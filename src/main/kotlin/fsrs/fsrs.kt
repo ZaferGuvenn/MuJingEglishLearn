@@ -8,8 +8,8 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 /**
- * 自由间隔重复调度算法
- * 地址：https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler
+ * Serbest aralıklı tekrarlama zamanlama algoritması
+ * Adres: https://github.com/open-spaced-repetition/free-spaced-repetition-scheduler
  */
 class FSRS {
     private var p = Parameters()

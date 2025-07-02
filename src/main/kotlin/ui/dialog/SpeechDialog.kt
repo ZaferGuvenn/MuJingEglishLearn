@@ -40,7 +40,7 @@ fun AzureTTSDialog(
     azureTTS: AzureTTS
 ){
     DialogWindow(
-        title = "设置 Azure TTS",
+        title = "Azure TTS Ayarları",
         icon = painterResource("logo/logo.png"),
         onCloseRequest = { close() },
         resizable = false,
@@ -52,7 +52,7 @@ fun AzureTTSDialog(
         windowBackgroundFlashingOnCloseFixHack()
         Box{
             Column (Modifier.fillMaxSize().background(MaterialTheme.colors.background).padding(start = 10.dp)){
-                // 支持 Azure Speech 的区域
+                // Azure Speech destekleyen bölgeler
                 val regionList = listOf("southafricanorth","eastasia","southeastasia","australiaeast","centralindia","japaneast","japanwest","koreacentral","canadacentral","northeurope","westeurope","francecentral","germanywestcentral","norwayeast","swedencentral8","switzerlandnorth","switzerlandwest","uksouth","uaenorth","brazilsouth","qatarcentral3,8","centralus","eastus","eastus2","northcentralus","southcentralus","westcentralus","westus","westus2","westus3","southafricanorth","eastasia","southeastasia","australiaeast","centralindia","japaneast","japanwest","koreacentral","canadacentral","northeurope","westeurope","francecentral","germanywestcentral","norwayeast","swedencentral8","switzerlandnorth","switzerlandwest","uksouth","uaenorth","brazilsouth","qatarcentral3,8","centralus","eastus","eastus2","northcentralus","southcentralus","westcentralus","westus","westus2","westus3")
                 val voiceList = remember{ mutableStateListOf<Voice>() }
                 val border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f))
@@ -144,7 +144,7 @@ fun AzureTTSDialog(
                         var showStyle by remember{ mutableStateOf(false) }
 
                         Row(verticalAlignment = Alignment.CenterVertically){
-                            Text("口音")
+                            Text("Aksan")
 
                             Spacer(Modifier.width(15.dp))
                             Row(
@@ -155,7 +155,7 @@ fun AzureTTSDialog(
                                     .border(border = border)
                                     .clickable { showStyle = !showStyle}
                             ) {
-                                Text(text = if(azureTTS.pronunciationStyle == "en-GB") "英式发音" else "美式发音",
+                                Text(text = if(azureTTS.pronunciationStyle == "en-GB") "İngiliz Aksanı" else "Amerikan Aksanı",
                                     modifier = Modifier.padding(start = 12.dp),
                                     color = MaterialTheme.colors.onBackground)
                                 val tint = if (MaterialTheme.colors.isLight) Color.DarkGray else MaterialTheme.colors.onBackground
@@ -196,7 +196,7 @@ fun AzureTTSDialog(
                                                 .width(2.dp)
                                             )
                                             Text(
-                                                text = "英式发音",
+                                                text = "İngiliz Aksanı",
                                                 color = if(azureTTS.pronunciationStyle == "en-GB") MaterialTheme.colors.primary else  Color.Unspecified,
                                                 modifier = Modifier.padding(start = 6.dp)
                                             )
@@ -222,7 +222,7 @@ fun AzureTTSDialog(
                                             )
 
                                             Text(
-                                                text = "美式发音",
+                                                text = "Amerikan Aksanı",
                                                 color = if(azureTTS.pronunciationStyle == "en-US") MaterialTheme.colors.primary else  Color.Unspecified,
                                                 modifier = Modifier.padding(start = 6.dp)
                                             )
@@ -242,7 +242,7 @@ fun AzureTTSDialog(
                         var showList by remember{ mutableStateOf(false) }
 
                         Row(verticalAlignment = Alignment.CenterVertically){
-                            Text("语音")
+                            Text("Ses")
 
                             Spacer(Modifier.width(15.dp))
                             Row(
@@ -355,12 +355,12 @@ fun AzureTTSDialog(
 
                             }
                         }, enabled = !isPlaying){
-                            Text("测试",)
+                            Text("Test Et",)
                         }
                         Spacer(Modifier.width(8.dp))
                         DisposableEffect(Unit){
                             onDispose {
-                                // TODO 可能要重构保存逻辑
+                                // TODO Kaydetme mantığının yeniden düzenlenmesi gerekebilir
                                 azureTTS.saveAzureState()
                                 audioPlayerComponent.mediaPlayer().release()
                             }}
@@ -373,7 +373,7 @@ fun AzureTTSDialog(
             }
 
             OutlinedButton(onClick = close,modifier = Modifier.padding(bottom = 10.dp).align(Alignment.BottomCenter)){
-                Text("关闭")
+                Text("Kapat")
             }
         }
 

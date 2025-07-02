@@ -47,7 +47,7 @@ fun SettingsDialog(
 ) {
     val height = if (Toolkit.getDefaultToolkit().screenSize.height > 720) 700.dp else 662.dp
     DialogWindow(
-        title = "设置",
+        title = "Ayarlar",
         icon = painterResource("logo/logo.png"),
         onCloseRequest = { close() },
         resizable = true,
@@ -75,7 +75,7 @@ fun SettingsDialog(
                                     .clickable { currentPage = "Theme" }
                                     .fillMaxWidth()
                                     .height(48.dp)) {
-                                Text("主题", modifier = Modifier.padding(start = 16.dp))
+                                Text("Tema", modifier = Modifier.padding(start = 16.dp))
                                 if (currentPage == "Theme") {
                                     Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                                 }
@@ -88,7 +88,7 @@ fun SettingsDialog(
                                     .clickable { currentPage = "TextStyle" }
                                     .fillMaxWidth()
                                     .height(48.dp)) {
-                                Text("字体样式", modifier = Modifier.padding(start = 16.dp))
+                                Text("Yazı Tipi Stili", modifier = Modifier.padding(start = 16.dp))
                                 if (currentPage == "TextStyle") {
                                     Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                                 }
@@ -121,7 +121,7 @@ fun SettingsDialog(
                                 onClick = { close() },
                                 modifier = Modifier.padding(end = 10.dp)
                             ) {
-                                Text("关闭")
+                                Text("Kapat")
                             }
                         }
                     }
@@ -156,7 +156,7 @@ fun SettingTextStyle(
                     modifier = Modifier.padding(start = 50.dp, top = 20.dp, bottom = 10.dp, end = 50.dp)
                 ) {
 
-                    Text("单词的样式")
+                    Text("Kelime Stili")
                     Spacer(Modifier.width(15.dp))
 
                     TextStyleChooser(
@@ -168,7 +168,7 @@ fun SettingTextStyle(
                         }
                     )
                     Spacer(Modifier.width(30.dp))
-                    Text("字间隔空")
+                    Text("Harf Aralığı")
                     Spacer(Modifier.width(15.dp))
                     Box {
                         var spacingExpanded by remember { mutableStateOf(false) }
@@ -290,7 +290,7 @@ fun SettingTextStyle(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(start = 50.dp, top = 20.dp, bottom = 10.dp, end = 100.dp)
                 ) {
-                    Text("详细信息的样式")
+                    Text("Detay Bilgisi Stili")
                     Spacer(Modifier.width(15.dp))
                     TextStyleChooser(
                         isWord = false,
@@ -332,7 +332,7 @@ fun SettingTextStyle(
     } else {
         Box(Modifier.fillMaxSize()) {
             Text(
-                text = "请先选择词库",
+                text = "Lütfen önce kelime dağarcığını seçin",
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -528,7 +528,7 @@ fun SettingTheme(
                     tint = tint
                 )
                 Text(
-                    text = "深色模式", fontSize = 12.sp,
+                    text = "Koyu Mod", fontSize = 12.sp,
                 )
             }
             Column (
@@ -555,7 +555,7 @@ fun SettingTheme(
                     tint = tint
                 )
                 Text(
-                    text = "浅色模式", fontSize = 12.sp,
+                    text = "Açık Mod", fontSize = 12.sp,
                 )
             }
             Column (
@@ -585,14 +585,14 @@ fun SettingTheme(
                     tint = if(appState.global.isFollowSystemTheme) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground
                 )
                 Text(
-                    text = "跟随系统", fontSize = 12.sp,
+                    text = "Sistemi Takip Et", fontSize = 12.sp,
                 )
             }
             Spacer(Modifier.width(90.dp))
         }
         var selectPrimaryColor by remember { mutableStateOf(false) }
         OutlinedButton(onClick = { selectPrimaryColor = true }, Modifier.padding(end = 100.dp)) {
-            Text("主色调")
+            Text("Ana Renk")
         }
         if(selectPrimaryColor){
             ColorPicker(
@@ -606,7 +606,7 @@ fun SettingTheme(
                     selectPrimaryColor = false
                 },
                 reset = {
-                    // 恢复默认颜色,绿色
+                    // Varsayılan renge dön, yeşil
                     appState.global.primaryColor = Color(9, 175, 0)
                     appState.colors = createColors(appState.global)
                     appState.saveGlobalState()
@@ -624,7 +624,7 @@ fun SettingTheme(
             var selectBackgroundColor by remember { mutableStateOf(false) }
             var selectOnBackgroundColor by remember { mutableStateOf(false) }
             OutlinedButton(onClick = { selectBackgroundColor = true }, Modifier.padding(end = 100.dp)) {
-                Text("设置背景颜色")
+                Text("Arka Plan Rengini Ayarla")
             }
             if(selectBackgroundColor){
                 ColorPicker(
@@ -659,7 +659,7 @@ fun SettingTheme(
                 )
             }
             OutlinedButton(onClick = { selectOnBackgroundColor = true }, Modifier.padding(end = 90.dp)) {
-                Text("设置前景颜色")
+                Text("Ön Plan Rengini Ayarla")
             }
 
             if(selectOnBackgroundColor){

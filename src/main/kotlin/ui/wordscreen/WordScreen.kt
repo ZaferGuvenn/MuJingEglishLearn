@@ -70,10 +70,10 @@ import javax.swing.filechooser.FileSystemView
 import kotlin.concurrent.schedule
 
 /**
- * 应用程序的核心组件，记忆单词界面
- * @param appState 应用程序的全局状态
- * @param wordScreenState 记忆单词界面的状态容器
- * @param videoBounds 视频播放窗口的位置和大小
+ * Uygulamanın çekirdek bileşeni, kelime ezberleme arayüzü
+ * @param appState uygulamanın genel durumu
+ * @param wordScreenState kelime ezberleme arayüzünün durum kapsayıcısı
+ * @param videoBounds video oynatma penceresinin konumu ve boyutu
  */
 @OptIn(
     ExperimentalComposeUiApi::class,
@@ -110,9 +110,9 @@ fun WordScreen(
 
     Box(Modifier.background(MaterialTheme.colors.background)) {
         ->
-        /** 单词输入框的焦点请求器*/
+        /** Kelime giriş kutusu odak isteyicisi*/
         val wordFocusRequester = remember { FocusRequester() }
-        /** 当前正在记忆的单词 */
+        /** Mevcut ezberlenen kelime */
         val currentWord = if(wordScreenState.vocabulary.wordList.isNotEmpty()){
             wordScreenState.getCurrentWord()
         }else  null
@@ -211,7 +211,7 @@ fun WordScreen(
                         border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                         shape = RectangleShape
                     ) {
-                        Text(text = "打开词库文件 $ctrl + O", modifier = Modifier.padding(10.dp))
+                        Text(text = "Kelime Dağarcığı Dosyasını Aç $ctrl + O", modifier = Modifier.padding(10.dp))
                     }
                 },
                 delayMillis = 50,
@@ -242,7 +242,7 @@ fun WordScreen(
                 wordScreenState.vocabularyName = ""
                 wordScreenState.vocabularyPath = ""
                 wordScreenState.saveWordScreenState()
-            }, toolTip = "关闭当前词库")
+            }, toolTip = "Mevcut Kelime Dağarcığını Kapat")
             val extensions = if(isMacOS()) listOf("public.json") else listOf("json")
 
             FilePicker(
@@ -301,7 +301,7 @@ fun Header(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ){
-        // macOS 的标题栏和 windows 不一样，需要特殊处理
+        // macOS başlık çubuğu Windows'tan farklıdır, özel işlem gerekir
         if (isMacOS()) {
             MacOSTitle(
                 title = title,
@@ -316,10 +316,10 @@ fun Header(
             // 记忆单词时的状态信息
             val text = when(wordScreenState.memoryStrategy){
                 Normal -> { if(wordScreenState.vocabulary.size>0) "${wordScreenState.index + 1}/${wordScreenState.vocabulary.size}" else ""}
-                Dictation -> { "听写单词   ${wordScreenState.dictationIndex + 1}/${wordScreenState.dictationWords.size}"}
-                DictationTest -> {"听写测试   ${wordScreenState.dictationIndex + 1}/${wordScreenState.reviewWords.size}"}
-                NormalReviewWrong -> { "复习错误单词   ${wordScreenState.dictationIndex + 1}/${wordScreenState.wrongWords.size}"}
-                DictationTestReviewWrong -> { "听写测试 - 复习错误单词   ${wordScreenState.dictationIndex + 1}/${wordScreenState.wrongWords.size}"}
+                Dictation -> { "Kelime Dikte Etme   ${wordScreenState.dictationIndex + 1}/${wordScreenState.dictationWords.size}"}
+                DictationTest -> {"Dikte Testi   ${wordScreenState.dictationIndex + 1}/${wordScreenState.reviewWords.size}"}
+                NormalReviewWrong -> { "Yanlış Kelimeleri Gözden Geçir   ${wordScreenState.dictationIndex + 1}/${wordScreenState.wrongWords.size}"}
+                DictationTestReviewWrong -> { "Dikte Testi - Yanlış Kelimeleri Gözden Geçir   ${wordScreenState.dictationIndex + 1}/${wordScreenState.wrongWords.size}"}
             }
 
             val top = if(wordScreenState.memoryStrategy != Normal) 0.dp else 12.dp
@@ -335,13 +335,13 @@ fun Header(
                 Spacer(Modifier.width(20.dp))
                 val tooltip = when (wordScreenState.memoryStrategy) {
                     DictationTest, DictationTestReviewWrong -> {
-                        "退出听写测试"
+                        "Dikte Testinden Çık"
                     }
                     Dictation -> {
-                        "退出听写"
+                        "Dikte Etmeden Çık"
                     }
                     else -> {
-                        "退出复习"
+                        "Gözden Geçirmeden Çık"
                     }
                 }
                 ExitButton(
@@ -384,38 +384,38 @@ fun MainContent(
     window: ComposeWindow,
 ){
     var nextButtonVisible by remember{ mutableStateOf(false) }
-        /** 协程构建器 */
+        /** Coroutine oluşturucu */
         val scope = rememberCoroutineScope()
 
-        /** 单词输入错误*/
+        /** Kelime giriş hatası*/
         var isWrong by remember { mutableStateOf(false) }
 
-        /** 是否正在播放视频 */
+        /** Video oynatılıyor mu */
         var isPlaying by remember { mutableStateOf(false) }
 
-        /** 快捷键播放字幕的索引 */
+        /** Altyazı oynatma kısayol tuşu dizini */
         var plyingIndex by remember { mutableStateOf(0) }
 
-        /** 显示填充后的书签图标 */
+        /** Doldurulmuş yer imi simgesini göster */
         var showBookmark by remember { mutableStateOf(false) }
 
-        /** 显示删除对话框 */
+        /** Silme iletişim kutusunu göster */
         var showDeleteDialog by remember { mutableStateOf(false) }
 
-        /** 显示把当前单词加入到熟悉词库的确认对话框 */
+        /** Mevcut kelimeyi bildiklerine ekleme onay iletişim kutusunu göster */
         var showFamiliarDialog by remember { mutableStateOf(false) }
 
-        /** 字幕输入框焦点请求器*/
+        /** Altyazı giriş kutusu odak isteyicisi*/
         val (focusRequester1,focusRequester2,focusRequester3) = remember { FocusRequester.createRefs() }
 
-        /** 等宽字体*/
+        /** Sabit genişlikli yazı tipi*/
         val monospace  = rememberMonospace()
 
         val audioPlayerComponent = LocalAudioPlayerComponent.current
 
         val clipboardManager = LocalClipboardManager.current
 
-        /** 是否正在播放单词发音 */
+        /** Kelime telaffuzu oynatılıyor mu */
         var isPlayingAudio by remember { mutableStateOf(false) }
 
     val onVideoBoundsChanged :(Boolean) -> Unit= {
@@ -450,7 +450,7 @@ fun MainContent(
         }
 
 
-        /** 删除当前单词 */
+        /** Mevcut kelimeyi sil */
         val deleteWord:() -> Unit = {
             val index = wordScreenState.index
             wordScreenState.vocabulary.wordList.removeAt(index)
@@ -471,16 +471,16 @@ fun MainContent(
                     appState.hardVocabulary.size = appState.hardVocabulary.wordList.size
                 }
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(window, "删除单词失败,错误信息:\n${e.message}")
+                JOptionPane.showMessageDialog(window, "Kelime silinemedi, hata mesajı:\n${e.message}")
             }
         }
 
-        /** 把当前单词加入到熟悉词库 */
+        /** Mevcut kelimeyi bildiklerine ekle */
         val addToFamiliar:() -> Unit = {
             val file = getFamiliarVocabularyFile()
             val familiar =  loadVocabulary(file.absolutePath)
             val familiarWord = currentWord.deepCopy()
-            // 如果当前词库是 MKV 或 SUBTITLES 类型的词库，需要把内置词库转换成外部词库。
+            // Mevcut kelime dağarcığı MKV veya SUBTITLES türündeyse, dahili kelime dağarcığının harici bir kelime dağarcığına dönüştürülmesi gerekir.
             if (wordScreenState.vocabulary.type == VocabularyType.MKV ||
                 wordScreenState.vocabulary.type == VocabularyType.SUBTITLES
             ) {
@@ -516,19 +516,19 @@ fun MainContent(
                 }
 
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(window, "保存熟悉词库失败,错误信息:\n${e.message}")
+                JOptionPane.showMessageDialog(window, "Bildikleriniz kaydedilemedi, hata mesajı:\n${e.message}")
             }
             showFamiliarDialog = false
         }
 
-        /** 处理加入到困难词库的函数 */
+        /** Zor kelimeler listesine ekleme işlevi */
         val bookmarkClick :() -> Unit = {
             val hardWord = currentWord.deepCopy()
             val contains = appState.hardVocabulary.wordList.contains(currentWord)
             val index = appState.hardVocabulary.wordList.indexOf(currentWord)
             if(contains){
                 appState.hardVocabulary.wordList.removeAt(index)
-                // 如果当前词库是困难词库，说明用户想把单词从困难词库（当前词库）删除
+                // Mevcut kelime dağarcığı zor kelimeler listesi ise, kullanıcı kelimeyi zor kelimeler listesinden (mevcut kelime dağarcığı) silmek istiyor demektir
                 if(wordScreenState.vocabulary.name == "HardVocabulary"){
                     wordScreenState.vocabulary.wordList.remove(currentWord)
                     wordScreenState.vocabulary.size = wordScreenState.vocabulary.wordList.size
@@ -542,7 +542,7 @@ fun MainContent(
                         wordScreenState.vocabulary.size = wordScreenState.vocabulary.wordList.size
 
                         e.printStackTrace()
-                        JOptionPane.showMessageDialog(window, "保存当前词库失败,错误信息:\n${e.message}")
+                        JOptionPane.showMessageDialog(window, "Mevcut kelime dağarcığı kaydedilemedi, hata mesajı:\n${e.message}")
                     }
 
                 }
@@ -578,12 +578,12 @@ fun MainContent(
                     appState.hardVocabulary.wordList.remove(hardWord)
                 }
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(window, "保存困难词库失败,错误信息:\n${e.message}")
+                JOptionPane.showMessageDialog(window, "Zor kelimeler kaydedilemedi, hata mesajı:\n${e.message}")
             }
 
         }
 
-        /** 处理全局快捷键的回调函数 */
+        /** Genel kısayol tuşu geri arama işlevi */
         val globalKeyEvent: (KeyEvent) -> Boolean = {
             when {
                 (it.isCtrlPressed && it.isShiftPressed && it.key == Key.A && it.type == KeyEventType.KeyUp) -> {
@@ -713,7 +713,7 @@ fun MainContent(
                 }
                 (it.isCtrlPressed && it.key == Key.Y && it.type == KeyEventType.KeyUp) -> {
                     if(wordScreenState.vocabulary.name == "FamiliarVocabulary"){
-                        JOptionPane.showMessageDialog(window, "不能把熟悉词库的单词添加到熟悉词库")
+                        JOptionPane.showMessageDialog(window, "Bildiklerinize eklenmiş bir kelime tekrar eklenemez.")
                     }else{
                         showFamiliarDialog = true
                     }
@@ -772,13 +772,13 @@ fun MainContent(
 
         }
 
-        /** 显示本章节已经完成对话框 */
+        /** Bu bölüm tamamlandı iletişim kutusunu göster */
         var showChapterFinishedDialog by remember { mutableStateOf(false) }
 
-        /** 显示整个词库已经学习完成对话框 */
+        /** Tüm kelime dağarcığı öğrenildi iletişim kutusunu göster */
         var isVocabularyFinished by remember { mutableStateOf(false) }
 
-        /** 播放整个章节完成时音效 */
+        /** Bölüm tamamlandığında ses efektini oynat */
         val playChapterFinished = {
             if (wordScreenState.isPlaySoundTips) {
                 playSound("audio/Success!!.wav", wordScreenState.soundTipsVolume)
@@ -786,19 +786,19 @@ fun MainContent(
         }
 
         /**
-         * 在听写模式，闭着眼睛听写单词时，刚拼写完单词，就播放这个声音感觉不好，
-         * 在非听写模式下按Enter键就不会有这种感觉，因为按Enter键，
-         * 自己已经输入完成了，有一种期待，预测到了将会播放提示音。
+         * Dikte modunda, gözler kapalı kelime yazarken, kelimeyi yeni bitirdiğinizde bu sesi çalmak iyi hissettirmiyor.
+         * Dikte olmayan modda Enter tuşuna basıldığında böyle bir his olmaz, çünkü Enter tuşuna basıldığında,
+         * giriş zaten tamamlanmıştır, bir beklenti vardır ve bir ipucu sesinin çalınacağı tahmin edilir.
          */
         val delayPlaySound:() -> Unit = {
-            Timer("playChapterFinishedSound", false).schedule(1000) {
+            Timer("bolumBitirmeSesiCal", false).schedule(1000) {
                 playChapterFinished()
             }
             showChapterFinishedDialog = true
         }
 
 
-        /** 增加复习错误单词时的索引 */
+        /** Yanlış kelimeleri gözden geçirirken dizini artır */
         val increaseWrongIndex:() -> Unit = {
             if (wordScreenState.dictationIndex + 1 == wordScreenState.wrongWords.size) {
                 delayPlaySound()
@@ -806,7 +806,7 @@ fun MainContent(
         }
 
 
-        /** 切换到下一个单词 */
+        /** Sonraki kelimeye geç */
         val toNext: () -> Unit = {
             scope.launch {
                 wordScreenState.clearInputtedState()
@@ -845,17 +845,17 @@ fun MainContent(
             }
         }
 
-        /** 切换到上一个单词,听写时不允许切换到上一个单词 */
+        /** Önceki kelimeye geç, dikte sırasında izin verilmez */
         val previous :() -> Unit = {
             scope.launch {
-                // 正常记忆单词
+                // Normal kelime ezberleme
                 if(wordScreenState.memoryStrategy == Normal){
                     wordScreenState.clearInputtedState()
                     if((wordScreenState.index) % 20 != 0 ){
                         wordScreenState.index -= 1
                         wordScreenState.saveWordScreenState()
                     }
-                    // 复习错误单词
+                    // Yanlış kelimeleri gözden geçir
                 }else if (wordScreenState.memoryStrategy == NormalReviewWrong || wordScreenState.memoryStrategy == DictationTestReviewWrong ){
                     wordScreenState.clearInputtedState()
                     if(wordScreenState.dictationIndex > 0 ){
@@ -882,26 +882,26 @@ fun MainContent(
                 .padding(end = 0.dp,bottom = 58.dp)
         ) {
 
-            /** 听写模式的错误单词 */
+            /** Dikte modundaki yanlış kelimeler */
             val dictationWrongWords = remember { mutableStateMapOf<Word, Int>()}
 
-            /** 显示编辑单词对话框 */
+            /** Kelime düzenleme iletişim kutusunu göster */
             var showEditWordDialog by remember { mutableStateOf(false) }
 
-            /** 清空听写模式存储的错误单词 */
+            /** Dikte modunda saklanan yanlış kelimeleri temizle */
             val resetChapterTime: () -> Unit = {
                 dictationWrongWords.clear()
             }
 
 
-            /** 播放错误音效 */
+            /** Hata ses efektini oynat */
             val playBeepSound = {
                 if (wordScreenState.isPlaySoundTips) {
                     playSound("audio/beep.wav", wordScreenState.soundTipsVolume)
                 }
             }
 
-            /** 播放成功音效 */
+            /** Başarı ses efektini oynat */
             val playSuccessSound = {
                 if (wordScreenState.isPlaySoundTips) {
                     playSound("audio/hint.wav", wordScreenState.soundTipsVolume)
@@ -909,7 +909,7 @@ fun MainContent(
             }
 
 
-            /** 播放按键音效 */
+            /** Tuş vuruşu ses efektini oynat */
             val playKeySound = {
                 if (appState.global.isPlayKeystrokeSound) {
                     playSound("audio/keystroke.wav", appState.global.keystrokeVolume)
@@ -917,8 +917,7 @@ fun MainContent(
             }
 
             /**
-             * 当用户在听写测试按 enter 调用的函数，
-             * 在听写测试跳过单词也算一次错误
+             * Kullanıcı dikte testinde enter'a bastığında çağrılan işlev, dikte testinde kelimeyi atlamak da hata sayılır
              */
             val dictationSkipCurrentWord: () -> Unit = {
                 if (wordScreenState.wordCorrectTime == 0) {
@@ -929,12 +928,12 @@ fun MainContent(
                 }
             }
 
-            /** 焦点切换到单词输入框 */
+            /** Odağı kelime giriş kutusuna taşı */
             val jumpToWord:() -> Unit = {
                 wordFocusRequester.requestFocus()
             }
 
-            /** 焦点切换到抄写字幕 */
+            /** Odağı altyazı kopyalamaya taşı */
             val jumpToCaptions:() -> Unit = {
                 if((wordScreenState.memoryStrategy != Dictation && wordScreenState.memoryStrategy != DictationTest) &&
                     wordScreenState.subtitlesVisible && (currentWord.captions.isNotEmpty() || currentWord.externalCaptions.isNotEmpty())
@@ -943,15 +942,14 @@ fun MainContent(
                 }
             }
 
-            /** 检查输入的单词 */
+            /** Girilen kelimeyi kontrol et */
             val checkWordInput: (String) -> Unit = { input ->
                 if(!isWrong){
                     wordScreenState.wordTextFieldValue = input
                     wordScreenState.wordTypingResult.clear()
                     var done = true
                     /**
-                     *  防止用户粘贴内容过长，如果粘贴的内容超过 word.value 的长度，
-                     * 会改变 BasicTextField 宽度，和 Text 的宽度不匹配
+                     *  Kullanıcının çok uzun içerik yapıştırmasını engelle, yapıştırılan içerik word.value uzunluğunu aşarsa BasicTextField genişliğini değiştirir ve Text genişliğiyle eşleşmez
                      */
                     if (input.length > currentWord.value.length) {
                         wordScreenState.wordTypingResult.clear()
@@ -964,13 +962,13 @@ fun MainContent(
                             if (inputChar == wordChar) {
                                 wordScreenState.wordTypingResult.add(Pair(inputChar, true))
                             } else {
-                                // 字母输入错误
+                                // Harf giriş hatası
                                 wordScreenState.wordTypingResult.add(Pair(inputChar, false))
                                 done = false
                                 playBeepSound()
                                 isWrong = true
                                 wordScreenState.wordWrongTime++
-                                // 如果是听写测试，或独立的听写测试，需要汇总错误单词
+                                // Dikte testi veya bağımsız dikte testi ise, yanlış kelimeleri toplamak gerekir
                                 if (wordScreenState.memoryStrategy == Dictation || wordScreenState.memoryStrategy == DictationTest) {
                                     val dictationWrongTime = dictationWrongWords[currentWord]
                                     if (dictationWrongTime != null) {
@@ -979,7 +977,7 @@ fun MainContent(
                                         dictationWrongWords[currentWord] = 1
                                     }
                                 }
-//                                // 再播放一次单词发音
+//                                // Kelime telaffuzunu tekrar oynat
                                 if (!isPlayingAudio && wordScreenState.playTimes == 2) {
                                     scope.launch (Dispatchers.IO){
                                         val audioPath =  getAudioPath(
@@ -1004,26 +1002,26 @@ fun MainContent(
 
                             }
                         }
-                        // 用户输入的单词完全正确
+                        // Kullanıcının girdiği kelime tamamen doğru
                         if (wordScreenState.wordTypingResult.size == currentWord.value.length && done) {
-                            // 输入完全正确
+                            // Giriş tamamen doğru
                             playSuccessSound()
                             wordScreenState.wordCorrectTime++
                             if (wordScreenState.memoryStrategy == Dictation || wordScreenState.memoryStrategy == DictationTest) {
-                                Timer("input correct to next", false).schedule(50) {
+                                Timer("dogruGirisSonrakine", false).schedule(50) {
                                     toNext()
                                 }
                             }else if (wordScreenState.isAuto && wordScreenState.wordCorrectTime == wordScreenState.repeatTimes ) {
-                                Timer("input correct to next", false).schedule(50) {
+                                Timer("dogruGirisSonrakine", false).schedule(50) { // Timer adı aynı kalabilir, işlevi benzer
                                     toNext()
                                 }
                             } else {
-                                Timer("input correct clean InputChar", false).schedule(50){
+                                Timer("dogruGirisTemizle", false).schedule(50){
                                     wordScreenState.wordTypingResult.clear()
                                     wordScreenState.wordTextFieldValue = ""
                                 }
 
-                                // 再播放一次单词发音
+                                // Kelime telaffuzunu tekrar oynat
                                 if (!isPlayingAudio && wordScreenState.playTimes == 2) {
                                     scope.launch (Dispatchers.IO){
                                         val audioPath =  getAudioPath(
@@ -1049,9 +1047,9 @@ fun MainContent(
                         }
                     }
                 }else{
-                    // 输入错误后继续输入
+                    // Hatalı girişten sonra yazmaya devam et
                     if(input.length > wordScreenState.wordTypingResult.size){
-                        // 如果不截取字符串，用户长按某个按键，程序可能会崩溃
+                        // Dize kesilmezse, kullanıcı bir tuşa uzun basarsa program çökebilir
                         val inputStr = input.substring(0,wordScreenState.wordTypingResult.size)
                         val inputChars = inputStr.toList()
                         isWrong = false
@@ -1067,12 +1065,12 @@ fun MainContent(
                             wordScreenState.wordTextFieldValue = inputStr
                         }
                     }else if(input.length == wordScreenState.wordTypingResult.size-1){
-                        // 输入错误后按退格键删除错误字母
+                        // Hatalı girişten sonra hatalı harfi silmek için geri al tuşuna bas
                         isWrong = false
                             wordScreenState.wordTypingResult.removeLast()
                             wordScreenState.wordTextFieldValue = input
                     }else if(input.isEmpty()){
-                        // 输入错误后 Ctrl + A 全选后删除全部输入
+                        // Hatalı girişten sonra Ctrl + A ile tümünü seçip tüm girişi sil
                         wordScreenState.wordTextFieldValue = ""
                         wordScreenState.wordTypingResult.clear()
                         isWrong = false
@@ -1083,7 +1081,7 @@ fun MainContent(
             }
 
 
-            /** 检查输入的字幕 */
+            /** Girilen altyazıyı kontrol et */
             val checkCaptionsInput: (Int, String, String) -> Unit = { index, input, captionContent ->
                 when(index){
                     0 -> wordScreenState.captionsTextFieldValue1 = input
@@ -1101,10 +1099,10 @@ fun MainContent(
                             typingResult.add(Pair(captionChar, true))
                         }else if (inputChar == ' ' && (captionChar == '[' || captionChar == ']')) {
                             typingResult.add(Pair(captionChar, true))
-                            // 音乐符号不好输入，所以可以使用空格替换
+                            // Müzik sembollerini girmek zor olduğundan boşlukla değiştirilebilir
                         }else if (inputChar == ' ' && (captionChar == '♪')) {
                             typingResult.add(Pair(captionChar, true))
-                            // 音乐符号占用两个空格，所以插入♪ 再删除一个空格
+                            // Müzik sembolü iki boşluk kaplar, bu yüzden ♪ ekleyip bir boşluk silin
                             inputChars.add(i,'♪')
                             inputChars.removeAt(i+1)
                             val textFieldValue = String(inputChars.toCharArray())
@@ -1124,7 +1122,7 @@ fun MainContent(
 
             }
 
-            /** 索引递减 */
+            /** Dizini azalt */
             val decreaseIndex = {
                 if(wordScreenState.index == wordScreenState.vocabulary.size - 1){
                     val mod = wordScreenState.vocabulary.size % 20
@@ -1133,7 +1131,7 @@ fun MainContent(
                 else wordScreenState.index = 0
             }
 
-            /** 计算正确率 */
+            /** Doğruluk oranını hesapla */
             val correctRate: () -> Float = {
                 val size = if(wordScreenState.memoryStrategy == Dictation ) wordScreenState.dictationWords.size else wordScreenState.reviewWords.size
                 var rate =  (size - dictationWrongWords.size).div(size.toFloat()) .times(1000)
@@ -1141,7 +1139,7 @@ fun MainContent(
                 rate
             }
 
-            /** 重复学习本章 */
+            /** Bu bölümü tekrar öğren */
             val learnAgain: () -> Unit = {
                 decreaseIndex()
                 resetChapterTime()
@@ -1151,7 +1149,7 @@ fun MainContent(
             }
 
 
-            /** 复习错误单词 */
+            /** Yanlış kelimeleri gözden geçir */
             val reviewWrongWords: () -> Unit = {
                 val reviewList = dictationWrongWords.keys.toList()
                 if (reviewList.isNotEmpty()) {
@@ -1171,7 +1169,7 @@ fun MainContent(
                 }
             }
 
-            /** 下一章 */
+            /** Sonraki bölüm */
             val nextChapter: () -> Unit = {
 
                 if (wordScreenState.memoryStrategy == NormalReviewWrong ||
@@ -1193,42 +1191,42 @@ fun MainContent(
             }
 
 
-            /** 正常记忆单词，进入到听写测试，需要的单词 */
+            /** Normal kelime ezberleme, dikte testine girmek için gereken kelimeler */
             val shuffleNormal:() -> Unit = {
                 val wordValue = wordScreenState.getCurrentWord().value
                 val shuffledList = wordScreenState.generateDictationWords(wordValue)
                 wordScreenState.dictationWords.clear()
                 wordScreenState.dictationWords.addAll(shuffledList)
             }
-            /** 从独立的听写测试再次进入到听写测试时，需要的单词 */
+            /** Bağımsız dikte testinden tekrar dikte testine girerken gereken kelimeler */
             val shuffleDictationReview:() -> Unit = {
                 var shuffledList = wordScreenState.reviewWords.shuffled()
-                // 如果打乱顺序的列表的第一个单词，和当前章节的最后一个词相等，就不会触发重组
+                // Karıştırılmış listenin ilk kelimesi mevcut bölümün son kelimesine eşitse, yeniden oluşturma tetiklenmez
                 while(shuffledList.first() == currentWord){
                     shuffledList = wordScreenState.reviewWords.shuffled()
                 }
                 wordScreenState.reviewWords.clear()
                 wordScreenState.reviewWords.addAll(shuffledList)
             }
-            /** 进入听写模式 */
+            /** Dikte moduna gir */
             val enterDictation: () -> Unit = {
                 scope.launch {
                     wordScreenState.saveWordScreenState()
                     when(wordScreenState.memoryStrategy){
-                        // 从正常记忆单词第一次进入到听写测试
+                        // Normal kelime ezberlemeden ilk kez dikte testine girme
                         Normal -> {
                             shuffleNormal()
                             wordScreenState.memoryStrategy = Dictation
                             wordScreenState.dictationIndex = 0
                             wordScreenState.hiddenInfo(dictationState)
                         }
-                        // 正常记忆单词时选择再次听写
+                        // Normal kelime ezberlerken tekrar dikte etmeyi seç
                         Dictation ->{
                             shuffleNormal()
                             wordScreenState.dictationIndex = 0
                         }
-                        // 从复习错误单词进入到听写测试，这里有两种情况：
-                        // 一种是从正常记忆单词进入到复习错误单词，复习完毕后，再次听写
+                        // Yanlış kelimeleri gözden geçirmeden dikte testine girme, burada iki durum vardır:
+                        // Biri normal kelime ezberlemeden yanlış kelimeleri gözden geçirmeye girmek, gözden geçirme tamamlandıktan sonra tekrar dikte etmek
                         NormalReviewWrong ->{
                             wordScreenState.memoryStrategy = Dictation
                             wordScreenState.wrongWords.clear()
@@ -1236,7 +1234,7 @@ fun MainContent(
                             wordScreenState.dictationIndex = 0
                             wordScreenState.hiddenInfo(dictationState)
                         }
-                        // 一种是从独立的听写测试进入到复习错误单词，复习完毕后，再次听写
+                        // Biri bağımsız dikte testinden yanlış kelimeleri gözden geçirmeye girmek, gözden geçirme tamamlandıktan sonra tekrar dikte etmek
                         DictationTestReviewWrong ->{
                             wordScreenState.memoryStrategy = DictationTest
                             wordScreenState.wrongWords.clear()
@@ -1244,7 +1242,7 @@ fun MainContent(
                             wordScreenState.dictationIndex = 0
                             wordScreenState.hiddenInfo(dictationState)
                         }
-                        // 在独立的听写测试时选择再次听写
+                        // Bağımsız dikte testindeyken tekrar dikte etmeyi seç
                         DictationTest ->{
                             shuffleDictationReview()
                             wordScreenState.dictationIndex = 0
@@ -1259,20 +1257,20 @@ fun MainContent(
 
 
             /**
-             * 重置索引
-             * 参数 isShuffle 是否打乱词库
+             * Dizini sıfırla
+             * Parametre isShuffle kelime dağarcığını karıştırıp karıştırmayacağı
              */
             val resetIndex: (isShuffle: Boolean) -> Unit = { isShuffle ->
-                // 如果要打乱顺序
+                // Sırayı karıştırmak istiyorsanız
                 if (isShuffle) {
-                    // 内置词库的地址
+                    // Dahili kelime dağarcığının adresi
                     val path = getResourcesFile("vocabulary").absolutePath
-                    // 如果要打乱的词库是内置词库，要选择一个地址，保存打乱后的词库，
-                    // 如果不选择地址的话，软件升级后词库会被重置。
+                    // Karıştırılacak kelime dağarcığı dahili bir kelime dağarcığıysa, karıştırılmış kelime dağarcığını kaydetmek için bir adres seçmeniz gerekir,
+                    // Bir adres seçmezseniz, yazılım yükseltildikten sonra kelime dağarcığı sıfırlanır.
                     if(wordScreenState.vocabularyPath.startsWith(path)){
                         val fileChooser = appState.futureFileChooser.get()
                         fileChooser.dialogType = JFileChooser.SAVE_DIALOG
-                        fileChooser.dialogTitle = "保存重置后的词库"
+                        fileChooser.dialogTitle = "Sıfırladıktan sonra kelime dağarcığını kaydet"
                         val myDocuments = FileSystemView.getFileSystemView().defaultDirectory.path
                         val fileName = File(wordScreenState.vocabularyPath).nameWithoutExtension
                         fileChooser.selectedFile = File("$myDocuments${File.separator}$fileName.json")
@@ -1282,7 +1280,7 @@ fun MainContent(
                             val vocabularyDirPath =  Paths.get(getResourcesFile("vocabulary").absolutePath)
                             val savePath = Paths.get(selectedFile.absolutePath)
                             if(savePath.startsWith(vocabularyDirPath)){
-                                JOptionPane.showMessageDialog(null,"不能把词库保存到应用程序安装目录，因为软件更新或卸载时，词库会被重置或者被删除")
+                                JOptionPane.showMessageDialog(null,"Kelime dağarcığı uygulama kurulum dizinine kaydedilemez, çünkü yazılım güncellendiğinde veya kaldırıldığında kelime dağarcığı sıfırlanır veya silinir.")
                             }else{
                                 wordScreenState.vocabulary.wordList.shuffle()
                                 val shuffledList = wordScreenState.vocabulary.wordList
@@ -1299,9 +1297,9 @@ fun MainContent(
                                 try {
                                     saveVocabulary(vocabulary, selectedFile.absolutePath)
                                     appState.changeVocabulary(selectedFile, wordScreenState, 0)
-                                    // changeVocabulary 会把内置词库保存到最近列表，
-                                    // 保存后，如果再切换列表，就会有两个名字相同的词库，
-                                    // 所以需要把刚刚添加的词库从最近列表删除
+                                    // changeVocabulary dahili kelime dağarcığını son kullanılanlar listesine kaydeder,
+                                    // Kaydettikten sonra listeyi tekrar değiştirirseniz, aynı ada sahip iki kelime dağarcığı olacaktır,
+                                    // Bu yüzden yeni eklenen kelime dağarcığını son kullanılanlar listesinden silmeniz gerekir
                                     for (i in 0 until appState.recentList.size) {
                                         val recentItem = appState.recentList[i]
                                         if (recentItem.name == wordScreenState.vocabulary.name) {
@@ -1311,7 +1309,7 @@ fun MainContent(
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()
-                                    JOptionPane.showMessageDialog(window, "保存词库失败,错误信息:\n${e.message}")
+                                    JOptionPane.showMessageDialog(window, "Kelime dağarcığı kaydedilemedi, hata mesajı:\n${e.message}")
                                 }
 
 
@@ -1323,7 +1321,7 @@ fun MainContent(
                             wordScreenState.saveCurrentVocabulary()
                         }catch(e:Exception){
                             e.printStackTrace()
-                            JOptionPane.showMessageDialog(window, "保存词库失败,错误信息:\n${e.message}")
+                            JOptionPane.showMessageDialog(window, "Kelime dağarcığı kaydedilemedi, hata mesajı:\n${e.message}")
                         }
 
                     }
@@ -1410,7 +1408,7 @@ fun MainContent(
             Box(
                 Modifier.onPointerEvent(PointerEventType.Exit) { activeMenu = false }
             ) {
-                /** 动态菜单，鼠标移动到单词区域时显示 */
+                /** Dinamik menü, fare kelime alanına geldiğinde görüntülenir */
                 if (activeMenu) {
                     Row(modifier = Modifier.align(Alignment.TopCenter)) {
                         val contains = appState.hardVocabulary.wordList.contains(currentWord)
@@ -1418,7 +1416,7 @@ fun MainContent(
                         EditButton(onClick = { showEditWordDialog = true })
                         FamiliarButton(onClick = {
                             if(wordScreenState.vocabulary.name == "FamiliarVocabulary"){
-                                JOptionPane.showMessageDialog(window, "不能把熟悉词库的单词添加到熟悉词库")
+                                JOptionPane.showMessageDialog(window, "Bildiklerinize eklenmiş bir kelime tekrar eklenemez.")
                             }else{
                                 showFamiliarDialog = true
                             }
@@ -1433,7 +1431,7 @@ fun MainContent(
                     }
                 }else if(showBookmark){
                     val contains = appState.hardVocabulary.wordList.contains(currentWord)
-                    // 这个按钮只显示 0.3 秒后消失
+                    // Bu düğme yalnızca 0.3 saniye görüntülenir ve sonra kaybolur
                     BookmarkButton(
                         modifier = Modifier.align(Alignment.TopCenter).padding(start = 96.dp),
                         contains = contains,
@@ -1563,7 +1561,7 @@ fun MainContent(
 
             if (showDeleteDialog) {
                 ConfirmDialog(
-                    message = "确定要删除单词 ${currentWord.value} ?",
+                    message = "${currentWord.value} kelimesini silmek istediğinizden emin misiniz?",
                     confirm = {
                         scope.launch {
                             deleteWord()
@@ -1575,8 +1573,8 @@ fun MainContent(
             }
             if(showFamiliarDialog){
                 ConfirmDialog(
-                    message = "确定要把 ${currentWord.value} 加入到熟悉词库？\n" +
-                            "加入到熟悉词库后，${currentWord.value} 会从当前词库删除。",
+                    message = "${currentWord.value} kelimesini bildiklerinize eklemek istediğinizden emin misiniz?\n" +
+                            "Bildiklerinize eklendikten sonra ${currentWord.value} mevcut kelime dağarcığından silinecektir.",
                     confirm = { scope.launch { addToFamiliar() } },
                     close = { showFamiliarDialog = false }
                 )
@@ -1585,25 +1583,25 @@ fun MainContent(
             if (showEditWordDialog) {
                 EditWordDialog(
                     word = currentWord,
-                    title = "编辑单词",
+                    title = "Kelimeyi Düzenle",
                     appState = appState,
                     vocabulary = wordScreenState.vocabulary,
                     vocabularyDir = wordScreenState.getVocabularyDir(),
                     save = { newWord ->
                         scope.launch {
                             val index = wordScreenState.index
-                            // 触发重组
+                            // Yeniden oluşturmayı tetikle
                             wordScreenState.vocabulary.wordList.removeAt(index)
                             wordScreenState.vocabulary.wordList.add(index, newWord)
                             try{
                                 wordScreenState.saveCurrentVocabulary()
                                 showEditWordDialog = false
                             }catch(e:Exception){
-                                // 回滚
+                                // Geri al
                                 wordScreenState.vocabulary.wordList.removeAt(index)
                                 wordScreenState.vocabulary.wordList.add(index, currentWord)
                                 e.printStackTrace()
-                                JOptionPane.showMessageDialog(window, "保存当前词库失败,错误信息:\n${e.message}")
+                                JOptionPane.showMessageDialog(window, "Mevcut kelime dağarcığı kaydedilemedi, hata mesajı:\n${e.message}")
                             }
 
                         }
@@ -1612,9 +1610,9 @@ fun MainContent(
                 )
             }
 
-            /** 显示独立的听写测试的选择章节对话框 */
+            /** Bağımsız dikte testi için bölüm seçimi iletişim kutusunu göster */
             var showChapterDialog by remember { mutableStateOf(false) }
-            /** 打开独立的听写测试的选择章节对话框 */
+            /** Bağımsız dikte testi için bölüm seçimi iletişim kutusunu aç */
             val openReviewDialog:() -> Unit = {
                 showChapterFinishedDialog = false
                 showChapterDialog = true
@@ -1632,7 +1630,7 @@ fun MainContent(
                 )
             }
 
-            /** 关闭当前章节结束时跳出的对话框 */
+            /** Mevcut bölüm bittiğinde açılan iletişim kutusunu kapat */
             val close: () -> Unit = {
                 showChapterFinishedDialog = false
                 if(isVocabularyFinished) isVocabularyFinished = false
@@ -1668,7 +1666,7 @@ fun MainContent(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(10.dp)
                         ) {
-                            Text(text = "上一个")
+                            Text(text = "Önceki")
                         }
                     }
                 },
@@ -1702,7 +1700,7 @@ fun MainContent(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(10.dp)
                         ) {
-                            Text(text = "下一个")
+                            Text(text = "Sonraki")
                         }
                     }
                 },
@@ -1756,7 +1754,7 @@ fun VocabularyEmpty(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "打开词库",
+                        text = "Kelime Dağarcığını Aç",
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable(onClick = { openVocabulary() })
                             .padding(5.dp)
@@ -1768,7 +1766,7 @@ fun VocabularyEmpty(
                     modifier = Modifier.padding(top = 10.dp).fillMaxWidth()
                 ) {
                     Text(
-                        text = "使用手册",
+                        text = "Kullanım Kılavuzu",
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable(onClick = { openDocument() })
                             .width(78.dp)
@@ -1781,7 +1779,7 @@ fun VocabularyEmpty(
                     modifier = Modifier.padding(top = 10.dp).fillMaxWidth()
                 ) {
                     Text(
-                        text = "生成词库",
+                        text = "Kelime Dağarcığı Oluştur",
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable(onClick = {generateVocabulary()  })
                             .padding(5.dp)
@@ -1802,7 +1800,7 @@ fun VocabularyEmpty(
                         modifier = Modifier.padding(top = 10.dp).onPointerEvent(PointerEventType.Enter) { visible = true }
                     ) {
                         Text(
-                            text = "内置词库",
+                            text = "Dahili Kelime Dağarcığı",
                             color = MaterialTheme.colors.primary,
                             modifier = Modifier.clickable(onClick = {openBuiltInVocabulary()})
                                 .padding(5.dp)
@@ -1811,13 +1809,13 @@ fun VocabularyEmpty(
                     val scope = rememberCoroutineScope()
                     AnimatedVisibility(visible = visible){
 
-                        /** 保存词库 */
+                        /** Kelime dağarcığını kaydet */
                         val save:(File) -> Unit = {file ->
                             scope.launch(Dispatchers.IO) {
                                 val name = file.nameWithoutExtension
                                 val fileChooser = futureFileChooser.get()
                                 fileChooser.dialogType = JFileChooser.SAVE_DIALOG
-                                fileChooser.dialogTitle = "保存词库"
+                                fileChooser.dialogTitle = "Kelime Dağarcığını Kaydet"
                                 val myDocuments = FileSystemView.getFileSystemView().defaultDirectory.path
                                 fileChooser.selectedFile = File("$myDocuments${File.separator}${name}.json")
                                 val userSelection = fileChooser.showSaveDialog(parentWindow)
@@ -1825,16 +1823,16 @@ fun VocabularyEmpty(
 
                                     val fileToSave = fileChooser.selectedFile
                                     if (fileToSave.exists()) {
-                                        // 是-0,否-1，取消-2
+                                        // 是-0,否-1，取消-2 (Evet-0, Hayır-1, İptal-2)
                                         val answer =
-                                            JOptionPane.showConfirmDialog(parentWindow, "${name}.json 已存在。\n要替换它吗？")
+                                            JOptionPane.showConfirmDialog(parentWindow, "${name}.json zaten var.\nDeğiştirilsin mi?")
                                         if (answer == 0) {
                                             try{
                                                 fileToSave.writeBytes(file.readBytes())
                                                 openChooseVocabulary(file.absolutePath)
                                             }catch (e:Exception){
                                                 e.printStackTrace()
-                                                JOptionPane.showMessageDialog(parentWindow,"保存失败，错误信息：\n${e.message}")
+                                                JOptionPane.showMessageDialog(parentWindow,"Kaydetme başarısız, hata mesajı:\n${e.message}")
                                             }
 
                                         }
@@ -1844,7 +1842,7 @@ fun VocabularyEmpty(
                                             openChooseVocabulary(file.absolutePath)
                                         }catch (e:Exception){
                                             e.printStackTrace()
-                                            JOptionPane.showMessageDialog(parentWindow,"保存失败，错误信息：\n${e.message}")
+                                            JOptionPane.showMessageDialog(parentWindow,"Kaydetme başarısız, hata mesajı:\n${e.message}")
                                         }
 
                                     }
@@ -1859,37 +1857,37 @@ fun VocabularyEmpty(
                             modifier = Modifier.padding(top = 5.dp)
                         ) {
                             Text(
-                                text = "四级",
+                                text = "Seviye 4",
                                 color = MaterialTheme.colors.primary,
                                 modifier = Modifier.clickable(onClick = {
-                                    val file = getResourcesFile("vocabulary/大学英语/四级.json")
+                                    val file = getResourcesFile("vocabulary/大学英语/四级.json") // TODO: Dosya yolu da çevrilecek
                                     save(file)
                                 })
                                     .padding(5.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "六级",
+                                text = "Seviye 6",
                                 color = MaterialTheme.colors.primary,
                                 modifier = Modifier.clickable(onClick = {
-                                    val file = getResourcesFile("vocabulary/大学英语/六级.json")
+                                    val file = getResourcesFile("vocabulary/大学英语/六级.json") // TODO: Dosya yolu da çevrilecek
                                     save(file)
                                 })
                                     .padding(5.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "牛津核心3000词",
+                                text = "Oxford 3000 Temel Kelime",
                                 color = MaterialTheme.colors.primary,
                                 modifier = Modifier.clickable(onClick = {
-                                    val file = getResourcesFile("vocabulary/牛津核心词/The_Oxford_3000.json")
+                                    val file = getResourcesFile("vocabulary/牛津核心词/The_Oxford_3000.json") // TODO: Dosya yolu da çevrilecek
                                     save(file)
                                 })
                                     .padding(5.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "更多",
+                                text = "Daha Fazla",
                                 color = MaterialTheme.colors.primary,
                                 modifier = Modifier.clickable(onClick = {openBuiltInVocabulary()})
                                     .padding(5.dp)
@@ -1906,7 +1904,7 @@ fun VocabularyEmpty(
 }
 
 /**
- * 词型组件
+ * Kelime biçimi bileşeni
  */
 @Composable
 fun Morphology(
@@ -1979,7 +1977,7 @@ fun Morphology(
                         buildAnnotatedString {
                             if (lemma.isNotEmpty()) {
                                 withStyle(style = plainStyle) {
-                                    append("原型 ")
+                                    append("Kök Hali ")
                                 }
                                 withStyle(style = plainStyle.copy(color = Color.Magenta)) {
                                     append(lemma)
@@ -1995,7 +1993,7 @@ fun Morphology(
 
                                 }
                                 withStyle(style = plainStyle) {
-                                    append("过去式 ")
+                                    append("Geçmiş Zaman Hali ")
                                 }
                                 withStyle(style = plainStyle.copy(color = color)) {
                                     append(preterite)
@@ -2011,7 +2009,7 @@ fun Morphology(
                                         if (MaterialTheme.colors.isLight) MaterialTheme.colors.primary else Color.Yellow
                                 }
                                 withStyle(style = plainStyle) {
-                                    append("过去分词 ")
+                                    append("Geçmiş Zaman Sıfat Fiili ")
                                 }
                                 withStyle(style = plainStyle.copy(color = color)) {
                                     append(pastParticiple)
@@ -2023,7 +2021,7 @@ fun Morphology(
                             if (presentParticiple.isNotEmpty()) {
                                 val color = if (presentParticiple.endsWith("ing")) textColor else Color(0xFF303F9F)
                                 withStyle(style = plainStyle) {
-                                    append("现在分词 ")
+                                    append("Şimdiki Zaman Sıfat Fiili ")
                                 }
                                 withStyle(style = plainStyle.copy(color = color)) {
                                     append(presentParticiple)
@@ -2035,7 +2033,7 @@ fun Morphology(
                             if (third.isNotEmpty()) {
                                 val color = if (third.endsWith("s")) textColor else Color.Cyan
                                 withStyle(style = plainStyle) {
-                                    append("第三人称单数 ")
+                                    append("Üçüncü Tekil Şahıs Hali ")
                                 }
                                 withStyle(style = plainStyle.copy(color = color)) {
                                     append(third)
@@ -2047,18 +2045,18 @@ fun Morphology(
 
                             if (er.isNotEmpty()) {
                                 withStyle(style = plainStyle) {
-                                    append("比较级 $er;")
+                                    append("Karşılaştırma Derecesi $er;")
                                 }
                             }
                             if (est.isNotEmpty()) {
                                 withStyle(style = plainStyle) {
-                                    append("最高级 $est;")
+                                    append("Üstünlük Derecesi $est;")
                                 }
                             }
                             if (plural.isNotEmpty()) {
                                 val color = if (plural.endsWith("s")) textColor else Color(0xFFD84315)
                                 withStyle(style = plainStyle) {
-                                    append("复数 ")
+                                    append("Çoğul Hali ")
                                 }
                                 withStyle(style = plainStyle.copy(color = color)) {
                                     append(plural)
@@ -2083,7 +2081,7 @@ fun Morphology(
 }
 
 /**
- * 英语定义组件
+ * İngilizce tanım bileşeni
  */
 @Composable
 fun Definition(
@@ -2094,8 +2092,8 @@ fun Definition(
     fontSize: TextUnit
 ) {
     if (definitionVisible && (isChangeVideoBounds || !isPlaying )) {
-        // 计算行数,用于判断是否显示滚动条
-        // 通过原始字符串长度减去去掉换行符后的长度，得到换行符的个数
+        // Satır sayısını hesapla, kaydırma çubuğunun gösterilip gösterilmeyeceğine karar vermek için kullanılır
+        // Orijinal dize uzunluğundan satır sonu karakterleri çıkarılmış uzunluğu çıkararak satır sonu karakterlerinin sayısını al
         val rows = word.definition.length - word.definition.replace("\n", "").length
         val width = when (fontSize) {
             MaterialTheme.typography.h5.fontSize -> {
@@ -2144,7 +2142,7 @@ fun Definition(
 }
 
 /**
- * 中文释义组件
+ * Çince anlam bileşeni
  */
 @Composable
 fun Translation(
@@ -2155,8 +2153,8 @@ fun Translation(
     fontSize: TextUnit
 ) {
     if (translationVisible && (isChangeVideoBounds || !isPlaying )) {
-        // 计算行数,用于判断是否显示滚动条
-        // 通过原始字符串长度减去去掉换行符后的长度，得到换行符的个数
+        // Satır sayısını hesapla, kaydırma çubuğunun gösterilip gösterilmeyeceğine karar vermek için kullanılır
+        // Orijinal dize uzunluğundan satır sonu karakterleri çıkarılmış uzunluğu çıkararak satır sonu karakterlerinin sayısını al
         val rows = word.translation.length - word.translation.replace("\n", "").length
         val width = when (fontSize) {
             MaterialTheme.typography.h5.fontSize -> {
@@ -2205,7 +2203,7 @@ fun Translation(
 }
 
 /**
- * 例句组件
+ * Örnek cümle bileşeni
  */
 @Composable
 fun Sentences(
@@ -2216,8 +2214,8 @@ fun Sentences(
     fontSize: TextUnit
 ) {
     if (sentencesVisible && word.pos.isNotEmpty() && (isChangeVideoBounds || !isPlaying )) {
-        // 计算行数,用于判断是否显示滚动条
-        // 通过原始字符串长度减去去掉换行符后的长度，得到换行符的个数
+        // Satır sayısını hesapla, kaydırma çubuğunun gösterilip gösterilmeyeceğine karar vermek için kullanılır
+        // Orijinal dize uzunluğundan satır sonu karakterleri çıkarılmış uzunluğu çıkararak satır sonu karakterlerinin sayısını al
         val rows = word.pos.length - word.pos.replace("\n", "").length
 
         val width = when (fontSize) {
@@ -2265,14 +2263,14 @@ fun Sentences(
     }
 }
 
-/** 字幕列表组件
- * @param captionsVisible 字幕的可见性
- * @param playTripleMap 要显示的字幕。Map 的类型参数说明：
- * - Map 的 Int      -> index,主要用于删除字幕，和更新时间轴
- * - Triple 的 Caption  -> caption.content 用于输入和阅读，caption.start 和 caption.end 用于播放视频
- * - Triple 的 String   -> 字幕对应的视频地址
- * - Triple 的 Int      -> 字幕的轨道
- * @param videoPlayerWindow 视频播放窗口
+/** Altyazı listesi bileşeni
+ * @param captionsVisible altyazıların görünürlüğü
+ * @param playTripleMap gösterilecek altyazılar. Map türü parametre açıklaması:
+ * - Map'in Int'i      -> index, esas olarak altyazıları silmek ve zaman çizelgesini güncellemek için kullanılır
+ * - Triple'ın Caption'ı  -> caption.content giriş ve okuma için, caption.start ve caption.end video oynatma için
+ * - Triple'ın String'i   -> altyazının karşılık geldiği video adresi
+ * - Triple'ın Int'i      -> altyazının parçası
+ * @param videoPlayerWindow video oynatma penceresi
  * @param isPlaying 是否正在播放视频
  * @param volume 音量
  * @param setIsPlaying 设置是否正在播放视频播放的回调
@@ -2477,12 +2475,12 @@ fun replaceSeparator(path:String): String {
 }
 
 /**
- * 获取字幕
- * @return Map 的类型参数说明：
- * Int      -> index,主要用于删除字幕，和更新时间轴
- * - Triple 的 Caption  -> caption.content 用于输入和阅读，caption.start 和 caption.end 用于播放视频
- * - Triple 的 String   -> 字幕对应的视频地址
- * - Triple 的 Int      -> 字幕的轨道
+ * Altyazıları al
+ * @return Map türü parametre açıklaması:
+ * Int      -> index, esas olarak altyazıları silmek ve zaman çizelgesini güncellemek için kullanılır
+ * - Triple'ın Caption'ı  -> caption.content giriş ve okuma için, caption.start ve caption.end video oynatma için
+ * - Triple'ın String'i   -> altyazının karşılık geldiği video adresi
+ * - Triple'ın Int'i      -> altyazının parçası
  */
 fun getPlayTripleMap(
     vocabularyType: VocabularyType,
@@ -2523,23 +2521,23 @@ fun secondsToString(seconds: Double): String {
 }
 
 /**
- * 字幕组件
- * @param isPlaying 是否正在播放
- * @param isWriteSubtitles 是否抄写字幕
- * @param captionContent 字幕的内容
- * @param textFieldValue 输入的字幕
- * @param typingResult 输入字幕的结果
- * @param checkTyping 输入字幕后被调用的回调
- * @param index 当前字幕的索引
- * @param playingIndex 正在播放的字幕索引
- * @param focusRequester 焦点请求器
- * @param focused 是否获得焦点
- * @param focusChanged 处理焦点变化的函数
- * @param playCurrentCaption 播放当前字幕的函数
- * @param captionKeyEvent 处理当前字幕的快捷键函数
- * @param selectable 是否可选择复制
- * @param setSelectable 设置是否可选择
- * @param isPlayFailed 是否路径错误
+ * Altyazı bileşeni
+ * @param isPlaying oynatılıyor mu
+ * @param isWriteSubtitles altyazılar kopyalanıyor mu
+ * @param captionContent altyazının içeriği
+ * @param textFieldValue girilen altyazı
+ * @param typingResult altyazı giriş sonucu
+ * @param checkTyping altyazı girildikten sonra çağrılan geri arama
+ * @param index mevcut altyazının dizini
+ * @param playingIndex oynatılan altyazının dizini
+ * @param focusRequester odak isteyicisi
+ * @param focused odakta mı
+ * @param focusChanged odak değişikliklerini işleme fonksiyonu
+ * @param playCurrentCaption mevcut altyazıyı oynatma fonksiyonu
+ * @param captionKeyEvent mevcut altyazı için kısayol tuşlarını işleme fonksiyonu
+ * @param selectable kopyalamak için seçilebilir mi
+ * @param setSelectable seçilebilir olup olmadığını ayarlama
+ * @param isPlayFailed yol hatalı mı
  */
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -2640,8 +2638,7 @@ fun Caption(
                     onDismissRequest = { setSelectable(false) },
                     offset = DpOffset(0.dp, (if(isWriteSubtitles)-30 else -70).dp)
                 ) {
-                    // 增加一个检查，检查字幕的字符长度，有的字幕是机器生成的，一段可能会有很多字幕，
-                    // 可能会超出限制，导致程序崩溃。
+                    // Bir kontrol ekleyin, altyazının karakter uzunluğunu kontrol edin, bazı altyazılar makine tarafından oluşturulur, bir bölümde çok fazla altyazı olabilir, sınırı aşabilir ve programın çökmesine neden olabilir.
                     val content = if(captionContent.length>400){
                        captionContent.substring(0,400)
                     }else captionContent
@@ -2684,10 +2681,10 @@ fun Caption(
                         val ctrl = LocalCtrl.current
                         val shift = if (isMacOS()) "⇧" else "Shift"
                         val text: Any = when (index) {
-                            0 -> "播放 $ctrl+$shift+Z"
-                            1 -> "播放 $ctrl+$shift+X"
-                            2 -> "播放 $ctrl+$shift+C"
-                            else -> println("字幕数量超出范围")
+                            0 -> "Oynat $ctrl+$shift+Z"
+                            1 -> "Oynat $ctrl+$shift+X"
+                            2 -> "Oynat $ctrl+$shift+C"
+                            else -> println("Altyazı sayısı aralık dışında")
                         }
                         Text(text = text.toString(), modifier = Modifier.padding(10.dp))
                     }
@@ -2714,7 +2711,7 @@ fun Caption(
             }
             if (isPlayFailed) {
                 Text(failedMessage, color = Color.Red)
-                Timer("恢复状态", false).schedule(2000) {
+                Timer("Durumu Geri Yükle", false).schedule(2000) {
                     resetPlayState()
                 }
             }
@@ -2764,8 +2761,7 @@ fun buildAnnotatedString(
 
         if (!(typingResult.isNotEmpty() && captionContent.length < typingResult.size)) {
             var remainChars = captionContent.substring(typingResult.size)
-            // 增加一个检查，检查字幕的字符长度，有的字幕是机器生成的，一段可能会有很多字幕，
-            // 可能会超出限制，导致程序崩溃。
+            // Bir kontrol ekleyin, altyazının karakter uzunluğunu kontrol edin, bazı altyazılar makine tarafından oluşturulur, bir bölümde çok fazla altyazı olabilir, sınırı aşabilir ve programın çökmesine neden olabilir.
             if (remainChars.length > 400) {
                 remainChars = remainChars.substring(0, 400)
             }
@@ -2785,7 +2781,7 @@ fun buildAnnotatedString(
     }
 }
 
-/** 删除按钮*/
+/** Silme düğmesi*/
 @Composable
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 fun DeleteButton(onClick:()->Unit){
@@ -2800,7 +2796,7 @@ fun DeleteButton(onClick:()->Unit){
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Text(text = "删除单词")
+                    Text(text = "Kelimeyi Sil")
                     CompositionLocalProvider(LocalContentAlpha provides 0.5f) {
                         val shift = if (isMacOS()) "⇧" else "Shift"
                         Text(text = " $shift + Delete ")
@@ -2829,7 +2825,7 @@ fun DeleteButton(onClick:()->Unit){
         }
     }
 }
-/** 编辑按钮*/
+/** Düzenleme düğmesi*/
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun EditButton(onClick: () -> Unit){
@@ -2840,7 +2836,7 @@ fun EditButton(onClick: () -> Unit){
                 border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                 shape = RectangleShape
             ) {
-                Text(text = "编辑", modifier = Modifier.padding(10.dp))
+                Text(text = "Düzenle", modifier = Modifier.padding(10.dp))
             }
         },
         delayMillis = 300,
@@ -2863,7 +2859,7 @@ fun EditButton(onClick: () -> Unit){
     }
 }
 
-/** 困难单词按钮 */
+/** Zor kelimeler düğmesi */
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun HardButton(
@@ -2883,7 +2879,7 @@ fun HardButton(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    val text = if(contains) "从困难词库中移除" else "添加到困难词库"
+                    val text = if(contains) "Zor Kelimelerden Kaldır" else "Zor Kelimelere Ekle"
                     Text(text = text)
                     CompositionLocalProvider(LocalContentAlpha provides 0.5f) {
                         Text(text = " $ctrl + ")
@@ -2912,7 +2908,7 @@ fun HardButton(
     }
 }
 
-/** 熟悉单词按钮 */
+/** Bildik kelimeler düğmesi */
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun FamiliarButton(
@@ -2930,7 +2926,7 @@ fun FamiliarButton(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Text(text = "移动到熟悉词库")
+                    Text(text = "Bildiklerine Taşı")
                     CompositionLocalProvider(LocalContentAlpha provides 0.5f) {
                         Text(text = " $ctrl + Y")
                     }
@@ -2959,7 +2955,7 @@ fun FamiliarButton(
     }
 }
 
-/** 使用快捷键 Ctrl + I,把当前单词加入到困难单词时显示 0.3 秒后消失 */
+/** Ctrl + I kısayol tuşunu kullanarak mevcut kelimeyi zor kelimelere eklediğinizde 0.3 saniye görüntülenir ve sonra kaybolur */
 @Composable
 fun BookmarkButton(
     modifier: Modifier,
@@ -2975,7 +2971,7 @@ fun BookmarkButton(
                 tint = tint,
             )
             SideEffect{
-                Timer("不显示 Bookmark 图标", false).schedule(300) {
+                Timer("Yer İmi Simgesini Gizle", false).schedule(300) {
                     disappear()
                 }
             }
@@ -2983,7 +2979,7 @@ fun BookmarkButton(
 
 }
 
-/** 复制按钮 */
+/** Kopyala düğmesi */
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun CopyButton(wordValue:String){
@@ -2999,7 +2995,7 @@ fun CopyButton(wordValue:String){
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Text(text = "复制")
+                    Text(text = "Kopyala")
                     CompositionLocalProvider(LocalContentAlpha provides 0.5f) {
                         Text(text = " $ctrl + C")
                     }
@@ -3034,9 +3030,9 @@ fun CopyButton(wordValue:String){
 
 
 /**
- * @param currentWord 当前正在记忆的单词
- * @param index links 的 index
- * @return Triple<Caption, String, Int>? ,视频播放器需要的信息
+ * @param currentWord mevcut ezberlenen kelime
+ * @param index linklerin dizini
+ * @return Triple<Caption, String, Int>? , video oynatıcının ihtiyaç duyduğu bilgiler
  */
 fun getPayTriple(currentWord: Word, index: Int): Triple<Caption, String, Int>? {
 
@@ -3049,13 +3045,13 @@ fun getPayTriple(currentWord: Word, index: Int): Triple<Caption, String, Int>? {
     }
 }
 
-/**  设置处理拖放文件的函数
- *  @param window  主窗口
- *  @param appState 应用程序的全局状态
- *  @param wordScreenState 单词记忆界面的状态
- *  @param showVideoPlayer 显示视频播放器
- *  @param setVideoPath 设置视频路径
- *  @param setVideoVocabulary 设置视频对应的词库
+/**  Sürükle ve bırak dosyalarını işleme fonksiyonunu ayarla
+ *  @param window  ana pencere
+ *  @param appState uygulama genel durumu
+ *  @param wordScreenState kelime ezberleme arayüzü durumu
+ *  @param showVideoPlayer video oynatıcıyı göster
+ *  @param setVideoPath video yolunu ayarla
+ *  @param setVideoVocabulary video için karşılık gelen kelime dağarcığını ayarla
  * */
 @OptIn(ExperimentalSerializationApi::class)
 fun setWindowTransferHandler(
@@ -3077,7 +3073,7 @@ fun setWindowTransferHandler(
                     val index = appState.findVocabularyIndex(file)
                     appState.changeVocabulary(file,wordScreenState,index)
                 } else {
-                    JOptionPane.showMessageDialog(window, "词库已打开")
+                    JOptionPane.showMessageDialog(window, "Kelime dağarcığı zaten açık.")
                 }
 
             } else if (file.extension == "mkv" || file.extension == "mp4") {
@@ -3085,7 +3081,7 @@ fun setWindowTransferHandler(
                 setVideoPath(file.absolutePath)
                 setVideoVocabulary(wordScreenState.vocabularyPath)
             } else {
-                JOptionPane.showMessageDialog(window, "文件格式不支持")
+                JOptionPane.showMessageDialog(window, "Dosya formatı desteklenmiyor.")
             }
         }
     )

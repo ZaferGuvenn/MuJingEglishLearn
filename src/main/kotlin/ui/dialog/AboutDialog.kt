@@ -23,7 +23,7 @@ import ui.components.LinkText
 import ui.window.windowBackgroundFlashingOnCloseFixHack
 
 /**
- * 关于 对话框
+ * Hakkında İletişim Kutusu
  */
 @Composable
 fun AboutDialog(
@@ -31,7 +31,7 @@ fun AboutDialog(
     close: () -> Unit
 ) {
     DialogWindow(
-        title = "关于",
+        title = "Hakkında",
         icon = painterResource("logo/logo.png"),
         onCloseRequest = { close() },
         resizable = false,
@@ -58,22 +58,22 @@ fun AboutDialog(
                     backgroundColor = Color.Transparent
                 ) {
                     Tab(
-                        text = { Text("关于") },
+                        text = { Text("Hakkında") },
                         selected = state == 0,
                         onClick = { state = 0 }
                     )
                     Tab(
-                        text = { Text("第三方软件") },
+                        text = { Text("Üçüncü Parti Yazılımlar") },
                         selected = state == 1,
                         onClick = { state = 1 }
                     )
                     Tab(
-                        text = { Text("致谢") },
+                        text = { Text("Teşekkürler") },
                         selected = state == 2,
                         onClick = { state = 2 }
                     )
                     Tab(
-                        text = { Text("许可") },
+                        text = { Text("Lisans") },
                         selected = state == 3,
                         onClick = { state = 3 }
                     )
@@ -100,26 +100,26 @@ fun AboutDialog(
                                 modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
                             ) {
                                 SelectionContainer {
-                                    Text("幕境 $version")
+                                    Text("MuJing $version")
                                 }
                             }
 
                             Row(modifier = Modifier.fillMaxWidth().padding(top = 20.dp)){
-                                Text("GitHub 地址：     ")
+                                Text("GitHub Adresi:     ")
                                 LinkText(
                                     text = "https://github.com/tangshimin/MuJing",
                                     url =  "https://github.com/tangshimin/MuJing"
                                 )
                             }
                             Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)){
-                                Text("用户反馈地址：   ")
+                                Text("Kullanıcı Geri Bildirim Adresi:   ")
                                 LinkText(
                                     text = "https://support.qq.com/products/594079/",
                                     url =  "https://support.qq.com/products/594079/"
                                 )
                             }
                             Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)){
-                                Text("邮箱：                ",modifier = Modifier.padding(end = 1.dp))
+                                Text("E-posta:                ",modifier = Modifier.padding(end = 1.dp))
                                 LinkText(
                                     text = "tang_shimin@qq.com",
                                     url = "mailto:tang_shimin@qq.com"
@@ -148,12 +148,12 @@ fun AboutDialog(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier.fillMaxWidth()
                                 ){
-                                    Text("软件")
-                                    Text("License")
+                                    Text("Yazılım")
+                                    Text("Lisans")
                                 }
 
                                 Divider()
-                                // 各个平台的版本不一致，windows 版本是 3.0.17 ,mac intel 版本是 3.0.20 mac m1 版本是 3.0.21
+                                // Farklı platformlardaki sürümler tutarsızdır; Windows sürümü 3.0.17, Mac Intel sürümü 3.0.20, Mac M1 sürümü 3.0.21
                                 val vlcVersion = if(isWindows()){
                                     "3.0.17.4"
                                 }else if(isMacOS()){
@@ -434,24 +434,24 @@ fun AboutDialog(
                                 Row(horizontalArrangement = Arrangement.Start,
                                     modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp)){
 
-                                    Text("本地词典：")
+                                    Text("Yerel Sözlük:")
                                     LinkText(
-                                        text = "ECDICT 本地词典",
+                                        text = "ECDICT Yerel Sözlük",
                                         url = "https://github.com/skywind3000/ECDICT"
                                     )
                                 }
                                 Row(horizontalArrangement = Arrangement.Start,
                                     modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp)){
-                                    Text("单词发音：单词的语音数据来源于 ")
+                                    Text("Kelime Telaffuzu: Kelime ses verileri ")
                                     LinkText(
-                                        text = "有道词典",
+                                        text = "Youdao Sözlük",
                                         url = "https://www.youdao.com/"
                                     )
-                                    Text(" 在线发音 API")
+                                    Text(" çevrimiçi telaffuz API'sinden gelmektedir.")
                                 }
                                 Row(horizontalArrangement = Arrangement.Start,
                                     modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp)){
-                                    Text("本程序使用的音效：")
+                                    Text("Bu programda kullanılan ses efektleri:")
                                     LinkText(
                                         text = "Success!!",
                                         url = "https://freesound.org/people/jobro/sounds/60445/"
@@ -481,42 +481,42 @@ fun AboutDialog(
 
                         Column (Modifier.padding(start = 18.dp,top = 20.dp,end = 18.dp,bottom = 20.dp)){
                             Row(horizontalArrangement = Arrangement.Start){
-                                Text("感谢 ")
+                                Text("Teşekkürler ")
                                 LinkText(
                                     text = "qwerty-learner",
                                     url = "https://github.com/Kaiyiwing/qwerty-learner"
                                 )
-                                Text("的所有贡献者，让我有机会把我曾经放弃的一个 app，又找到新的方式实现。")
+                                Text(" tüm katkıda bulunanlara, bir zamanlar vazgeçtiğim bir uygulamayı yeni bir yolla hayata geçirme fırsatı verdikleri için.")
 
                             }
                             Row{
-                                Text("感谢 ")
+                                Text("Teşekkürler ")
                                 LinkText(
                                     text = "skywind3000",
                                     url = "https://github.com/skywind3000"
                                 )
-                                Text("开源")
+                                Text(" açık kaynaklı")
                                 LinkText(
                                     text = "ECDICT",
                                     url = "https://github.com/skywind3000/ECDICT"
                                 )
-                                Text("。")
+                                Text(".")
                             }
                             Row{
-                                Text("感谢 ")
+                                Text("Teşekkürler ")
                                 LinkText(
                                     text = "libregd",
                                     url = "https://github.com/libregd"
                                 )
-                                Text(" 为本项目贡献了一些交互设和及非常好的功能建议，以及为 Typing Learner 设计 Logo。")
+                                Text(" bu projeye bazı etkileşim tasarımları ve çok iyi özellik önerileriyle katkıda bulundu ve Typing Learner için logo tasarladı.")
                             }
                             Row{
-                                Text("感谢")
+                                Text("Teşekkürler")
                                 LinkText(
-                                    text = "网易有道",
+                                    text = "NetEase Youdao",
                                     url = "https://www.youdao.com/"
                                 )
-                                Text("为本项目提供专业的词典发音。")
+                                Text(" bu proje için profesyonel sözlük telaffuzları sağladı.")
                             }
                         }
 
@@ -550,7 +550,7 @@ fun AboutDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     OutlinedButton(onClick = { close() }) {
-                        Text("确定")
+                        Text("Tamam")
                     }
                 }
             }

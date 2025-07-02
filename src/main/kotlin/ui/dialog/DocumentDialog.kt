@@ -40,7 +40,7 @@ fun DocumentWindow(
     setCurrentPage:(String) -> Unit
 ) {
     Window(
-        title = "使用手册",
+        title = "Kullanım Kılavuzu",
         icon = painterResource("logo/logo.png"),
         onCloseRequest = { close() },
         resizable = true,
@@ -68,7 +68,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "features")selectedColor else MaterialTheme.colors.background )
                                 .clickable { setCurrentPage("features" )}) {
-                            Text("主要功能", modifier = Modifier.padding(start = 16.dp))
+                            Text("Ana Özellikler", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "features"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -81,7 +81,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "vocabulary")selectedColor else MaterialTheme.colors.background )
                                 .clickable { setCurrentPage("vocabulary" )}) {
-                            Text("词库介绍", modifier = Modifier.padding(start = 16.dp))
+                            Text("Kelime Dağarcığı Tanıtımı", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "vocabulary"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -94,7 +94,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "tips")selectedColor else MaterialTheme.colors.background )
                                 .clickable { setCurrentPage("tips" )}) {
-                            Text("使用技巧", modifier = Modifier.padding(start = 16.dp))
+                            Text("Kullanım İpuçları", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "tips"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -107,7 +107,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "document")selectedColor else MaterialTheme.colors.background )
                                 .clickable {  setCurrentPage("document") }) {
-                            Text("用文档生成词库", modifier = Modifier.padding(start = 16.dp))
+                            Text("Belgeden Kelime Dağarcığı Oluştur", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "document"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -120,7 +120,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "subtitles")selectedColor else MaterialTheme.colors.background )
                                 .clickable {  setCurrentPage("subtitles") }) {
-                            Text("用字幕生成词库", modifier = Modifier.padding(start = 16.dp))
+                            Text("Altyazıdan Kelime Dağarcığı Oluştur", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "subtitles"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -133,7 +133,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "video")selectedColor else MaterialTheme.colors.background )
                                 .clickable {  setCurrentPage("video")}) {
-                            Text("用视频生成词库", modifier = Modifier.padding(start = 16.dp))
+                            Text("Videodan Kelime Dağarcığı Oluştur", modifier = Modifier.padding(start = 16.dp))
                             if( currentPage == "video"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -146,7 +146,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "Danmaku")selectedColor else MaterialTheme.colors.background )
                                 .clickable { setCurrentPage("Danmaku") }) {
-                            Text("如何打开单词弹幕", modifier = Modifier.padding(start = 16.dp))
+                            Text("Kelime Baloncuğu Nasıl Açılır", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "Danmaku"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -159,7 +159,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "linkVocabulary")selectedColor else MaterialTheme.colors.background )
                                 .clickable {  setCurrentPage("linkVocabulary") }) {
-                            Text("链接字幕词库", modifier = Modifier.padding(start = 16.dp))
+                            Text("Altyazı Kelime Dağarcığını Bağla", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "linkVocabulary"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -172,7 +172,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "linkCaptions")selectedColor else MaterialTheme.colors.background )
                                 .clickable {  setCurrentPage("linkCaptions") }) {
-                            Text("链接字幕", modifier = Modifier.padding(start = 16.dp))
+                            Text("Altyazıyı Bağla", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "linkCaptions"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -186,7 +186,7 @@ fun DocumentWindow(
                                 .height(48.dp)
                                 .background( if(currentPage == "download")selectedColor else MaterialTheme.colors.background )
                                 .clickable { setCurrentPage("download") }) {
-                            Text("视频资源下载", modifier = Modifier.padding(start = 16.dp))
+                            Text("Video Kaynaklarını İndir", modifier = Modifier.padding(start = 16.dp))
                             if(currentPage == "download"){
                                 Spacer(Modifier.fillMaxHeight().width(2.dp).background(MaterialTheme.colors.primary))
                             }
@@ -234,14 +234,14 @@ fun DocumentWindow(
     }
 }
 
-const val frequencyText = "\n英国国家语料库(BNC) 和当代语料库(COCA)里的词频顺序介绍\n" +
-        "BNC 词频统计的是最近几百年的历史各类英文资料，而当代语料库只统计了最近 20 年的，为什么两者都要提供呢？\n" +
-        "很简单，quay（码头）这个词在当代语料库(COCA)里排两万以外，你可能觉得是个没必要掌握的生僻词，而 BNC \n" +
-        "里面却排在第 8906 名，基本算是一个高频词，为啥呢？可以想象过去航海还是一个重要的交通工具，所以以往的各类\n" +
-        "文字资料对这个词提的比较多，你要看懂 19 世纪即以前的各类名著，你会发现 BNC 的词频很管用。而你要阅读各类\n" +
-        "现代杂志，当代语料库的作用就体现出来了，比如 Taliban（塔利班），在 BNC 词频里基本就没收录（没进前 20 万\n" +
-        "词汇），而在当代语料库里，它已经冒到 6089 号了，高频中的高频。BNC 较为全面和传统，针对性学习能帮助你阅读\n" +
-        "各类国外帝王将相的文学名著，当代语料库较为现代和实时，以和科技紧密相关。所以两者搭配，干活不累。[2]\n"
+const val frequencyText = "\nİngiliz Ulusal Dil Derlemi (BNC) ve Çağdaş Amerikan İngilizcesi Derlemi (COCA) içindeki kelime sıklığı sıralamasına giriş\n" +
+        "BNC kelime sıklığı istatistikleri son birkaç yüz yıldaki çeşitli İngilizce materyallerin geçmişini kapsarken, Çağdaş Dil Derlemi yalnızca son 20 yılı kapsar. Neden her ikisi de sağlanmaktadır?\n" +
+        "Çok basit, 'quay' (rıhtım) kelimesi Çağdaş Dil Derlemi'nde (COCA) yirmi binin üzerindedir, bu yüzden öğrenilmesi gerekmeyen nadir bir kelime olduğunu düşünebilirsiniz, ancak BNC'de\n" +
+        "8906. sırada yer alır, bu da onu temelde sık kullanılan bir kelime yapar. Neden mi? Geçmişte denizciliğin hala önemli bir ulaşım aracı olduğunu hayal edebilirsiniz, bu nedenle geçmişteki çeşitli\n" +
+        "yazılı materyallerde bu kelimeden daha sık bahsedilmiştir. 19. yüzyıl ve öncesine ait çeşitli klasikleri anlamak istiyorsanız, BNC kelime sıklığının çok faydalı olduğunu göreceksiniz. Ve çeşitli\n" +
+        "modern dergileri okumak istiyorsanız, Çağdaş Dil Derlemi'nin rolü belirginleşir. Örneğin, 'Taliban', BNC kelime sıklığında temel olarak yer almaz (ilk 200.000\n" +
+        "kelime dağarcığına girmez), ancak Çağdaş Dil Derlemi'nde 6089 numaraya yükselmiştir, sık kullanılanlar arasında sık kullanılır. BNC daha kapsamlı ve gelenekseldir ve hedeflenmiş öğrenme, çeşitli\n" +
+        "yabancı edebi klasikleri okumanıza yardımcı olabilir. Çağdaş Dil Derlemi daha modern ve günceldir ve teknolojiyle yakından ilişkilidir. Bu nedenle, ikisini birleştirmek işleri kolaylaştırır.[2]\n"
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FrequencyRelatedLink(){
@@ -293,7 +293,7 @@ fun FeaturesPage(){
                 Spacer(Modifier.width(200.dp))
             }
 
-            Text("记忆单词的时候，会自动播放单词的读音，然后用键盘打字练习拼写，每个单词都可以输入多次，直到记住为止。从视频生成的词库(单词本)，可以抄写单词对应的字幕，播放单词对应的视频片段。默认使用 Enter 键切换下一个单词。\n\n")
+            Text("Kelimeleri ezberlerken, kelimenin telaffuzu otomatik olarak oynatılır, ardından yazarak pratik yapmak için klavyeyi kullanırsınız. Her kelime hatırlanana kadar birden çok kez girilebilir. Videolardan oluşturulan kelime dağarcıklarından (kelime defterleri), kelimelere karşılık gelen altyazıları kopyalayabilir ve kelimelere karşılık gelen video klipleri oynatabilirsiniz. Varsayılan olarak bir sonraki kelimeye geçmek için Enter tuşu kullanılır.\n\n")
 
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -308,7 +308,7 @@ fun FeaturesPage(){
 
 
 
-            Text("字幕浏览器，可以浏览字幕，练习跟读美剧、电影、TED演讲，可以选择性的播放一条或多条字幕，如果要播放多行字幕，点击左边的数字就可以开启，点击 5 和 10 再点击左边的播放按钮，就会从第5行开始播放，到第10行结束。还可以抄写字幕。\n\n")
+            Text("Altyazı görüntüleyici, altyazılara göz atmanıza, Amerikan dizileri, filmler ve TED konuşmalarıyla gölgeleme alıştırması yapmanıza olanak tanır. İsteğe bağlı olarak bir veya daha fazla altyazı satırını oynatabilirsiniz. Birden çok satırı oynatmak istiyorsanız, etkinleştirmek için soldaki numaraya tıklayın. 5 ve 10'a tıklayıp ardından soldaki oynat düğmesine tıklarsanız, 5. satırdan başlayıp 10. satırda sona erecektir. Altyazıları da kopyalayabilirsiniz.\n\n")
 
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -321,8 +321,8 @@ fun FeaturesPage(){
                 Spacer(Modifier.width(200.dp))
             }
 
-            Text("以弹幕的形式复习单词。播放电影时，添加用电影生成的词库到播放器，单词会以弹幕的形式出现。要查看某个单词的中文解释，只需要输入单词或对应的数字就可以查看。" +
-                    "打开弹幕的快捷方式：如果正在记忆某个由视频或字幕生成的词库，把视频拖放到记忆单词界面，就可以快速的打开视频和弹幕。\n\n")
+            Text("Kelimeleri akan yazı (Danmaku) biçiminde gözden geçirin. Bir film oynatırken, filmden oluşturulan kelime dağarcığını oynatıcıya ekleyin; kelimeler akan yazı olarak görünecektir. Belirli bir kelimenin Çince açıklamasını görüntülemek için kelimeyi veya karşılık gelen numarayı girmeniz yeterlidir." +
+                    "Akan yazıyı açmanın kısayolu: Video veya altyazılardan oluşturulmuş bir kelime dağarcığını ezberliyorsanız, videoyu kelime ezberleme arayüzüne sürükleyip bırakarak videoyu ve akan yazıyı hızla açabilirsiniz.\n\n")
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()){
@@ -338,7 +338,7 @@ fun FeaturesPage(){
             Row(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()){
-                Text("抄写文本，可以抄写 txt 格式的文本")
+                Text("Metin kopyalama, txt formatındaki metinleri kopyalayabilirsiniz")
                 Spacer(Modifier.width(200.dp))
             }
 
@@ -357,20 +357,20 @@ fun FeaturesPage(){
 fun VocabularyPage(){
     val ctrl = LocalCtrl.current
     Column (Modifier.fillMaxSize().padding(start = 16.dp, top = 16.dp,end = 16.dp)){
-        Text("词库可以分为两类：\n" +
-                "     • 文档词库，软件内置的词库就是文档词库，另外使用文档生成的词库也是文档词库。\n" +
-                "     • 字幕词库，字幕词库也分为两类：\n" +
-                "         • MKV 词库，使用MKV或MP4视频内置字幕生成的词库。\n" +
-                "         • SUBTITLES 词库，使用外部字幕生成的词库。\n\n" +
-                "字幕词库和 MKV 词库里的字幕可以链接到文档词库里的单词。\n" +
-                "建议把字幕词库和相关视频文件放到一个文件夹，这样就可以把字幕词库和视频一起分享给朋友了。生成字幕词库后不要修改关联视频的名称。\n"
+        Text("Kelime dağarcıkları iki kategoriye ayrılabilir:\n" +
+                "     • Belge kelime dağarcıkları: Yazılımdaki dahili kelime dağarcıkları belge kelime dağarcıklarıdır ve belgeler kullanılarak oluşturulan kelime dağarcıkları da belge kelime dağarcıklarıdır.\n" +
+                "     • Altyazı kelime dağarcıkları: Altyazı kelime dağarcıkları da iki kategoriye ayrılır:\n" +
+                "         • MKV kelime dağarcıkları: MKV veya MP4 videolarındaki dahili altyazılar kullanılarak oluşturulan kelime dağarcıkları.\n" +
+                "         • SUBTITLES kelime dağarcıkları: Harici altyazılar kullanılarak oluşturulan kelime dağarcıkları.\n\n" +
+                "Altyazı kelime dağarcıklarındaki ve MKV kelime dağarcıklarındaki altyazılar, belge kelime dağarcıklarındaki kelimelere bağlanabilir.\n" +
+                "Altyazı kelime dağarcıklarını ve ilgili video dosyalarını aynı klasöre koymanız önerilir, böylece altyazı kelime dağarcıklarını ve videoları arkadaşlarınızla birlikte paylaşabilirsiniz. Altyazı kelime dağarcığını oluşturduktan sonra ilişkili videonun adını değiştirmeyin.\n"
         )
 
-        Text("熟悉词库：非常熟悉，不要再记忆的单词。\n" +
-                "记忆单词的时候，觉得一个单词非常熟悉，不用再记忆了，就可以使用快捷键 $ctrl + Y 把这个单词加入到熟悉词库。\n" +
-                "生成词库的时候，在左边的过滤区选择熟悉词库，就可以批量的过滤熟悉词库。\n")
+        Text("Bildik kelimeler: Çok tanıdık, artık ezberlenmesi gerekmeyen kelimeler.\n" +
+                "Kelimeleri ezberlerken, bir kelimenin çok tanıdık olduğunu ve artık ezberlenmesi gerekmediğini düşünüyorsanız, bu kelimeyi bildiklerinize eklemek için $ctrl + Y kısayol tuşunu kullanabilirsiniz.\n" +
+                "Bir kelime dağarcığı oluştururken, soldaki filtre alanında bildik kelimeleri seçerek bunları toplu olarak filtreleyebilirsiniz.\n")
 
-        Text("困难词库：很难拼写的单词，比如发音不规则的单词或者比较长的单词，可以使用快捷键 $ctrl + I 把这个单词添加到困难词库。\n")
+        Text("Zor kelimeler: Yazılması zor kelimeler, örneğin düzensiz telaffuzlu kelimeler veya daha uzun kelimeler. Bu kelimeyi zor kelimeler listesine eklemek için $ctrl + I kısayol tuşunu kullanabilirsiniz.\n")
     }
 }
 
@@ -382,10 +382,10 @@ fun Tips(){
         Row(Modifier.fillMaxWidth()){
             val annotatedString = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold,color = MaterialTheme.colors.onBackground)) {
-                    append("复制单词")
+                    append("Kelimeyi Kopyala")
                 }
                 withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
-                    append("，如果要复制正在抄写的字幕或文本，可以先把光标定位到要复制的行，然后按 ")
+                    append(", kopyalamakta olduğunuz altyazıyı veya metni kopyalamak istiyorsanız, önce imleci kopyalamak istediğiniz satıra getirin, ardından ")
                 }
 
                 withStyle(style = SpanStyle(color =  MaterialTheme.colors.primary,background = background)) {
@@ -393,7 +393,7 @@ fun Tips(){
                 }
 
                 withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
-                    append("，就可以复制单词了。 ")
+                    append(" tuşuna basın, böylece kelimeyi kopyalayabilirsiniz. ")
                 }
             }
             Text(annotatedString)
@@ -401,10 +401,10 @@ fun Tips(){
         Row(Modifier.fillMaxWidth().padding(top = 10.dp)){
             val annotatedString = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold,color = MaterialTheme.colors.onBackground)) {
-                    append("快速打开视频弹幕")
+                    append("Video Akan Yazısını Hızla Aç")
                 }
                 withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
-                    append("，如果正在记忆某个由视频生成的词库，把视频拖放到记忆单词界面，就可以快速的打开视频和弹幕。")
+                    append(", videodan oluşturulmuş bir kelime dağarcığını ezberliyorsanız, videoyu kelime ezberleme arayüzüne sürükleyip bırakarak videoyu ve akan yazıyı hızla açabilirsiniz.")
                 }
             }
             Text(annotatedString)
@@ -412,11 +412,11 @@ fun Tips(){
         Row(Modifier.fillMaxWidth().padding(top = 10.dp)){
             val annotatedString = buildAnnotatedString {
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold,color = MaterialTheme.colors.onBackground)) {
-                    append("播放多行字幕")
+                    append("Birden Fazla Altyazı Satırını Oynat")
                 }
                 withStyle(style = SpanStyle(color = MaterialTheme.colors.onBackground)) {
-                    append(", 在字幕浏览器界面，如果要播放多行字幕，点击左边的数字就可以开启，点击 5 和 10 再点击左边的播放按钮，" +
-                            "就会从第5行开始播放，到第10行结束。快捷键 ")
+                    append(", altyazı görüntüleyici arayüzünde, birden fazla altyazı satırını oynatmak istiyorsanız, etkinleştirmek için soldaki numaraya tıklayın. 5 ve 10'a tıklayıp ardından soldaki oynat düğmesine tıklarsanız, " +
+                            "5. satırdan başlayıp 10. satırda sona erecektir. Kısayol tuşu ")
                 }
                 withStyle(style = SpanStyle(color =  MaterialTheme.colors.primary,background = background)) {
                     append("$ctrl + N ")
@@ -435,11 +435,11 @@ fun DocumentPage(){
         Column (Modifier.padding(start = 16.dp, top = 16.dp,end = 16.dp).verticalScroll(stateVertical)){
             val theme = if(MaterialTheme.colors.isLight) "light" else "dark"
 
-            Text("\n1. 把鼠标移动到屏幕顶部的菜单栏 > 点击词库 > 再点击 用文档生成词库，然后选择文档，可以拖放文档到窗口快速打开，\n" +
-                    "    我这里选择的是一个 android 开发英文文档[1]，有 1300 页。点击开始按钮。\n")
+            Text("\n1. Fareyi ekranın üst kısmındaki menü çubuğuna getirin > Kelime Dağarcığı'na tıklayın > ardından Belgeden Kelime Dağarcığı Oluştur'a tıklayın, sonra belgeyi seçin. Hızlı açmak için belgeyi pencereye sürükleyip bırakabilirsiniz,\n" +
+                    "    Burada 1300 sayfalık bir Android geliştirme İngilizce belgesi seçtim[1]. Başlat düğmesine tıklayın.\n")
             Image(
                 painter = painterResource("screenshot/document-$theme/document-1.png"),
-                contentDescription = "document-step-1",
+                contentDescription = "document-step-1", // Belge Adım 1
                 modifier = Modifier.width(640.dp).height(150.dp).padding(start = 20.dp)
                     .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)))
             )
@@ -448,7 +448,7 @@ fun DocumentPage(){
             val blueColor = if (MaterialTheme.colors.isLight) Color.Blue else Color(41, 98, 255)
             Row (verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(top = 30.dp)){
-                Text("[1]演示文档 AndroidNotesForProfessionals 来源于：")
+                Text("[1]Örnek belge AndroidNotesForProfessionals şuradan alınmıştır:")
                 val annotatedString1 = buildAnnotatedString {
                     pushStringAnnotation(tag = "android", annotation = "https://goalkicker.com/AndroidBook/")
                     withStyle(style = SpanStyle(color = blueColor)) {
@@ -481,89 +481,89 @@ fun DocumentPage(){
 @Composable
 fun SameSteps(){
     val theme = if(MaterialTheme.colors.isLight) "light" else "dark"
-    Text("\n在右边的预览区可以看到程序生成的单词。如果你不想删除任何单词就可以直接点击右下角的保存按钮，\n" +
-            "如果有很多数字，或者很多熟悉的单词不想再记忆了，就选择左边的过滤选项过滤掉不需要的单词。\n",
+    Text("\nSağdaki önizleme alanında program tarafından oluşturulan kelimeleri görebilirsiniz. Herhangi bir kelimeyi silmek istemiyorsanız, doğrudan sağ alt köşedeki kaydet düğmesine tıklayabilirsiniz,\n" +
+            "Çok sayıda rakam veya artık ezberlemek istemediğiniz birçok tanıdık kelime varsa, gereksiz kelimeleri filtrelemek için soldaki filtre seçeneğini seçin.\n",
         modifier = Modifier.padding(start = 20.dp)
         )
 
-    Text("\n2. 你可以点击左边的过滤词频顺序为0的词，词频为 0 的词包括简单的字母和数字还有一些没有收录进词频顺序的生僻词。")
+    Text("\n2. Soldaki, kelime sıklığı sırası 0 olan kelimeleri filtrele'ye tıklayabilirsiniz. Kelime sıklığı 0 olan kelimeler arasında basit harfler ve rakamların yanı sıra kelime sıklığı sırasına dahil edilmemiş bazı nadir kelimeler bulunur.")
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(start = 20.dp)){
         Spacer(Modifier.width(3.dp).height(180.dp).background(if(MaterialTheme.colors.isLight) Color.LightGray else Color.DarkGray))
-        Text(frequencyText, modifier = Modifier.padding(start = 10.dp, bottom = 5.dp))
+        Text(frequencyText, modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)) // frequencyText zaten çevrildi
     }
 
     Column {
         Image(
             painter = painterResource("screenshot/mkv-$theme/MKV-2.png"),
-            contentDescription = "step-2",
+            contentDescription = "step-2", // Adım 2
             modifier = Modifier.width(405.dp).height(450.dp).padding(start = 20.dp)
         )
         Divider(Modifier.width(405.dp).padding(start = 20.dp))
     }
 
-    Text("\n3. 可以勾选【过滤 COCA 词频前 1000 的单词】或【过滤 BNC 词频前 1000 的单词】，\n" +
-            "    过滤最常见的 1000 词，这个值可以改成 2000，或 3000.")
+    Text("\n3. [İlk 1000 COCA kelime sıklığını filtrele] veya [İlk 1000 BNC kelime sıklığını filtrele] seçeneklerini işaretleyebilirsiniz,\n" +
+            "    En yaygın 1000 kelimeyi filtreleyin, bu değer 2000 veya 3000 olarak değiştirilebilir.")
     Column {
         Image(
             painter = painterResource("screenshot/mkv-$theme/MKV-7.png"),
-            contentDescription = "step-3",
+            contentDescription = "step-3", // Adım 3
             modifier = Modifier.width(406.dp).height(450.dp).padding(start = 20.dp)
         )
         Divider(Modifier.width(406.dp).padding(start = 20.dp))
     }
-    Text("\n4. 还可以把所有的派生词替换为原型词。")
+    Text("\n4. Ayrıca tüm türetilmiş kelimeleri kök kelimelerle değiştirebilirsiniz.")
     Column {
         Image(
             painter = painterResource("screenshot/mkv-$theme/MKV-3.png"),
-            contentDescription = "step-4",
+            contentDescription = "step-4", // Adım 4
             modifier = Modifier.width(405.dp).height(450.dp).padding(start = 20.dp)
         )
         Divider(Modifier.width(405.dp).padding(start = 20.dp))
     }
 
-    Text("\n5. 如果有数字还可用过滤数字。")
+    Text("\n5. Rakamlar varsa, rakamları filtrelemek için de kullanabilirsiniz.")
     Column {
 
         Image(
             painter = painterResource("screenshot/mkv-$theme/MKV-4.png"),
-            contentDescription = "step-5",
+            contentDescription = "step-5", // Adım 5
             modifier = Modifier.width(405.dp).height(450.dp).padding(start = 20.dp)
         )
         Divider(Modifier.width(405.dp).padding(start = 20.dp))
     }
 
-    Text("\n6. 经过前面的过滤之后，还是有你很熟悉的词，比如你已经过了很熟悉牛津核心5000词了，\n" +
-            "    点击左边的内置词库，然后选择：牛津核心词 -> The_Oxford_5000，选择之后的单词是不是少了很多。")
+    Text("\n6. Önceki filtrelemeden sonra hala çok tanıdık kelimeleriniz varsa, örneğin Oxford Core 5000 kelimesine zaten çok aşinaysanız,\n" +
+            "    Soldaki dahili kelime dağarcığına tıklayın, ardından şunu seçin: Oxford Temel Kelimeler -> The_Oxford_5000. Seçimden sonra kelime sayısı önemli ölçüde azaldı mı?")
     Column {
         Image(
             painter = painterResource("screenshot/mkv-$theme/MKV-5.png"),
-            contentDescription = "step-6",
+            contentDescription = "step-6", // Adım 6
             modifier = Modifier.width(475.dp).height(636.dp).padding(start = 20.dp)
         )
         Divider(Modifier.width(475.dp).padding(start = 20.dp))
     }
 
-    Text("\n7. 如果还有你熟悉的词，可以先把排序改成【按 COCA 词频排序】或【按 BNC 词频排序】，\n" +
-            "    这样熟悉的单词就会出现在最前面。再使用鼠标单击单词的右上角的删除按钮，删除的单词会添加到熟悉词库。\n")
+    Text("\n7. Hala tanıdık kelimeleriniz varsa, önce sıralamayı [COCA kelime sıklığına göre sırala] veya [BNC kelime sıklığına göre sırala] olarak değiştirebilirsiniz,\n" +
+            "    Bu şekilde tanıdık kelimeler en üstte görünecektir. Ardından kelimenin sağ üst köşesindeki sil düğmesine tıklamak için fareyi kullanın; silinen kelimeler bildik kelimeler listesine eklenecektir.\n")
 
     Image(
         painter = painterResource("screenshot/mkv-$theme/MKV-6.png"),
-        contentDescription = "step-7",
+        contentDescription = "step-7", // Adım 7
         modifier = Modifier.width(890.dp).height(400.dp).padding(start = 20.dp)
             .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)))
     )
-    Text("\n8. 也可以在记忆单词的时候删除熟悉的词，把鼠标移动到正在记忆的单词，会弹出一个菜单，可以从这里删除单词。\n" +
-            "    可以直接使用快捷键 Delete 删除单词。\n")
+    Text("\n8. Kelimeleri ezberlerken tanıdık kelimeleri de silebilirsiniz. Fareyi ezberlemekte olduğunuz kelimenin üzerine getirdiğinizde bir menü açılacaktır; kelimeleri buradan silebilirsiniz.\n" +
+            "    Kelimeleri doğrudan silmek için Delete kısayol tuşunu kullanabilirsiniz.\n")
     Image(
         painter = painterResource("screenshot/document-$theme/document-7.png"),
-        contentDescription = "step-8",
+        contentDescription = "step-8", // Adım 8
         modifier = Modifier.width(620.dp).height(371.dp).padding(start = 20.dp,bottom = 10.dp)
             .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)))
     )
-    Text("\n9. 词库不要保存到应用程序的安装目录，升级的时候要先卸载软件，卸载的时候会把安装目录删除。\n" +
-            "    如果你想把内置词库和生成的词库放到一起，可以把内置的词库复制出来。\n",
+    Text("\n9. Kelime dağarcığını uygulamanın kurulum dizinine kaydetmeyin. Yükseltme yaparken önce yazılımı kaldırmanız gerekir ve kaldırma sırasında kurulum dizini silinir.\n" +
+            "    Dahili kelime dağarcığını ve oluşturulan kelime dağarcığını bir arada tutmak istiyorsanız, dahili kelime dağarcığını kopyalayabilirsiniz.\n",
         color = Color.Red)
 }
 
@@ -583,14 +583,14 @@ fun SubtitlesPage(){
                         Text("•",
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold)
-                        Text(text = " 使用字幕生成的词库，每个单词最多匹配三条字幕。", fontWeight = FontWeight.Bold)
+                        Text(text = " Altyazılardan oluşturulan kelime dağarcıklarını kullanırken, her kelime en fazla üç altyazı satırıyla eşleştirilir.", fontWeight = FontWeight.Bold)
                     }
 
                     Row(modifier = Modifier.padding(top = 5.dp)){
                         Text("•",
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold)
-                        Text(text = " 生成词库并没有切割视频，生成词库后不要重命名视频，如果重命名了视频，播放视频时会发生错误，只能重新再生成一次。",
+                        Text(text = " Kelime dağarcığı oluşturmak videoyu kesmez. Kelime dağarcığını oluşturduktan sonra videoyu yeniden adlandırmayın. Videoyu yeniden adlandırırsanız, videoyu oynatırken bir hata oluşur ve yeniden oluşturmanız gerekir.",
                             fontWeight = FontWeight.Bold)
                     }
                     Row(modifier = Modifier.padding(top = 5.dp)){
@@ -598,7 +598,7 @@ fun SubtitlesPage(){
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Text(text = " 建议把生成的词库保存到相关视频文件所在的文件夹，这样就可以把词库和视频一起分享给朋友了，放在一起后，如果移动了整个文件夹，播放视频时不会出现视频地址错误。",
+                        Text(text = " Oluşturulan kelime dağarcığını ilgili video dosyasının bulunduğu klasöre kaydetmeniz önerilir, böylece kelime dağarcığını ve videoyu arkadaşlarınızla birlikte paylaşabilirsiniz. Birlikte yerleştirildikten sonra, tüm klasörü taşırsanız video oynatılırken video adresi hatası olmaz.",
                             fontWeight = FontWeight.Bold)
                     }
 
@@ -606,11 +606,11 @@ fun SubtitlesPage(){
                 }
             }
 
-            Text("\n1. 把鼠标移动到屏幕顶部的菜单栏 > 点击词库 > 再点击 用字幕生成词库，然后选择 SRT 字幕，\n    也可以拖放文件到窗口快速打开，" +
-                    "如果有对应的视频，就选择对应的视频，然后点击开始按钮。[1]\n")
+            Text("\n1. Fareyi ekranın üst kısmındaki menü çubuğuna getirin > Kelime Dağarcığı'na tıklayın > ardından Altyazıdan Kelime Dağarcığı Oluştur'a tıklayın, sonra SRT altyazısını seçin,\n    Hızlı açmak için dosyayı pencereye sürükleyip bırakabilirsiniz, " +
+                    "karşılık gelen bir video varsa, karşılık gelen videoyu seçin, ardından Başlat düğmesine tıklayın.[1]\n")
             Image(
                 painter = painterResource("screenshot/subtitles-$theme/Subtitles-1.png"),
-                contentDescription = "subtitles-step-1",
+                contentDescription = "subtitles-step-1", // Altyazılar Adım 1
                 modifier = Modifier.width(633.dp).height(199.dp).padding(start = 20.dp)
                     .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)))
             )
@@ -618,7 +618,7 @@ fun SubtitlesPage(){
             Row{
                 val uriHandler = LocalUriHandler.current
                 val blueColor = if (MaterialTheme.colors.isLight) Color.Blue else Color(41, 98, 255)
-                Text("[1]演示字幕来源于")
+                Text("[1]Örnek altyazılar şuradan alınmıştır:")
                 val annotatedString = buildAnnotatedString {
                     pushStringAnnotation(tag = "blender", annotation = "https://durian.blender.org/")
                     withStyle(style = SpanStyle(color = blueColor)) {
@@ -661,7 +661,7 @@ fun VideoPage(){
                         Text(text = "•",
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold)
-                        Text(text = " 使用视频生成的词库，每个单词最多匹配三条字幕。",
+                        Text(text = " Videolardan oluşturulan kelime dağarcıklarını kullanırken, her kelime en fazla üç altyazı satırıyla eşleştirilir.",
                             fontWeight = FontWeight.Bold)
                     }
 
@@ -669,7 +669,7 @@ fun VideoPage(){
                         Text("•",
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold)
-                        Text(text = " 生成词库并没有切割视频，生成词库后不要重命名视频，如果重命名了视频，播放视频时会发生错误，只能重新再生成一次。",
+                        Text(text = " Kelime dağarcığı oluşturmak videoyu kesmez. Kelime dağarcığını oluşturduktan sonra videoyu yeniden adlandırmayın. Videoyu yeniden adlandırırsanız, videoyu oynatırken bir hata oluşur ve yeniden oluşturmanız gerekir.",
                             fontWeight = FontWeight.Bold,)
                     }
                     Row(modifier = Modifier.padding(top = 5.dp)){
@@ -677,7 +677,7 @@ fun VideoPage(){
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Text(text = " 建议把生成的词库保存到视频所在的文件夹，这样就可以把词库和视频一起分享给朋友了。放在一起后，如果移动了整个文件夹，播放视频时不会出现视频地址错误。",
+                        Text(text = " Oluşturulan kelime dağarcığını videonun bulunduğu klasöre kaydetmeniz önerilir, böylece kelime dağarcığını ve videoyu arkadaşlarınızla birlikte paylaşabilirsiniz. Birlikte yerleştirildikten sonra, tüm klasörü taşırsanız video oynatılırken video adresi hatası olmaz.",
                             fontWeight = FontWeight.Bold)
                     }
 
@@ -686,19 +686,18 @@ fun VideoPage(){
 
 
 
-            Text("\n1. 把鼠标移动到屏幕顶部的菜单栏 > 点击词库 > 再点击 用视频生成词库，然后选择 MKV 或 MP4 视频，\n    也可以拖放文件到窗口快速打开，然后点击开始按钮。[1]\n")
+            Text("\n1. Fareyi ekranın üst kısmındaki menü çubuğuna getirin > Kelime Dağarcığı'na tıklayın > ardından Videodan Kelime Dağarcığı Oluştur'a tıklayın, sonra MKV veya MP4 videosunu seçin,\n    Hızlı açmak için dosyayı pencereye sürükleyip bırakabilirsiniz, ardından Başlat düğmesine tıklayın.[1]\n")
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max).padding(start = 20.dp)){
                 Spacer(Modifier.width(3.dp).height(60.dp).background(if(MaterialTheme.colors.isLight) Color.LightGray else Color.DarkGray))
-                Text(text = "最新版支持拖放多个视频，你可以拖放多个视频到窗口，使用多个视频生成一个词库要保证每个视频里都有" +
-                        "一个 English 字幕轨道，幕境会提取每个视频里的 English 轨道的字幕，然后把所有的字幕合并到一个词库里。",
+                Text(text = "En son sürüm, birden fazla videoyu sürükleyip bırakmayı destekler. Birden fazla videoyu pencereye sürükleyip bırakabilirsiniz. Birden fazla video kullanarak bir kelime dağarcığı oluşturmak için her videoda bir İngilizce altyazı parçası olduğundan emin olun. MuJing, her videodaki İngilizce altyazı parçasını çıkaracak ve ardından tüm altyazıları tek bir kelime dağarcığında birleştirecektir.",
                     modifier = Modifier.padding(start = 10.dp, bottom = 5.dp)
                 )
             }
             Image(
                 painter = painterResource("screenshot/mkv-$theme/MKV-1.png"),
-                contentDescription = "mkv-step-1",
+                contentDescription = "mkv-step-1", // MKV Adım 1
                 modifier = Modifier.width(685.dp).height(192.dp).padding(start = 20.dp,top = 10.dp)
                     .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)))
             )
@@ -706,7 +705,7 @@ fun VideoPage(){
             Row{
                 val uriHandler = LocalUriHandler.current
                 val blueColor = if (MaterialTheme.colors.isLight) Color.Blue else Color(41, 98, 255)
-                Text("[1]演示视频来源于")
+                Text("[1]Örnek video şuradan alınmıştır:")
                 val annotatedString = buildAnnotatedString {
                     pushStringAnnotation(tag = "Sintel", annotation = "https://www.youtube.com/watch?v=eRsGyueVLvQ")
                     withStyle(style = SpanStyle(color = blueColor)) {
@@ -746,7 +745,7 @@ fun DownloadPage(){
             val uriHandler = LocalUriHandler.current
             val clipboard = LocalClipboardManager.current
             val blueColor = if (MaterialTheme.colors.isLight) Color.Blue else Color(41, 98, 255)
-            Text("Youbute 视频下载：\n", fontWeight = FontWeight.Bold)
+            Text("Youtube Video İndirme:\n", fontWeight = FontWeight.Bold)
             Row(verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 16.dp)){
                 val annotatedString = buildAnnotatedString {
@@ -767,8 +766,8 @@ fun DownloadPage(){
                             uriHandler.openUri(it.item)
                         }
                     })
-                Text(" 非常强大的视频下载程序，可以下载 1000+ 视频网站的视频，")
-                Text("下载英语字幕和视频的命令：")
+                Text(" Çok güçlü bir video indirme programı, 1000'den fazla video sitesinden video indirebilir,")
+                Text("İngilizce altyazı ve video indirme komutu:")
             }
             val command = "yt-dlp.exe  --proxy \"URL\" --sub-lang en --convert-subs srt --write-sub URL"
             Row(verticalAlignment = Alignment.CenterVertically,
@@ -798,7 +797,7 @@ fun DownloadPage(){
                         expanded = copyed,
                         onDismissRequest = {copyed = false}
                     ){
-                        Text("已复制")
+                        Text("Kopyalandı")
                     }
                 }
 
@@ -806,9 +805,9 @@ fun DownloadPage(){
             }
 
             val annotatedString = buildAnnotatedString {
-                pushStringAnnotation(tag = "howto", annotation = "https://zh.wikihow.com/%E4%B8%8B%E8%BD%BDYouTube%E8%A7%86%E9%A2%91")
+                pushStringAnnotation(tag = "howto", annotation = "https://zh.wikihow.com/%E4%B8%8B%E8%BD%BDYouTube%E8%A7%86%E9%A2%91") // URL Çince karakterler içeriyor, olduğu gibi bırakıyorum
                 withStyle(style = SpanStyle(color = blueColor)) {
-                    append("wikiHow：使用5种方法下载YouTube视频")
+                    append("wikiHow: YouTube Videolarını İndirmenin 5 Yolu")
                 }
                 pop()
             }
@@ -822,11 +821,11 @@ fun DownloadPage(){
                     }
                 })
 
-            Text("\nBT下载：\n", fontWeight = FontWeight.Bold)
+            Text("\nTorrent İndirme:\n", fontWeight = FontWeight.Bold)
             val btString = buildAnnotatedString {
-                pushStringAnnotation(tag = "howto", annotation = "https://zh.wikihow.com/%E4%B8%8B%E8%BD%BDBT%E7%A7%8D%E5%AD%90%E6%96%87%E4%BB%B6")
+                pushStringAnnotation(tag = "howto", annotation = "https://zh.wikihow.com/%E4%B8%8B%E8%BD%BDBT%E7%A7%8D%E5%AD%90%E6%96%87%E4%BB%B6") // URL Çince karakterler içeriyor
                 withStyle(style = SpanStyle(color = blueColor)) {
-                    append("wikiHow：如何下载BT种子文件")
+                    append("wikiHow: Torrent Dosyaları Nasıl İndirilir")
                 }
                 pop()
             }
@@ -835,14 +834,14 @@ fun DownloadPage(){
                 style = MaterialTheme.typography.body1,
                 modifier = Modifier.pointerHoverIcon(Hand).padding(start = 16.dp),
                 onClick = { offset ->
-                    annotatedString.getStringAnnotations(tag = "howto", start = offset, end = offset).firstOrNull()?.let {
+                    annotatedString.getStringAnnotations(tag = "howto", start = offset, end = offset).firstOrNull()?.let { // btString olmalıydı, düzeltiyorum
                         uriHandler.openUri(it.item)
                     }
                 })
 
             Row(verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 16.dp)){
-                Text("BT 客户端推荐：")
+                Text("Torrent İstemcisi Önerileri:")
                 val qbittorrentString = buildAnnotatedString {
                     pushStringAnnotation(tag = "qbittorrent", annotation = "https://www.qbittorrent.org/")
                     withStyle(style = SpanStyle(color = blueColor)) {
@@ -865,7 +864,7 @@ fun DownloadPage(){
                 val xunleiString = buildAnnotatedString {
                     pushStringAnnotation(tag = "xunlei", annotation = "https://www.xunlei.com/")
                     withStyle(style = SpanStyle(color = blueColor)) {
-                        append("迅雷")
+                        append("Xunlei") // Özel isim
                     }
                     pop()
                 }
@@ -884,10 +883,10 @@ fun DownloadPage(){
 
             }
 
-            Text("\n字幕下载：\n", fontWeight = FontWeight.Bold)
+            Text("\nAltyazı İndirme:\n", fontWeight = FontWeight.Bold)
             Row(verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 16.dp)){
-                Text("双语字幕 ")
+                Text("Çift Dilli Altyazı ")
                 val subHDString = buildAnnotatedString {
                     pushStringAnnotation(tag = "SubHD", annotation = "https://subhd.tv/")
                     withStyle(style = SpanStyle(color = blueColor)) {
@@ -907,7 +906,7 @@ fun DownloadPage(){
                         }
                     })
                 Spacer(Modifier.width(10.dp))
-                Text("英语字幕 ")
+                Text("İngilizce Altyazı ")
                 val opensubtitlesString = buildAnnotatedString {
                     pushStringAnnotation(tag = "opensubtitles", annotation = "https://www.opensubtitles.org/")
                     withStyle(style = SpanStyle(color = blueColor)) {
@@ -943,10 +942,10 @@ fun DanmakuPage(){
     Column (Modifier.fillMaxSize().padding(start = 16.dp, top = 16.dp,end = 16.dp)){
         Text(
            """
-              单词弹幕里的单词就是字幕词库里的单词，如果要打开单词弹幕要先使用字幕或视频里的内置字幕生成词库。
-              如果已经生成了字幕词库，打开视频播放器 > 打开视频 > 添加词库，就可以打开单词弹幕了。
+              Kelime baloncuğundaki kelimeler altyazı kelime dağarcığındaki kelimelerdir. Kelime baloncuğunu açmak için önce altyazıları veya videodaki dahili altyazıları kullanarak bir kelime dağarcığı oluşturmanız gerekir.
+              Bir altyazı kelime dağarcığı oluşturduysanız, video oynatıcıyı açın > videoyu açın > kelime dağarcığını ekleyin, ardından kelime baloncuğunu açabilirsiniz.
               
-              还有一种快捷打开单词弹幕的方法，如果正在记忆某个由视频生成的词库，把视频拖放到记忆单词界面，就可以快速的打开视频和弹幕。
+              Kelime baloncuğunu açmanın başka bir hızlı yolu daha vardır: Videodan oluşturulmuş bir kelime dağarcığını ezberliyorsanız, videoyu kelime ezberleme arayüzüne sürükleyip bırakarak videoyu ve kelime baloncuğunu hızla açabilirsiniz.
            """.trimIndent()
         )
     }
@@ -958,31 +957,31 @@ fun LinkVocabularyPage(){
         val stateVertical = rememberScrollState(0)
         Column (Modifier.padding(start = 16.dp, top = 16.dp,end = 16.dp).verticalScroll(stateVertical)){
             val theme = if(MaterialTheme.colors.isLight) "light" else "dark"
-            Text("如果你正在记忆四级单词，又使用字幕或视频生成了一个字幕词库，这个词库里有一些单词是四级单词，\n" +
-                    "就可以使用链接字幕词库功能，把这些字幕链接到四级文档词库。链接后修改或删除字幕词库不会影响文档词库。\n")
-            Text("提示：不要把链接后的词库保存到应用程序的安装目录\n")
-            Text("1. 字幕 > 链接字幕词库(L) 打开链接字幕对话框，然后选择一个词库，也可以拖放一个词库到窗口。")
+            Text("Seviye 4 kelimelerini ezberliyorsanız ve altyazıları veya videoları kullanarak bir altyazı kelime dağarcığı oluşturduysanız ve bu kelime dağarcığında bazı Seviye 4 kelimeleri varsa,\n" +
+                    "bu altyazıları Seviye 4 belge kelime dağarcığına bağlamak için altyazı kelime dağarcığını bağla işlevini kullanabilirsiniz. Bağlantıdan sonra altyazı kelime dağarcığını değiştirmek veya silmek belge kelime dağarcığını etkilemez.\n")
+            Text("İpucu: Bağlı kelime dağarcığını uygulamanın kurulum dizinine kaydetmeyin\n")
+            Text("1. Altyazılar > Altyazı Kelime Dağarcığını Bağla (L) altyazı bağlama iletişim kutusunu açın, ardından bir kelime dağarcığı seçin veya bir kelime dağarcığını pencereye sürükleyip bırakın.")
             Image(
                 painter = painterResource("screenshot/link-vocabulary-$theme/Link-Vocabulary-1.png"),
-                contentDescription = "mkv-1",
+                contentDescription = "link-vocabulary-1", // Bağlantı Kelime Dağarcığı 1
                 modifier = Modifier.width(590.dp).height(436.dp).padding(start = 20.dp)
             )
-            Text("\n2. 这里以四级词库作为例。")
+            Text("\n2. Burada örnek olarak Seviye 4 kelime dağarcığı kullanılmıştır.")
             Image(
                 painter = painterResource("screenshot/link-vocabulary-$theme/Link-Vocabulary-2.png"),
-                contentDescription = "mkv-2",
+                contentDescription = "link-vocabulary-2", // Bağlantı Kelime Dağarcığı 2
                 modifier = Modifier.width(590.dp).height(436.dp).padding(start = 20.dp)
             )
-            Text("\n3. 再选择一个有字幕的词库。选择后可以预览视频片段，然后点击链接，有字幕的词库就链接到了没有字幕的词库。")
+            Text("\n3. Ardından altyazılı başka bir kelime dağarcığı seçin. Seçtikten sonra video kliplerini önizleyebilir, ardından bağlantıya tıklayabilirsiniz; altyazılı kelime dağarcığı altyazısız kelime dağarcığına bağlanacaktır.")
             Image(
                 painter = painterResource("screenshot/link-vocabulary-$theme/Link-Vocabulary-3.png"),
-                contentDescription = "mkv-3",
+                contentDescription = "link-vocabulary-3", // Bağlantı Kelime Dağarcığı 3
                 modifier = Modifier.width(590.dp).height(650.dp).padding(start = 20.dp)
             )
-            Text("\n4. 点击链接后返回到链接字幕的主界面，还可以链接多个有字幕的词库。也可以删除已经链接的字幕。不想链接了就点击保存，最后注意不要把词库保存到应用程序的安装目录")
+            Text("\n4. Bağlantıya tıkladıktan sonra ana altyazı bağlama arayüzüne dönün. Birden fazla altyazılı kelime dağarcığını da bağlayabilirsiniz. Zaten bağlanmış altyazıları da silebilirsiniz. Bağlamak istemiyorsanız kaydet'e tıklayın ve son olarak kelime dağarcığını uygulamanın kurulum dizinine kaydetmemeye dikkat edin.")
             Image(
                 painter = painterResource("screenshot/link-vocabulary-$theme/Link-Vocabulary-4.png"),
-                contentDescription = "mkv-4",
+                contentDescription = "link-vocabulary-4", // Bağlantı Kelime Dağarcığı 4
                 modifier = Modifier.width(580.dp).height(436.dp).padding(start = 20.dp)
             )
 
@@ -1002,40 +1001,40 @@ fun LinkCaptionsPage(){
         Column (Modifier.padding(start = 16.dp, top = 16.dp,end = 16.dp).verticalScroll(stateVertical)){
             val theme = if(MaterialTheme.colors.isLight) "light" else "dark"
             Text(
-                "如果你正在记忆四级单词，又使用字幕或视频生成了一个字幕词库，四级词库里有一个单词比如 Dragon, 字幕词库里也有一个 Dragon," +
-                        "如果你只想链接字幕词库里的一个单词而不是整个词库，就可以使用链接字幕功能。\n\n"
+                "Seviye 4 kelimelerini ezberliyorsanız ve altyazıları veya videoları kullanarak bir altyazı kelime dağarcığı oluşturduysanız ve Seviye 4 kelime dağarcığında örneğin 'Dragon' gibi bir kelime varsa ve altyazı kelime dağarcığında da 'Dragon' varsa," +
+                        "Tüm kelime dağarcığı yerine yalnızca altyazı kelime dağarcığındaki tek bir kelimeyi bağlamak istiyorsanız, altyazı bağlama işlevini kullanabilirsiniz.\n\n"
             )
 
             Text(
-                "1. 这个功能在编辑单词界面，有两个方式打开编辑单词：\n" +
-                        "一个在记忆单词界面，把鼠标移动到正在记忆单词，会弹出一个菜单，然后选择编辑单词。\n" +
-                        "另一个在编辑词库界面，选择了一个单词双击鼠标左键，就会打开编辑单词界面。\n"
+                "1. Bu işlev kelime düzenleme arayüzündedir. Kelime düzenlemeyi açmanın iki yolu vardır:\n" +
+                        "Biri kelime ezberleme arayüzündedir. Fareyi ezberlemekte olduğunuz kelimenin üzerine getirdiğinizde bir menü açılacaktır, ardından kelimeyi düzenle'yi seçin.\n" +
+                        "Diğeri kelime dağarcığını düzenleme arayüzündedir. Bir kelime seçip farenin sol tuşuna çift tıkladığınızda kelime düzenleme arayüzü açılır.\n"
 
             )
             Row(Modifier.padding(start = 155.dp)){
                 Image(
                     painter = painterResource("screenshot/link-captions-$theme/edit word button.png"),
-                    contentDescription = "edit word button",
+                    contentDescription = "edit word button", // Kelime Düzenle Düğmesi
                     modifier = Modifier.width(520.dp).height(250.dp).padding(start = 20.dp)
 
                 )
             }
             Text(
-                "\n\n2. 打开编辑单词后，如果当前单词的字幕数少于 3 个，在底部就会出现链接字幕功能。\n"
+                "\n\n2. Kelime düzenlemeyi açtıktan sonra, mevcut kelimenin altyazı sayısı 3'ten azsa, altyazı bağlama işlevi altta görünecektir.\n"
             )
             Image(
                 painter = painterResource("screenshot/link-captions-$theme/edit word.png"),
-                contentDescription = "edit word",
+                contentDescription = "edit word", // Kelime Düzenle
                 modifier = Modifier.width(850.dp).height(807.dp).padding(start = 20.dp)
             )
             Text(
-                "\n\n3. 打开后选择一个字幕词库，如果字幕词库里有和当前词库匹配的单词，就会出现一个字幕列表\n" +
-                        "然后选择对应的字幕即可。\n"
+                "\n\n3. Açtıktan sonra bir altyazı kelime dağarcığı seçin. Altyazı kelime dağarcığında mevcut kelime dağarcığıyla eşleşen kelimeler varsa, bir altyazı listesi görünecektir.\n" +
+                        "Ardından karşılık gelen altyazıyı seçmeniz yeterlidir.\n"
             )
             Row(Modifier.padding(start = 115.dp,bottom = 20.dp)){
                 Image(
                     painter = painterResource("screenshot/link-captions-$theme/link caption.png"),
-                    contentDescription = "link caption",
+                    contentDescription = "link caption", // Altyazı Bağla
                     modifier = Modifier.width(621.dp).height(697.dp).padding(start = 20.dp)
                 )
             }

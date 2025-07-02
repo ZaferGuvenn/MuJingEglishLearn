@@ -27,7 +27,7 @@ fun findFFmpegPath(): String {
 }
 
 /**
- * 使用 FFmpeg 提取视频里的字幕,并且把字幕转换成 SRT 格式
+ * FFmpeg kullanarak videodan altyazıları çıkarın ve altyazıları SRT formatına dönüştürün
  */
 fun extractSubtitles(
     input: String, subtitleId: Int,
@@ -40,7 +40,7 @@ fun extractSubtitles(
             .setVerbosity(verbosity)
             .setInput(input)
             .addOutput(output)
-            .addExtraArgs("-map", "0:s:$subtitleId") //  -map 0:s:0 表示提取第一个字幕，-map 0:s:1 表示提取第二个字幕。
+            .addExtraArgs("-map", "0:s:$subtitleId") //  -map 0:s:0 ilk altyazıyı, -map 0:s:1 ikinci altyazıyı çıkarır.
             .done()
         val executor = FFmpegExecutor(ffmpeg)
         val job = executor.createJob(builder)
@@ -48,17 +48,17 @@ fun extractSubtitles(
         if (job.state == FFmpegJob.State.FINISHED) {
             "finished"
         } else {
-            JOptionPane.showMessageDialog(null, "提取字幕失败", "错误", JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showMessageDialog(null, "Altyazı çıkarılamadı", "Hata", JOptionPane.ERROR_MESSAGE)
             "failed"
         }
     } catch (e: Exception) {
-        JOptionPane.showMessageDialog(null, "选择的字幕格式暂时不支持\n ${e.message}", "错误", JOptionPane.ERROR_MESSAGE)
+        JOptionPane.showMessageDialog(null, "Seçilen altyazı formatı geçici olarak desteklenmiyor\n ${e.message}", "Hata", JOptionPane.ERROR_MESSAGE)
         "failed"
     }
 }
 
 /**
- * 使用 FFmpeg 把字幕格式转换成 SRT 格式
+ * FFmpeg kullanarak altyazı formatını SRT formatına dönüştürün
  */
 fun convertToSrt(
     input:String,
@@ -81,7 +81,7 @@ fun convertToSrt(
 }
 
 /**
- * 使用 FFmpeg 提取视频里的字幕，并且返回一个 Caption List
+ * FFmpeg kullanarak videodan altyazıları çıkarın ve bir Caption Listesi döndürün
  */
 fun readCaptionList(
     videoPath: String,
@@ -95,7 +95,7 @@ fun readCaptionList(
         .setVerbosity(verbosity)
         .setInput(videoPath)
         .addOutput("$applicationDir/temp.srt")
-        .addExtraArgs("-map", "0:s:$subtitleId") //  -map 0:s:0 表示提取第一个字幕，-map 0:s:1 表示提取第二个字幕。
+        .addExtraArgs("-map", "0:s:$subtitleId") //  -map 0:s:0 ilk altyazıyı, -map 0:s:1 ikinci altyazıyı çıkarır.
         .done()
     val executor = FFmpegExecutor(ffmpeg)
     val job = executor.createJob(builder)
@@ -110,26 +110,26 @@ fun readCaptionList(
 
 
 /**
- * 匹配富文本标签的正则表达式
+ * Zengin metin etiketleriyle eşleşen düzenli ifade
  */
 const val RICH_TEXT_REGEX = "<(b|i|u|font|s|ruby|rt|rb|sub|sup).*?>|</(b|i|u|font|s|ruby|rt|rb|sub|sup)>"
 
 
 /**
- * 移除 SRT 字幕里的富文本标签
- *使用 FFmpeg 提取 mov_text 字幕时，会保留这些富文本标签，但是我们只需要纯文本，所以需要移除这些标签。
+ * SRT altyazılarındaki zengin metin etiketlerini kaldırın
+ *FFmpeg kullanarak mov_text altyazılarını çıkarırken, bu zengin metin etiketleri korunur, ancak yalnızca düz metne ihtiyacımız olduğu için bu etiketleri kaldırmamız gerekir.
  *
- * mov_text 字幕支持以下富文本格式标签：
- * <font>: 字体样式（包括 face、size 和 color 属性）
- * <b>: 粗体文本
- * <i>: 斜体文本
- * <u>: 下划线文本
- * <s>: 删除线文本
- * <ruby>: 用于注音或解释的文本
- * <rt>: 注音文本
- * <rb>: 基本文本（与 <ruby> 一起使用）
- * <sub>: 下标文本
- * <sup>: 上标文本
+ * mov_text altyazıları aşağıdaki zengin metin biçimi etiketlerini destekler:
+ * <font>: Yazı tipi stili (face, size ve color özelliklerini içerir)
+ * <b>: Kalın metin
+ * <i>: İtalik metin
+ * <u>: Altı çizili metin
+ * <s>: Üstü çizili metin
+ * <ruby>: Fonetik veya açıklama için kullanılan metin
+ * <rt>: Fonetik metin
+ * <rb>: Temel metin (<ruby> ile birlikte kullanılır)
+ * <sub>: Alt simge metni
+ * <sup>: Üst simge metni
  */
 fun removeRichText(srtFile: File){
     var content = srtFile.readText()
@@ -152,7 +152,7 @@ fun hasRichText(srtFile: File): Boolean {
 
 
 /**
- * 提取选择的字幕到用户目录,字幕浏览器界面使用
+ * Seçilen altyazıları kullanıcı dizinine çıkarın, altyazı tarayıcı arayüzü tarafından kullanılır
  * */
 fun writeSubtitleToFile(
     videoPath: String,
@@ -162,7 +162,7 @@ fun writeSubtitleToFile(
     val subtitleFile = File(settingsDir, "subtitles.srt")
     val result = extractSubtitles(videoPath, trackId, subtitleFile.absolutePath)
     if(result == "finished"){
-        // 检查字幕文件是否包含富文本标签
+        // Altyazı dosyasının zengin metin etiketleri içerip içermediğini kontrol edin
         val hasRichText = hasRichText(subtitleFile)
         if(hasRichText){
             removeRichText(subtitleFile)

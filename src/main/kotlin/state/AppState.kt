@@ -32,77 +32,77 @@ import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 
-/** 所有界面共享的状态 */
+/** Tüm arayüzler tarafından paylaşılan durum */
 @ExperimentalSerializationApi
 class AppState {
 
-    /** 全局状态里需要持久化的状态 */
+    /** Genel durumda kalıcı olması gereken durum */
     var global: GlobalState = loadGlobalState()
 
-    /** Material 颜色 */
+    /** Materyal renkleri */
     var colors by mutableStateOf(createColors(global))
 
-    /** 视频播放窗口,使用 JFrame 的一个原因是 swingPanel 重组的时候会产生闪光,
-     * 相关 Issue: https://github.com/JetBrains/compose-jb/issues/1800,
-     * 等Jetbrains 把 bug 修复了再重构。 */
+    /** Video oynatma penceresi, JFrame kullanılmasının bir nedeni, swingPanel yeniden oluşturulduğunda bir flaş oluşmasıdır,
+     * İlgili Sorun: https://github.com/JetBrains/compose-jb/issues/1800,
+     * Jetbrains hatayı düzelttikten sonra yeniden düzenleyin. */
     var videoPlayerWindow = createVideoPlayerWindow()
 
-    /** VLC 视频播放组件 */
+    /** VLC video oynatma bileşeni */
     var videoPlayerComponent = createMediaPlayerComponent()
 
-    /** 文件选择器，如果不提前加载反应会很慢 */
+    /** Dosya seçici, önceden yüklenmezse tepki çok yavaş olacaktır */
     var futureFileChooser: FutureTask<JFileChooser> = initializeFileChooser(global.isDarkTheme,global.isFollowSystemTheme)
 
-    /** 困难词库 */
+    /** Zor kelime dağarcığı */
     var hardVocabulary = loadMutableVocabularyByName("HardVocabulary")
 
-    /** 最近生成的词库列表 */
+    /** Son oluşturulan kelime dağarcığı listesi */
     var recentList = readRecentList()
 
-    /** 打开设置 */
+    /** Ayarları aç */
     var openSettings by mutableStateOf(false)
 
-    /** 是否显示等待窗口 */
+    /** Bekleme penceresi gösterilsin mi */
     var loadingFileChooserVisible by mutableStateOf(false)
 
-    /** 是否显示【新建词库】窗口 */
+    /** [Yeni Kelime Dağarcığı] penceresi gösterilsin mi */
     var newVocabulary by  mutableStateOf(false)
-    /** 是否显示【编辑词库】窗口 */
+    /** [Kelime Dağarcığını Düzenle] penceresi gösterilsin mi */
     var editVocabulary by  mutableStateOf(false)
 
-    /** 是否显示【合并词库】窗口 */
+    /** [Kelime Dağarcıklarını Birleştir] penceresi gösterilsin mi */
     var mergeVocabulary by mutableStateOf(false)
 
-    /** 是否显示【过滤词库】窗口 */
+    /** [Kelime Dağarcığını Filtrele] penceresi gösterilsin mi */
     var filterVocabulary by mutableStateOf(false)
 
-    /** 是否显示【导入词库到熟悉词库】窗口 */
+    /** [Kelime Dağarcığını Bildiklerine Aktar] penceresi gösterilsin mi */
     var importFamiliarVocabulary by mutableStateOf(false)
 
-    /** 是否显示【用文档生成词库】窗口 */
+    /** [Belgeden Kelime Dağarcığı Oluştur] penceresi gösterilsin mi */
     var generateVocabularyFromDocument by mutableStateOf(false)
 
-    /** 是否显示【用字幕文件生成词库】窗口 */
+    /** [Altyazı Dosyasından Kelime Dağarcığı Oluştur] penceresi gösterilsin mi */
     var generateVocabularyFromSubtitles by mutableStateOf(false)
 
-    /** 是否显示【用视频生成词库】 窗口 */
+    /** [Videodan Kelime Dağarcığı Oluştur] penceresi gösterilsin mi */
     var generateVocabularyFromVideo by mutableStateOf(false)
 
-    /** 显示软件更新对话框 */
+    /** Yazılım güncelleme iletişim kutusunu göster */
     var showUpdateDialog by mutableStateOf(false)
 
-    /** 软件的最新版本 */
+    /** Yazılımın en son sürümü */
     var latestVersion by mutableStateOf("")
 
-    /** 版本说明 **/
+    /** Sürüm notları **/
     var releaseNote by mutableStateOf("")
 
-    /** 本地缓存的单词发音列表 */
+    /** Yerel olarak önbelleğe alınmış kelime telaffuz listesi */
     var localAudioSet = loadAudioSet()
 
     var vocabularyChanged by mutableStateOf(false)
 
-    /** 加载全局的设置信息 */
+    /** Genel ayar bilgilerini yükle */
     private fun loadGlobalState(): GlobalState {
         val globalSettings = getGlobalSettingsFile()
         return if (globalSettings.exists()) {
@@ -112,7 +112,7 @@ class AppState {
                 GlobalState(globalData)
             } catch (exception: Exception) {
                 FlatLightLaf.setup()
-                JOptionPane.showMessageDialog(null, "设置信息解析错误，将使用默认设置。\n地址：$globalSettings")
+                JOptionPane.showMessageDialog(null, "Ayar bilgileri ayrıştırılamadı, varsayılan ayarlar kullanılacak.\nAdres: $globalSettings")
                 GlobalState(GlobalData())
             }
         } else {
@@ -121,11 +121,11 @@ class AppState {
     }
 
 
-    /** 初始化视频播放窗口 */
+    /** Video oynatma penceresini başlat */
     @OptIn(ExperimentalComposeUiApi::class)
     private fun createVideoPlayerWindow(): JFrame {
         val window = JFrame()
-        window.title = "视频播放窗口"
+        window.title = "Video Oynatma Penceresi"
         ResourceLoader.Default.load("logo/logo.png").use { inputStream ->
             val image = ImageIO.read(inputStream)
             window.iconImage = image
@@ -135,7 +135,7 @@ class AppState {
         return window
     }
 
-    /** 保存全局的设置信息 */
+    /** Genel ayar bilgilerini kaydet */
     fun saveGlobalState() {
         runBlocking {
             launch (Dispatchers.IO){
@@ -171,7 +171,7 @@ class AppState {
         }
     }
 
-    /** 改变词库 */
+    /** Kelime dağarcığını değiştir */
     fun changeVocabulary(
         vocabularyFile: File,
         wordScreenState: WordScreenState,
@@ -185,7 +185,7 @@ class AppState {
                 wordScreenState.memoryStrategy = MemoryStrategy.Normal
                 wordScreenState.showInfo()
             }
-            // 把困难词库和熟悉词库的索引保存在 wordScreenState.
+            // Zor kelime dağarcığının ve bildik kelimeler dağarcığının dizinini wordScreenState'e kaydet.
             when (wordScreenState.vocabulary.name) {
                 "HardVocabulary" -> {
                     wordScreenState.hardVocabularyIndex = wordScreenState.index
@@ -194,7 +194,7 @@ class AppState {
                     wordScreenState.familiarVocabularyIndex = wordScreenState.index
                 }
                 else -> {
-                    // 保存当前词库的索引到最近列表,
+                    // Mevcut kelime dağarcığının dizinini son kullanılanlar listesine kaydet,
                     if(wordScreenState.vocabularyPath.isNotEmpty()){
                         saveToRecentList(wordScreenState.vocabulary.name, wordScreenState.vocabularyPath,wordScreenState.index)
                     }
@@ -223,7 +223,7 @@ class AppState {
         return index
     }
 
-    /** 保存困难词库 */
+    /** Zor kelime dağarcığını kaydet */
     fun saveHardVocabulary(){
         runBlocking {
             launch (Dispatchers.IO){
@@ -234,7 +234,7 @@ class AppState {
         }
     }
 
-    /** 读取最近生成的词库列表 */
+    /** Son oluşturulan kelime dağarcığı listesini oku */
     private fun readRecentList(): SnapshotStateList<RecentItem> {
         val recentListFile = getRecentListFile()
         var list = if (recentListFile.exists()) {
@@ -324,7 +324,7 @@ class AppState {
 }
 
 
-/** 序列化配置 */
+/** Serileştirme yapılandırması */
 private val encodeBuilder = Json {
     prettyPrint = true
     encodeDefaults = true
@@ -337,26 +337,26 @@ fun rememberAppState() = remember {
 }
 
 /**
- * 载入资源，资源在打包之前和打包之后的路径是不一样的
-- 相关链接：#938 https://github.com/JetBrains/compose-jb/issues/938
-- #938 的测试代码的地址
+ * Kaynakları yükle, kaynakların paketlemeden önceki ve sonraki yolları farklıdır
+- İlgili bağlantı: #938 https://github.com/JetBrains/compose-jb/issues/938
+- #938 test kodunun adresi
 - https://github.com/JetBrains/compose-jb/blob/3070856954d4c653ea13a73aa77adb86a2788c66/gradle-plugins/compose/src/test/test-projects/application/resources/src/main/kotlin/main.kt
-- 如果 System.getProperty("compose.application.resources.dir") 为 null,说明还没有打包
+- System.getProperty("compose.application.resources.dir") null ise, henüz paketlenmemiş demektir
  */
 fun composeAppResource(path: String): File {
     val property = "compose.application.resources.dir"
     val dir = System.getProperty(property)
     return if (dir != null) {
-        //打包之后的环境
+        // Paketlemeden sonraki ortam
         File(dir).resolve(path)
-    } else {// 开发环境
-        // 通用资源
+    } else {// Geliştirme ortamı
+        // Genel kaynaklar
         var commonPath = File("resources/common/$path")
-        // window 操作系统专用资源
+        // Windows işletim sistemine özel kaynaklar
         if (!commonPath.exists() && isWindows()) {
             commonPath = File("resources/windows/$path")
         }
-        // macOS 操作系统专用资源
+        // macOS işletim sistemine özel kaynaklar
         if (!commonPath.exists() && isMacOS()) {
             val arch = System.getProperty("os.arch").lowercase()
             commonPath = if (arch == "arm" || arch == "aarch64") {
@@ -365,7 +365,7 @@ fun composeAppResource(path: String): File {
                 File("resources/macos-x64/$path")
             }
         }
-        // Linux 操作系统专用资源
+        // Linux işletim sistemine özel kaynaklar
         if (!commonPath.exists() && isLinux()) {
             commonPath = File("resources/linux/$path")
         }
@@ -382,7 +382,7 @@ fun getAudioDirectory(): File {
     return audioDir
 }
 
-/** 获取应用程序的配置文件的目录 */
+/** Uygulamanın yapılandırma dosyası dizinini al */
 fun getSettingsDirectory(): File {
     val homeDir = File(System.getProperty("user.home"))
     val applicationDir = File(homeDir, ".MuJing")
@@ -392,7 +392,7 @@ fun getSettingsDirectory(): File {
     return applicationDir
 }
 
-/** 获取全局的配置文件 */
+/** Genel yapılandırma dosyasını al */
 private fun getGlobalSettingsFile(): File {
     val settingsDir = getSettingsDirectory()
     return File(settingsDir, "AppSettings.json")
@@ -400,8 +400,8 @@ private fun getGlobalSettingsFile(): File {
 
 
 /**
- * 获得资源文件
- * @param path 文件路径
+ * Kaynak dosyasını al
+ * @param path dosya yolu
  */
 fun getResourcesFile(path: String): File {
     val file = if (File(path).isAbsolute) {

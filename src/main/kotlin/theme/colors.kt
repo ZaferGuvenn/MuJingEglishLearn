@@ -94,7 +94,7 @@ fun isSystemDarkMode(): Boolean {
             }
         }
         System.getProperty("os.name").contains("Linux", ignoreCase = true) -> {
-            // 还没有在Linux上测试
+            // Henüz Linux'ta test edilmedi
             val command = arrayOf("gsettings", "get", "org.gnome.desktop.interface", "gtk-theme")
             try {
                 val process = Runtime.getRuntime().exec(command)

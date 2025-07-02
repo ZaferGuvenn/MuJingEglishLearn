@@ -17,13 +17,13 @@ import javax.swing.JOptionPane
 @OptIn(ExperimentalSerializationApi::class)
 class PlayerState(playerData: PlayerData) {
 
-    /** 显示视频播放器 */
+    /** Video oynatıcıyı göster */
     var showPlayerWindow by  mutableStateOf(false)
-    /** 播放器 > 视频地址 */
+    /** Oynatıcı > Video Adresi */
     var videoPath by mutableStateOf("")
-    /** 与视频关联的词库，用于生成弹幕 */
+    /** Videoyla ilişkili kelime dağarcığı, akan yazı oluşturmak için kullanılır */
     var vocabulary by  mutableStateOf<MutableVocabulary?>(null)
-    /** 与视频关联的词库地址，用于保存词库，因为看视频时可以查看单词详情，如果觉得太简单了可以删除或加入到熟悉词库 */
+    /** Videoyla ilişkili kelime dağarcığı adresi, kelime dağarcığını kaydetmek için kullanılır, çünkü video izlerken kelime ayrıntılarını görüntüleyebilir ve çok basitse silebilir veya bildiklerinize ekleyebilirsiniz */
     var vocabularyPath by mutableStateOf("")
 
     var showSequence by mutableStateOf(playerData.showSequence)
@@ -33,23 +33,23 @@ class PlayerState(playerData: PlayerData) {
     var preferredChinese by mutableStateOf(playerData.preferredChinese)
 
 
-    /** 设置视频地址的函数，放到这里是因为记忆单词窗口可以接受拖放的视频，然后打开视频播放器 */
+    /** Video adresini ayarlama işlevi, buraya yerleştirilmiştir çünkü kelime ezberleme penceresi sürüklenip bırakılan videoları kabul edebilir ve ardından video oynatıcıyı açabilir */
     val videoPathChanged:(String) -> Unit = {
-        // 已经打开了一个视频再打开一个新的视频，重置与旧视频相关联的词库。
+        // Bir video zaten açıkken yeni bir video açılırsa, eski videoyla ilişkili kelime dağarcığını sıfırlayın.
         if(videoPath.isNotEmpty() && vocabulary != null){
             vocabularyPath = ""
             vocabulary = null
         }
         videoPath = it
     }
-    /** 设置词库地址的函数，放到这里是因为记忆单词可以接受拖放的视频，然后把当前词库关联到打开的视频播放器。*/
+    /** Kelime dağarcığı adresini ayarlama işlevi, buraya yerleştirilmiştir çünkü kelime ezberleme sürüklenip bırakılan videoları kabul edebilir ve ardından mevcut kelime dağarcığını açık video oynatıcıyla ilişkilendirebilir.*/
     val vocabularyPathChanged:(String) -> Unit = {
         if(videoPath.isNotEmpty()){
             vocabularyPath = it
             val newVocabulary = loadMutableVocabulary(it)
             vocabulary = newVocabulary
         }else{
-            JOptionPane.showMessageDialog(null,"先打开视频，再拖放词库。")
+            JOptionPane.showMessageDialog(null,"Önce videoyu açın, ardından kelime dağarcığını sürükleyip bırakın.")
         }
     }
 
@@ -95,7 +95,7 @@ fun rememberPlayerState() = remember {
             val playerData = decodeFormat.decodeFromString<PlayerData>(playerSettings.readText())
             PlayerState(playerData)
         } catch (exception: Exception) {
-            println("解析视频播放器的设置失败，将使用默认值")
+            println("Video oynatıcı ayarları ayrıştırılamadı, varsayılan değerler kullanılacak")
             val playerState = PlayerState(PlayerData())
             playerState
         }

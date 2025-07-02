@@ -7,16 +7,16 @@ import state.getResourcesFile
 
 class MSTTSpeech {
 
-    /** 音量 1到100 */
+    /** Ses seviyesi 1 ila 100 */
     var volume: Int = 100
 
-    /** 频率 -10到10 */
+    /** Hız -10 ila 10 */
     var rate: Int = 0
 
-    /** 输出设备序号 */
+    /** Çıkış aygıtı dizin numarası */
     var audio: Int = 0
 
-    /** 声音对象 */
+    /** Ses nesnesi */
     var spVoice:Dispatch? = null
 
     var ax: ActiveXComponent? = null
@@ -29,16 +29,16 @@ class MSTTSpeech {
 
 
     /**
-     * 播放语言
-     * @param text 要转换成语言的文本
+     * Dili oynat
+     * @param text dile dönüştürülecek metin
      */
     fun speak(text: String) {
         try{
-            // 设置音量
+            // Ses seviyesini ayarla
             Dispatch.put(spVoice,"Volume",Variant(this.volume))
-            // 设置速率
+            // Hızı ayarla
             Dispatch.put(spVoice,"Rate",Variant(this.rate))
-            // 开始朗读
+            // Okumaya başla
             Dispatch.call(spVoice,"Speak",Variant(text))
         }catch (exception: Exception) {
             println(exception.message)

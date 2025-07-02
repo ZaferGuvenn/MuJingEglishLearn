@@ -54,7 +54,7 @@ class AzureTTS(
     var subscriptionKey: String by mutableStateOf(azureTTSData.subscriptionKey)
     var region: String by mutableStateOf(azureTTSData.region)
 
-    // 支持 Azure Speech 的区域
+    // Azure Speech destekleyen bölgeler
     private val regionList = listOf("southafricanorth","eastasia","southeastasia","australiaeast","centralindia","japaneast","japanwest","koreacentral","canadacentral","northeurope","westeurope","francecentral","germanywestcentral","norwayeast","swedencentral8","switzerlandnorth","switzerlandwest","uksouth","uaenorth","brazilsouth","qatarcentral3,8","centralus","eastus","eastus2","northcentralus","southcentralus","westcentralus","westus","westus2","westus3","southafricanorth","eastasia","southeastasia","australiaeast","centralindia","japaneast","japanwest","koreacentral","canadacentral","northeurope","westeurope","francecentral","germanywestcentral","norwayeast","swedencentral8","switzerlandnorth","switzerlandwest","uksouth","uaenorth","brazilsouth","qatarcentral3,8","centralus","eastus","eastus2","northcentralus","southcentralus","westcentralus","westus","westus2","westus3")
 
 
@@ -92,12 +92,12 @@ class AzureTTS(
             response.bodyAsText()
         }  catch (e: Exception) {
             // Handle any other exceptions
-            println("An error occurred: ${e.message}")
+            println("Bir hata oluştu: ${e.message}")
             null
         }
     }
 
-    // TODO 方法名不对，可能需要重构
+    // TODO Metod adı yanlış, yeniden düzenlenmesi gerekebilir
     suspend fun textToSpeech( text: String):String? {
         val accessToken = getAccessToken()
         if(accessToken != null){
@@ -132,7 +132,7 @@ class AzureTTS(
                  path
             }catch (e: Exception) {
                 // Handle any other exceptions
-                println("An error occurred: ${e.message}")
+                println("Bir hata oluştu: ${e.message}")
                 null
             }
 
@@ -165,7 +165,7 @@ class AzureTTS(
                 }
             }
         }catch (e:Exception){
-            println("GET request failed. Message: ${e.message}")
+            println("GET isteği başarısız oldu. Mesaj: ${e.message}")
         }
 
 
@@ -220,7 +220,7 @@ fun loadAzureState(): AzureTTS {
             AzureTTS(AzureTTSData())
         }
     }else{
-        println("Azure setting file not found")
+        println("Azure ayar dosyası bulunamadı")
         val azureData = AzureTTSData()
         val tts = AzureTTS(azureData)
         val json = encodeFormat.encodeToString(azureData)

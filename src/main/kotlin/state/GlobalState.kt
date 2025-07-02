@@ -12,7 +12,7 @@ import androidx.compose.ui.window.WindowPosition
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
-/** 全局的数据类 */
+/** Genel veri sınıfı */
 @ExperimentalSerializationApi
 @Serializable
 data class GlobalData(
@@ -41,121 +41,121 @@ data class GlobalData(
     val maxSentenceLength:Int = 25,
 )
 
-/** 全局状态的需要持久化的部分 */
+/** Genel durumun kalıcı olması gereken kısmı */
 @OptIn(ExperimentalSerializationApi::class)
 class GlobalState(globalData: GlobalData) {
     /**
-     * 练习的类型
+     * Alıştırma türü
      */
     var type by mutableStateOf(globalData.type)
 
     /**
-     * 是否是深色模式
+     * Koyu mod mu
      */
     var isDarkTheme by mutableStateOf(globalData.isDarkTheme)
 
     /**
-     * 是否跟随系统主题
+     * Sistem temasını takip etsin mi
      */
     var isFollowSystemTheme by mutableStateOf(globalData.isFollowSystemTheme)
 
     /**
-     * 单词发音的音量
+     * Kelime telaffuzunun ses seviyesi
      */
     var audioVolume by mutableStateOf(globalData.audioVolume)
 
     /**
-     * 视频播放的音量
+     * Video oynatmanın ses seviyesi
      */
     var videoVolume by mutableStateOf(globalData.videoVolume)
 
     /**
-     * 按键音效音量
+     * Tuş vuruşu ses efekti ses seviyesi
      */
     var keystrokeVolume by mutableStateOf(globalData.keystrokeVolume)
 
     /**
-     * 是否播放按键音效
+     * Tuş vuruşu ses efekti oynatılsın mı
      */
     var isPlayKeystrokeSound by mutableStateOf(globalData.isPlayKeystrokeSound)
 
     /**
-     * 主色调，默认为绿色
+     * Ana renk tonu, varsayılan olarak yeşil
      */
     var primaryColor by mutableStateOf(Color(globalData.primaryColorValue))
 
     /**
-     * 浅色主题的背景色
+     * Açık tema için arka plan rengi
      */
     var backgroundColor by mutableStateOf(Color(globalData.backgroundColorValue))
 
     /**
-     * 浅色主题的背景色
+     * Açık tema için arka plan rengi
      */
     var onBackgroundColor by mutableStateOf(Color(globalData.onBackgroundColorValue))
 
     /**
-     * 单词的字体样式，需要持久化
+     * Kelimenin yazı tipi stili, kalıcı olması gerekir
      */
     var wordTextStyle by mutableStateOf(globalData.wordTextStyle)
 
     /**
-     * 详细信息的字体样式，需要持久化
+     * Ayrıntılı bilgilerin yazı tipi stili, kalıcı olması gerekir
      */
     var detailTextStyle by mutableStateOf(globalData.detailTextStyle)
 
     /**
-     * 单词的字体大小，不用持久化
+     * Kelimenin yazı tipi boyutu, kalıcı olması gerekmez
      */
     var wordFontSize by mutableStateOf(TextUnit.Unspecified)
 
     /**
-     * 详细信息的的字体大小，不用持久化
+     * Ayrıntılı bilgilerin yazı tipi boyutu, kalıcı olması gerekmez
      */
     var detailFontSize by mutableStateOf(TextUnit.Unspecified)
 
     /**
-     *  字间隔空
+     *  Harf aralığı
      */
     var letterSpacing by mutableStateOf((globalData.letterSpacing).sp)
 
     /**
-     * 主窗口的位置
+     * Ana pencerenin konumu
      */
     var position by mutableStateOf(WindowPosition(globalData.x.dp,globalData.y.dp))
 
     /**
-     * 主窗口的尺寸
+     * Ana pencerenin boyutu
      */
     var size by mutableStateOf(DpSize(globalData.width.dp,globalData.height.dp))
 
     /**
-     * 描述如何放置窗口在屏幕
+     * Pencerenin ekranda nasıl yerleştirileceğini açıklar
      */
     var placement by mutableStateOf(globalData.placement)
 
     /**
-     * 自动检查更新
+     * Güncellemeleri otomatik kontrol et
      */
     var autoUpdate by mutableStateOf(globalData.autoUpdate)
 
     /**
-     * 忽略的版本
+     * Yoksayılan sürüm
      */
     var ignoreVersion by mutableStateOf(globalData.ignoreVersion)
 
     /**
-     * 过滤 BNC 词频最常见的单词数量，默认为 1000
+     * En yaygın BNC kelime sıklığına sahip kelime sayısını filtrele, varsayılan 1000
      */
     var bncNum by mutableStateOf(globalData.bnc)
 
     /**
-     * 过滤 COCA 词频最常见的单词数量，默认为 1000
+     * En yaygın COCA kelime sıklığına sahip kelime sayısını filtrele, varsayılan 1000
      */
     var frqNum by mutableStateOf(globalData.frq)
 
     /**
-     * 单词所在句子的最大单词数, 默认为 25
+     * Kelimenin bulunduğu cümlenin maksimum kelime sayısı, varsayılan 25
      */
     var maxSentenceLength by mutableStateOf(globalData.maxSentenceLength)
 

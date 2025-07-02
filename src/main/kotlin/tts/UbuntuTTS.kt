@@ -30,9 +30,9 @@ class UbuntuTTS {
         } catch (exception: IOException) {
             exception.printStackTrace()
             if(exception.message?.endsWith("No such file or directory") == true) {
-                JOptionPane.showMessageDialog(null, "请安装 espeak", "错误", JOptionPane.ERROR_MESSAGE)
+                JOptionPane.showMessageDialog(null, "Lütfen espeak kurun", "Hata", JOptionPane.ERROR_MESSAGE)
             } else {
-                JOptionPane.showMessageDialog(null, "${exception.message}", "错误", JOptionPane.ERROR_MESSAGE)
+                JOptionPane.showMessageDialog(null, "${exception.message}", "Hata", JOptionPane.ERROR_MESSAGE)
             }
         }
 

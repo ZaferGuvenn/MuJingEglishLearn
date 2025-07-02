@@ -6,10 +6,10 @@ import java.io.File
 import java.io.IOException
 import javax.swing.TransferHandler
 
-/** 创建拖放处理器
- * @param singleFile 是否只接收单个文件
- * @param parseImportFile 处理导入的文件的函数
- * @param showWrongMessage 显示提示信息的函数
+/** Sürükle ve bırak işleyicisi oluştur
+ * @param singleFile yalnızca tek bir dosya mı kabul edilsin
+ * @param parseImportFile içe aktarılan dosyaları işleme fonksiyonu
+ * @param showWrongMessage ipucu mesajını gösterme fonksiyonu
  */
 fun createTransferHandler(
     singleFile: Boolean = true,
@@ -35,7 +35,7 @@ fun createTransferHandler(
                     if (files.size == 1) {
                         parseImportFile(files)
                     } else {
-                        showWrongMessage("一次只能读取一个文件")
+                        showWrongMessage("Aynı anda yalnızca bir dosya okunabilir")
                     }
                 } else {
                     parseImportFile(files)

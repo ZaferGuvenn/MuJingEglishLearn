@@ -56,9 +56,9 @@ import kotlin.math.floor
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * 视频播放器，可以显示单词弹幕
- * 等 Jetbrains 修复了 https://github.com/JetBrains/compose-jb/issues/1800，要执行一次重构。
- * 如果 SwingPanel 不再显示到屏幕最前面之后，也需要重构一次。
+ * Video oynatıcı, kelime弹幕'larını (akan yazılarını) gösterebilir
+ * Jetbrains https://github.com/JetBrains/compose-jb/issues/1800 sorununu düzelttikten sonra yeniden düzenleme yapılmalı.
+ * SwingPanel artık en üstte gösterilmiyorsa da yeniden düzenleme yapılmalı.
  */
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -79,136 +79,136 @@ fun Player(
 
     val height = if (Toolkit.getDefaultToolkit().screenSize.height > 720) 854.dp else 662.dp
     val width = if (Toolkit.getDefaultToolkit().screenSize.width > 1280) 1289.dp else 1000.dp
-    /** 窗口的大小和位置 */
+    /** Pencere boyutu ve konumu */
     val windowState = rememberWindowState(
         size = DpSize(width, height),
         position = WindowPosition(Alignment.Center)
     )
 
-    /** 播放器的大小和位置 */
+    /** Oynatıcı boyutu ve konumu */
     val playerWindowState = rememberDialogState(
         width = width,
         height = height,
         position = WindowPosition(Alignment.Center)
     )
 
-    /** 标题 */
+    /** Başlık */
     val title by remember (videoPath){
         derivedStateOf {
             if(videoPath.isEmpty()){
-                "视频播放器"
+                "Video Oynatıcı"
             }else{
                 File(videoPath).name
             }
         }
     }
 
-    /** 显示视频的窗口 */
+    /** Videoyu gösteren pencere */
     var playerWindow by remember { mutableStateOf<ComposeDialog?>(null) }
 
-    /** 控制视频显示的窗口，弹幕显示到这个窗口 */
+    /** Video gösterimini kontrol eden pencere, akan yazılar bu pencerede gösterilir */
     var controlWindow by remember { mutableStateOf<ComposeDialog?>(null) }
 
-    /** 是否全屏，如果使用系统的全屏，播放器窗口会黑屏 */
+    /** Tam ekran mı, sistemin tam ekranı kullanılırsa oynatıcı penceresi kararır */
     var isFullscreen by remember { mutableStateOf(false) }
 
-    /** 全屏之前的位置 */
+    /** Tam ekrandan önceki konum */
     var fullscreenBeforePosition by remember { mutableStateOf(WindowPosition(0.dp,0.dp)) }
 
-    /** 全屏之前的尺寸 */
+    /** Tam ekrandan önceki boyut */
     var fullscreenBeforeSize by remember{ mutableStateOf(DpSize(width, height)) }
 
-    /** VLC 视频播放组件 */
+    /** VLC video oynatma bileşeni */
     val videoPlayerComponent by remember { mutableStateOf(createMediaPlayerComponent()) }
 
-    /** VLC 音频播放组件 */
+    /** VLC ses oynatma bileşeni */
     val audioPlayerComponent by remember{mutableStateOf(AudioPlayerComponent())}
 
-    /** 是否正在播放视频 */
+    /** Video oynatılıyor mu */
     var isPlaying by remember { mutableStateOf(false) }
 
-    /** 时间进度条 */
+    /** Zaman ilerleme çubuğu */
     var timeProgress by remember { mutableStateOf(0f) }
 
-    /** 当前时间 */
+    /** Mevcut zaman */
     var timeText by remember { mutableStateOf("") }
 
-    /** 查询弹幕 */
+    /** Akan yazıyı sorgula */
     var searchDanmaku by remember { mutableStateOf("") }
 
-    /** 弹幕计数器，用于快速定位弹幕 */
+    /** Akan yazı sayacı, akan yazıları hızlıca bulmak için kullanılır */
     var counter by remember { mutableStateOf(1) }
 
-    /** 这个视频的所有弹幕 */
+    /** Bu videodaki tüm akan yazılar */
     val danmakuMap by rememberDanmakuMap(videoPath, vocabularyPath,vocabulary)
 
-    /** 正在显示的弹幕,数字定位 */
+    /** Gösterilmekte olan akan yazı, sayısal konumlandırma */
     val showingDanmakuNum = remember { mutableStateMapOf<Int, DanmakuItem>() }
 
-    /** 正在显示的弹幕,单词定位 */
+    /** Gösterilmekte olan akan yazı, kelime konumlandırma */
     val showingDanmakuWord = remember { mutableStateMapOf<String, DanmakuItem>() }
 
-    /** 需要添加到正在显示的弹幕列表的弹幕 */
+    /** Gösterilmekte olan akan yazı listesine eklenmesi gereken akan yazılar */
     val shouldAddDanmaku = remember { mutableStateMapOf<Int, DanmakuItem>() }
 
-    /** 通用的暂停操作，比如空格键，双击视频触发的暂停。
-     * 使用这种方式触发暂停后，可以查看多个弹幕的解释，不会触发播放函数 */
+    /** Genel duraklatma işlemi, örneğin boşluk tuşu, videoya çift tıklayarak tetiklenen duraklatma.
+     * Bu şekilde duraklatma tetiklendikten sonra, birden fazla akan yazının açıklaması görüntülenebilir, oynatma işlevi tetiklenmez */
     var isNormalPause by remember { mutableStateOf(false) }
 
-    /** 播放器控制区的可见性 */
+    /** Oynatıcı kontrol alanının görünürlüğü */
     var controlBoxVisible by remember { mutableStateOf(false) }
     var timeSliderPress by remember { mutableStateOf(false) }
     var audioSliderPress by remember { mutableStateOf(false) }
     var playerCursor by remember{ mutableStateOf(PointerIcon.Default) }
-    /** 展开设置菜单 */
+    /** Ayarlar menüsünü genişlet */
     var settingsExpanded by remember { mutableStateOf(false) }
 
     var showSubtitleMenu by remember{mutableStateOf(false)}
 
-    /** 弹幕从右到左需要的时间，单位为毫秒 */
+    /** Akan yazının sağdan sola gitmesi için gereken süre, milisaniye cinsinden */
     var widthDuration by remember { mutableStateOf(playerWindowState.size.width.value.div(3).times(30).toInt()) }
 
-    /** 动作监听器每次需要删除的弹幕列表 */
+    /** Eylem dinleyicisinin her seferinde silmesi gereken akan yazı listesi */
     val removedList = remember { mutableStateListOf<DanmakuItem>() }
 
-    /** 正在显示单词详情 */
+    /** Kelime ayrıntıları gösteriliyor */
     var showingDetail by remember { mutableStateOf(false) }
 
-    /** 显示右键菜单 */
+    /** Sağ tıklama menüsünü göster */
     var showDropdownMenu by remember { mutableStateOf(false) }
 
-    /** 显示视频文件选择器 */
+    /** Video dosyası seçicisini göster */
     var showFilePicker by remember {mutableStateOf(false)}
 
-    /** 显示词库文件选择器 */
+    /** Kelime dağarcığı dosyası seçicisini göster */
     var showVocabularyPicker by remember {mutableStateOf(false)}
 
-    /** 显示字幕选择器 */
+    /** Altyazı seçicisini göster */
     var showSubtitlePicker by remember{mutableStateOf(false)}
 
-    /** 支持的视频类型 */
+    /** Desteklenen video türleri */
     val videoFormatList = remember{ mutableStateListOf("mp4","mkv") }
 
-    /** 字幕列表 */
+    /** Altyazı listesi */
     val subtitleTrackList = remember{mutableStateListOf<Pair<Int,String>>()}
 
-    /** 字幕轨道列表 */
+    /** Ses Parçası Listesi */
     val audioTrackList = remember{mutableStateListOf<Pair<Int,String>>()}
 
-    /** 当前正在显示的字幕轨道 */
+    /** Mevcut gösterilen altyazı parçası */
     var currentSubtitleTrack by remember{mutableStateOf(0)}
 
-    /** 当前正在播放的音频轨道 */
+    /** Mevcut oynatılan ses parçası */
     var currentAudioTrack by remember{mutableStateOf(0)}
 
     var hideControlBoxTask :TimerTask? by remember{ mutableStateOf(null)}
     val azureTTS = rememberAzureTTS()
-    /** 使弹幕从右往左移动的定时器 */
+    /** Akan yazıların sağdan sola hareket etmesini sağlayan zamanlayıcı */
     val danmakuTimer by remember {
         mutableStateOf(
             Timer(30) {
                 if(playerState.danmakuVisible){
-                    // showingDanmakuWord 和 showingDanmakuNum 的 values 都是一样的。
+                    // showingDanmakuWord ve showingDanmakuNum değerleri aynıdır.
                     val showingList = showingDanmakuNum.values.toList()
                     for (i in showingList.indices) {
                         val danmakuItem = showingList.getOrNull(i)
@@ -237,13 +237,13 @@ fun Player(
         )
     }
 
-    /** 关闭窗口 */
+    /** Pencereyi kapat */
     val closeWindow: () -> Unit = {
         danmakuTimer.stop()
         playerState.closePlayerWindow()
     }
 
-    /** 播放 */
+    /** Oynat */
     val play: () -> Unit = {
         if (isPlaying) {
             danmakuTimer.stop()
@@ -256,19 +256,19 @@ fun Player(
         }
     }
 
-    /** 手动触发暂停，与之对应的是，用鼠标移动弹幕触发的自动暂停和用快速定位触发的自动暂停。*/
+    /** Manuel tetiklenen duraklatma, buna karşılık fareyle akan yazıyı hareket ettirerek tetiklenen otomatik duraklatma ve hızlı konumlandırma ile tetiklenen otomatik duraklatma vardır.*/
     val normalPause: () -> Unit = {
         isNormalPause = !isNormalPause
     }
 
-    /** 清理弹幕 */
+    /** Akan yazıları temizle */
     val cleanDanmaku: () -> Unit = {
         showingDanmakuNum.clear()
         removedList.clear()
         shouldAddDanmaku.clear()
     }
 
-    /** 播放单词发音 */
+    /** Kelime telaffuzunu oynat */
     val playAudio:(String) -> Unit = { word ->
         val audioPath = getAudioPath(
             word = word,
@@ -289,32 +289,32 @@ fun Player(
 
 
 
-    /** 使用这个函数处理拖放的文件 */
+    /** Sürüklenip bırakılan dosyaları işlemek için bu işlevi kullanın */
     val parseImportFile: (List<File>) -> Unit = { files ->
         if(files.size == 1){
             val file = files.first()
-            /** 拖放的是视频。*/
+            /** Sürüklenip bırakılan bir videodur.*/
             if(videoFormatList.contains(file.extension)){
                 videoPathChanged(file.absolutePath)
-            /** 拖放的可能是词库。*/
+            /** Sürüklenip bırakılan bir kelime dağarcığı olabilir.*/
             }else if(file.extension == "json"){
                 vocabularyPathChanged(file.absolutePath)
             }
         }else if(files.size == 2){
             val first = files.first()
             val last = files.last()
-            /** 第一个文件为视频文件，第二个文件为词库。*/
+            /** İlk dosya bir video dosyası, ikincisi bir kelime dağarcığıdır.*/
             if(videoFormatList.contains(first.extension) && last.extension == "json"){
                 videoPathChanged(first.absolutePath)
                 vocabularyPathChanged(last.absolutePath)
-            /** 第一个文件为词库，第二个文件为视频。*/
+            /** İlk dosya bir kelime dağarcığı, ikincisi bir videodur.*/
             }else if(first.extension == "json" && videoFormatList.contains(last.extension)){
                 vocabularyPathChanged(first.absolutePath)
                 videoPathChanged(last.absolutePath)
-             /** 拖放了两个视频，只处理第一个视频。*/
+             /** İki video sürüklenip bırakıldı, yalnızca ilk video işlenir.*/
             }else if(videoFormatList.contains(first.extension) && videoFormatList.contains(last.extension)){
                 videoPathChanged(first.absolutePath)
-            /** 拖放了两个词库，只处理第一个词库。 */
+            /** İki kelime dağarcığı sürüklenip bırakıldı, yalnızca ilk kelime dağarcığı işlenir. */
             }else if(first.extension == "json" && last.extension == "json"){
                 vocabularyPathChanged(first.absolutePath)
             }
@@ -333,7 +333,7 @@ fun Player(
 
     val addSubtitle:(String) -> Unit = {path->
         videoPlayerComponent.mediaPlayer().subpictures().setSubTitleFile(path)
-        Timer("update subtitle track list", false).schedule(500) {
+        Timer("altyaziListesiniGuncelle", false).schedule(500) {
             subtitleTrackList.clear()
             videoPlayerComponent.mediaPlayer().subpictures().trackDescriptions().forEach { trackDescription ->
                 subtitleTrackList.add(Pair(trackDescription.id(),trackDescription.description()))
@@ -359,12 +359,12 @@ fun Player(
         resizable = true,
         onCloseRequest = { closeWindow() },
     ){
-        /** 最小化 */
+        /** Simge durumuna küçült */
         val minimized:() -> Unit = {
             window.isMinimized = true
         }
 
-        /** 全屏 */
+        /** Tam ekran */
         val fullscreen:()-> Unit = {
             if(isFullscreen){
                 isFullscreen = false
@@ -482,7 +482,7 @@ fun Player(
                     .onPointerEvent(PointerEventType.Move) {
                         controlBoxVisible = true
                         hideControlBoxTask?.cancel()
-                        hideControlBoxTask = Timer("Hide ControlBox", false).schedule(10000) {
+                        hideControlBoxTask = Timer("KontrolKutusunuGizle", false).schedule(10000) {
                             controlBoxVisible = false
                         }
                     }
@@ -512,7 +512,7 @@ fun Player(
                             onClick = { showDropdownMenu = true}
                         )) {
 
-                        /** 如果手动触发了暂停，就不处理播放函数 */
+                        /** Manuel olarak duraklatma tetiklenirse oynatma işlevini işleme */
                         val playEvent: () -> Unit = {
                             if (!isNormalPause) {
                                 play()
@@ -686,7 +686,7 @@ fun Player(
                                                     horizontalArrangement = Arrangement.SpaceBetween,
                                                     modifier = Modifier.fillMaxWidth()
                                                 ) {
-                                                    Text("单词定位弹幕")
+                                                    Text("Kelime Konumlu Akan Yazı")
                                                     Switch(checked = !playerState.showSequence, onCheckedChange = {
                                                         playerState.showSequence = !it
                                                         playerState.savePlayerState()
@@ -699,7 +699,7 @@ fun Player(
                                                     horizontalArrangement = Arrangement.SpaceBetween,
                                                     modifier = Modifier.fillMaxWidth()
                                                 ) {
-                                                    Text("数字定位弹幕")
+                                                    Text("Sayı Konumlu Akan Yazı")
                                                     Switch(checked = playerState.showSequence, onCheckedChange = {
                                                         playerState.showSequence = it
                                                         playerState.savePlayerState()
@@ -712,7 +712,7 @@ fun Player(
                                                     horizontalArrangement = Arrangement.SpaceBetween,
                                                     modifier = Modifier.fillMaxWidth()
                                                 ) {
-                                                    Text("弹幕")
+                                                    Text("Akan Yazı")
                                                     Switch(checked = playerState.danmakuVisible, onCheckedChange = {
                                                         if (playerState.danmakuVisible) {
                                                             playerState.danmakuVisible = false
@@ -739,7 +739,7 @@ fun Player(
                                                 border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                                                 shape = RectangleShape
                                             ) {
-                                                Text(text = "字幕和声音", modifier = Modifier.padding(10.dp))
+                                                Text(text = "Altyazı ve Ses", modifier = Modifier.padding(10.dp))
                                             }
                                         },
                                         delayMillis = 100,
@@ -780,12 +780,12 @@ fun Player(
                                             modifier = Modifier.width(282.dp).height(40.dp)
                                         ) {
                                             Tab(
-                                                text = { Text("字幕") },
+                                                text = { Text("Altyazı") },
                                                 selected = state == 0,
                                                 onClick = { state = 0 }
                                             )
                                             Tab(
-                                                text = { Text("声音") },
+                                                text = { Text("Ses") },
                                                 selected = state == 1,
                                                 onClick = { state = 1 }
                                             )
@@ -801,7 +801,7 @@ fun Player(
                                                         modifier = Modifier.width(282.dp).height(40.dp)
                                                     ) {
                                                         Text(
-                                                            text = "添加字幕",
+                                                            text = "Altyazı Ekle",
                                                             fontSize = 12.sp,
                                                             modifier = Modifier.fillMaxWidth()
                                                         )
@@ -942,7 +942,7 @@ fun Player(
                                                     }
                                                 )
                                                 if (searchDanmaku.isEmpty()) {
-                                                    val text = if(playerState.showSequence) "输入数字" else "输入单词"
+                                                        val text = if(playerState.showSequence) "Sayı Girin" else "Kelime Girin"
                                                     Text(text, color = Color.White)
                                                 }
                                             }
@@ -955,7 +955,7 @@ fun Player(
                                                         border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                                                         shape = RectangleShape
                                                     ) {
-                                                        Text(text = "搜索  Enter", modifier = Modifier.padding(10.dp))
+                                                        Text(text = "Ara Enter", modifier = Modifier.padding(10.dp))
                                                     }
                                                 },
                                                 delayMillis = 100,
@@ -990,12 +990,12 @@ fun Player(
                             MaterialTheme(colors = darkColors(primary = Color.LightGray)) {
                                 Row( modifier = Modifier.align(Alignment.Center)){
                                     OutlinedButton(onClick = { showFilePicker = true }){
-                                        Text("打开视频")
+                                        Text("Video Aç")
                                     }
                                 }
                             }
                         }
-                        // 视频文件选择器
+                        // Video dosyası seçicisini göster
                         FilePicker(
                             show = showFilePicker,
                             initialDirectory = ""
@@ -1008,7 +1008,7 @@ fun Player(
                             showFilePicker = false
                         }
                         val extensions = if(isMacOS()) listOf("public.json") else listOf("json")
-                        // 词库文件选择器
+                        // Kelime dağarcığı dosyası seçicisini göster
                         FilePicker(
                             show = showVocabularyPicker,
                             fileExtensions = extensions,
@@ -1021,7 +1021,7 @@ fun Player(
                             }
                             showVocabularyPicker = false
                         }
-                        // 字幕文件选择器
+                        // Altyazı seçicisini göster
                         FilePicker(
                             show = showSubtitlePicker,
                             initialDirectory = ""
@@ -1034,7 +1034,7 @@ fun Player(
                             showSubtitlePicker = false
                         }
 
-                        // 右键菜单
+                        // Sağ tıklama menüsünü göster
                         CursorDropdownMenu(
                             expanded = showDropdownMenu,
                             onDismissRequest = {showDropdownMenu = false},
@@ -1043,7 +1043,7 @@ fun Player(
                                 showFilePicker = true
                                 showDropdownMenu = false
                             }) {
-                                Text("打开视频")
+                                Text("Video Aç")
                             }
                             DropdownMenuItem(
                                 enabled = videoPath.isNotEmpty(),
@@ -1051,7 +1051,7 @@ fun Player(
                                     showVocabularyPicker = true
                                     showDropdownMenu = false
                                 }) {
-                                Text("添加词库")
+                                Text("Kelime Dağarcığı Ekle")
                             }
                         }
 
@@ -1062,7 +1062,7 @@ fun Player(
             }
 
 
-            /** 播放器显示后只执行一次，设置最小尺寸，绑定时间进度条，和时间,设置拖放函数 */
+            /** Oynatıcı görüntülendikten sonra yalnızca bir kez yürütülür, minimum boyutu ayarlar, zaman ilerleme çubuğunu ve zamanı bağlar, sürükle ve bırak işlevini ayarlar */
             LaunchedEffect(Unit) {
                 if(playerState.danmakuVisible && videoPath.isNotEmpty() && danmakuMap.isNotEmpty()){
                     danmakuTimer.start()
@@ -1111,7 +1111,7 @@ fun Player(
 
                 }
                 videoPlayerComponent.mediaPlayer().events().addMediaPlayerEventListener(eventListener)
-                /** 设置拖放函数 */
+                /** Sürükle ve bırak işlevini ayarla */
                 val transferHandler = createTransferHandler(
                     singleFile = false,
                     showWrongMessage = { message ->
@@ -1121,9 +1121,9 @@ fun Player(
                 )
                 window.transferHandler = transferHandler
             }
-            /** 保存 mediaPlayerEventListener 的引用，用于删除。*/
+            /** Silmek için mediaPlayerEventListener referansını kaydet.*/
             var mediaPlayerEventListener by remember{ mutableStateOf<MediaPlayerEventAdapter?>(null) }
-            /** 启动的时候执行一次，每次添加词库后再执行一次 */
+            /** Başlangıçta bir kez yürütülür, her kelime dağarcığı eklendikten sonra tekrar yürütülür */
             LaunchedEffect(vocabularyPath) {
                 if(mediaPlayerEventListener != null){
                     videoPlayerComponent.mediaPlayer().events().removeMediaPlayerEventListener(mediaPlayerEventListener)
@@ -1132,9 +1132,9 @@ fun Player(
                 var lastMaxLength = 0
                 val eventListener = object:MediaPlayerEventAdapter() {
                     override fun timeChanged(mediaPlayer: MediaPlayer?, newTime: Long) {
-                        // 单位为秒
+                        // Birim: saniye
                         val startTime = (newTime.milliseconds.inWholeSeconds + widthDuration.div(3000)).toInt()
-                        // 每秒执行一次
+                        // Saniyede bir kez yürüt
                         if (playerState.danmakuVisible && danmakuMap.isNotEmpty() && startTime != lastTime) {
                             val danmakuList = danmakuMap[startTime]
                             var offsetY = if(isFullscreen) 50 else 20
@@ -1149,7 +1149,7 @@ fun Player(
                                     maxLength = danmakuItem.content.length
                                 }
 
-                                // TODO 这里还是有多线程问题，可能会出现：这里刚刚添加，在另一个控制动画的 Timer 里面马上就删除了。
+                                // TODO Burada hala çoklu iş parçacığı sorunu var, şöyle bir durum oluşabilir: Buraya yeni eklendiğinde, animasyonu kontrol eden başka bir Zamanlayıcı'da hemen silinebilir.
                                 danmakuItem.sequence = counter
                                 shouldAddDanmaku[counter++] = danmakuItem
                                 if(counter == 100) counter = 1
@@ -1163,7 +1163,7 @@ fun Player(
                 mediaPlayerEventListener = eventListener
             }
 
-            /** 打开视频后自动播放 */
+            /** Videoyu açtıktan sonra otomatik oynat */
             LaunchedEffect(videoPath) {
                 if(videoPath.isNotEmpty()){
                     videoPlayerComponent.mediaPlayer().media().play(videoPath,":sub-autodetect-file")
@@ -1174,32 +1174,32 @@ fun Player(
                     if(danmakuTimer.isRunning){
                         showingDanmakuNum.clear()
                     }
-                    // 有一个奇怪的 bug,打开视频后只有声音看不到画面，调整窗口大小后就正常了。
+                    // Garip bir hata var, videoyu açtıktan sonra yalnızca ses var ve görüntü yok, pencere boyutunu ayarladıktan sonra normale dönüyor.
                     playerWindowState.size =DpSize(playerWindowState.size.width + 1.dp,playerWindowState.size.height)
-                    Timer("恢复宽度", false).schedule(500) {
+                    Timer("genisligiGeriYukle", false).schedule(500) {
                         playerWindowState.size =DpSize(playerWindowState.size.width - 1.dp,playerWindowState.size.height)
                     }
                 }
             }
 
-            /** 同步窗口尺寸 */
+            /** Pencere boyutlarını senkronize et */
             LaunchedEffect(playerWindowState) {
                 snapshotFlow { playerWindowState.size }
                     .onEach {
-                        // 同步窗口和对话框的大小
+                        // Pencere ve iletişim kutusu boyutlarını senkronize et
                         windowState.size = playerWindowState.size
                         val titleBarHeight = if(isFullscreen) 1 else 40
                         videoPlayerComponent.size =
                             Dimension(playerWindowState.size.width.value.toInt(), playerWindowState.size.height.value.toInt() - titleBarHeight)
                         widthDuration = playerWindowState.size.width.value.div(3).times(30).toInt()
-                        // 改变窗口的宽度后，有的弹幕会加速移动，还有一些弹幕会重叠，所以要把弹幕全部清除。
+                        // Pencere genişliğini değiştirdikten sonra bazı akan yazılar hızlanır ve bazıları üst üste gelir, bu yüzden tüm akan yazıları temizlemek gerekir.
                         cleanDanmaku()
                     }
                     .launchIn(this)
 
                 snapshotFlow { playerWindowState.position }
                     .onEach {
-                        // 同步窗口和对话框的位置
+                        // Pencere ve iletişim kutusu konumlarını senkronize et
                         windowState.position = playerWindowState.position
                     }
                     .launchIn(this)
@@ -1378,10 +1378,10 @@ fun DanmakuBox(
 
     }
 
-    /** 等宽字体*/
+    /** Sabit genişlikli yazı tipi*/
     val monospace  = rememberMonospace()
 
-    // 在这个 Box 使用 Modifier.fillMaxSize() 可能会导致 DropdownMenu 显示的位置不准。
+    // Bu Box'ta Modifier.fillMaxSize() kullanmak DropdownMenu'nun yanlış konumda görüntülenmesine neden olabilir.
     Box {
         showingDanmaku.forEach { (_, danmakuItem) ->
             Danmaku(
@@ -1407,16 +1407,16 @@ fun rememberDanmakuMap(
     vocabulary: MutableVocabulary?
 ) = remember(videoPath, vocabulary){
     derivedStateOf{
-        // Key 为秒 > 这一秒出现的单词列表
+        // Anahtar saniyedir > Bu saniyede görünen kelimelerin listesi
         val timeMap = mutableMapOf<Int, MutableList<DanmakuItem>>()
         val vocabularyDir = File(vocabularyPath).parentFile
         if (vocabulary != null) {
-            // 使用字幕和MKV 生成的词库
+            // Altyazılar ve MKV kullanılarak oluşturulan kelime dağarcıkları
             if (vocabulary.type == VocabularyType.MKV || vocabulary.type == VocabularyType.SUBTITLES) {
                 val absVideoFile = File(videoPath)
                 val relVideoFile = File(vocabularyDir, absVideoFile.name)
-                // absVideoFile.exists() 为真 视频文件没有移动，还是词库里保存的地址
-                //  relVideoFile.exists() 为真 视频文件移动了，词库里保存的地址是旧地址
+                // absVideoFile.exists() doğruysa video dosyası taşınmamıştır ve hala kelime dağarcığında kayıtlı adrestir
+                //  relVideoFile.exists() doğruysa video dosyası taşınmıştır ve kelime dağarcığında kayıtlı adres eski adrestir
                 if ((absVideoFile.exists() && absVideoFile.absolutePath ==  vocabulary.relateVideoPath) ||
                     (relVideoFile.exists() && relVideoFile.name == File(vocabulary.relateVideoPath).name)
                 ) {
@@ -1430,7 +1430,7 @@ fun rememberDanmakuMap(
                     }
                 }
 
-                // 文档词库，或混合词库
+                // Belge kelime dağarcığı veya karma kelime dağarcığı
             } else {
                 vocabulary.wordList.forEach { word ->
                     word.externalCaptions.forEach { externalCaption ->
