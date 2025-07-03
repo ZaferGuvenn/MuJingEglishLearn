@@ -19,7 +19,7 @@ import ui.window.windowBackgroundFlashingOnCloseFixHack
 @Composable
 fun DonateDialog(close: () -> Unit) {
     DialogWindow(
-        title = "捐赠",
+        title = "Bağış Yap", // "捐赠" -> "Bağış Yap"
         icon = painterResource("logo/logo.png"),
         onCloseRequest = { close() },
         resizable = false,
@@ -44,12 +44,12 @@ fun DonateDialog(close: () -> Unit) {
                     backgroundColor = Color.Transparent
                 ) {
                     Tab(
-                        text = { Text("微信支付") },
+                        text = { Text("WeChat Pay") }, // "微信支付" -> "WeChat Pay" (Özel isim olduğu için orijinal bırakıldı)
                         selected = state == 0,
                         onClick = { state = 0 }
                     )
                     Tab(
-                        text = { Text("支付宝") },
+                        text = { Text("Alipay") }, // "支付宝" -> "Alipay" (Özel isim olduğu için orijinal bırakıldı)
                         selected = state == 1,
                         onClick = { state = 1 }
                     )

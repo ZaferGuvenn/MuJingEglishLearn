@@ -333,7 +333,7 @@ fun Search(
                         }
 
                     }else if(input.isNotEmpty()){
-                        Text("没有找到相关单词")
+                        Text("İlgili kelime bulunamadı.") // "没有找到相关单词" -> "İlgili kelime bulunamadı."
                     }
                 }
                 VerticalScrollbar(

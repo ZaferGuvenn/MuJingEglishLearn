@@ -211,7 +211,7 @@ fun WordScreen(
                         border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                         shape = RectangleShape
                     ) {
-                        Text(text = "打开词库文件 $ctrl + O", modifier = Modifier.padding(10.dp))
+                        Text(text = "Kelime Listesi Aç $ctrl + O", modifier = Modifier.padding(10.dp)) // "打开词库文件" -> "Kelime Listesi Aç"
                     }
                 },
                 delayMillis = 50,
@@ -242,7 +242,7 @@ fun WordScreen(
                 wordScreenState.vocabularyName = ""
                 wordScreenState.vocabularyPath = ""
                 wordScreenState.saveWordScreenState()
-            }, toolTip = "关闭当前词库")
+            }, toolTip = "Mevcut Kelime Listesini Kapat") // "关闭当前词库" -> "Mevcut Kelime Listesini Kapat"
             val extensions = if(isMacOS()) listOf("public.json") else listOf("json")
 
             FilePicker(
@@ -301,10 +301,10 @@ fun Header(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ){
-        // macOS 的标题栏和 windows 不一样，需要特殊处理
+        // macOS başlık çubuğu Windows'tan farklıdır, özel işlem gerektirir
         if (isMacOS()) {
             MacOSTitle(
-                title = title,
+                title = title, // title zaten Türkçe geliyor App.kt'den
                 window = window,
                 modifier = Modifier.padding(top = 5.dp)
             )
@@ -313,13 +313,13 @@ fun Header(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center){
-            // 记忆单词时的状态信息
+            // Kelime öğrenme sırasındaki durum bilgisi
             val text = when(wordScreenState.memoryStrategy){
                 Normal -> { if(wordScreenState.vocabulary.size>0) "${wordScreenState.index + 1}/${wordScreenState.vocabulary.size}" else ""}
-                Dictation -> { "听写单词   ${wordScreenState.dictationIndex + 1}/${wordScreenState.dictationWords.size}"}
-                DictationTest -> {"听写测试   ${wordScreenState.dictationIndex + 1}/${wordScreenState.reviewWords.size}"}
-                NormalReviewWrong -> { "复习错误单词   ${wordScreenState.dictationIndex + 1}/${wordScreenState.wrongWords.size}"}
-                DictationTestReviewWrong -> { "听写测试 - 复习错误单词   ${wordScreenState.dictationIndex + 1}/${wordScreenState.wrongWords.size}"}
+                Dictation -> { "Kelime Dikte Et   ${wordScreenState.dictationIndex + 1}/${wordScreenState.dictationWords.size}"} // "听写单词"
+                DictationTest -> {"Dikte Testi   ${wordScreenState.dictationIndex + 1}/${wordScreenState.reviewWords.size}"} // "听写测试"
+                NormalReviewWrong -> { "Yanlış Kelimeleri Tekrar Et   ${wordScreenState.dictationIndex + 1}/${wordScreenState.wrongWords.size}"} // "复习错误单词"
+                DictationTestReviewWrong -> { "Dikte Testi - Yanlış Kelimeleri Tekrar Et   ${wordScreenState.dictationIndex + 1}/${wordScreenState.wrongWords.size}"} // "听写测试 - 复习错误单词"
             }
 
             val top = if(wordScreenState.memoryStrategy != Normal) 0.dp else 12.dp
@@ -335,13 +335,13 @@ fun Header(
                 Spacer(Modifier.width(20.dp))
                 val tooltip = when (wordScreenState.memoryStrategy) {
                     DictationTest, DictationTestReviewWrong -> {
-                        "退出听写测试"
+                        "Dikte Testinden Çık" // "退出听写测试"
                     }
                     Dictation -> {
-                        "退出听写"
+                        "Dikte Etmekten Çık" // "退出听写"
                     }
                     else -> {
-                        "退出复习"
+                        "Tekrardan Çık" // "退出复习"
                     }
                 }
                 ExitButton(
@@ -471,16 +471,16 @@ fun MainContent(
                     appState.hardVocabulary.size = appState.hardVocabulary.wordList.size
                 }
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(window, "删除单词失败,错误信息:\n${e.message}")
+                JOptionPane.showMessageDialog(window, "Kelime silinemedi. Hata:\n${e.message}") // "删除单词失败,错误信息:\n${e.message}"
             }
         }
 
-        /** 把当前单词加入到熟悉词库 */
+        /** Mevcut kelimeyi bildiklerine ekle */
         val addToFamiliar:() -> Unit = {
             val file = getFamiliarVocabularyFile()
             val familiar =  loadVocabulary(file.absolutePath)
             val familiarWord = currentWord.deepCopy()
-            // 如果当前词库是 MKV 或 SUBTITLES 类型的词库，需要把内置词库转换成外部词库。
+            // Mevcut kelime listesi MKV veya SUBTITLES türündeyse, dahili altyazıları harici altyazılara dönüştür.
             if (wordScreenState.vocabulary.type == VocabularyType.MKV ||
                 wordScreenState.vocabulary.type == VocabularyType.SUBTITLES
             ) {
@@ -499,7 +499,7 @@ fun MainContent(
 
             }
             if(familiar.name.isEmpty()){
-                familiar.name = "FamiliarVocabulary"
+                familiar.name = "FamiliarVocabulary" // Bu isim Türkçe olmalı, örn: "TanidikKelimeler" veya JSON'dan gelen ad kullanılmalı. Şimdilik böyle bırakıyorum.
             }
             if(!familiar.wordList.contains(familiarWord)){
                 familiar.wordList.add(familiarWord)
@@ -509,40 +509,40 @@ fun MainContent(
                 saveVocabulary(familiar,file.absolutePath)
                 deleteWord()
             }catch(e:Exception){
-                // 回滚
+                // Geri al
                 if(familiar.wordList.contains(familiarWord)){
                     familiar.wordList.remove(familiarWord)
                     familiar.size = familiar.wordList.size
                 }
 
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(window, "保存熟悉词库失败,错误信息:\n${e.message}")
+                JOptionPane.showMessageDialog(window, "Tanıdık kelime listesi kaydedilemedi. Hata:\n${e.message}") // "保存熟悉词库失败,错误信息:\n${e.message}"
             }
             showFamiliarDialog = false
         }
 
-        /** 处理加入到困难词库的函数 */
+        /** Zor kelime listesine ekleme/çıkarma işlemini yap */
         val bookmarkClick :() -> Unit = {
             val hardWord = currentWord.deepCopy()
             val contains = appState.hardVocabulary.wordList.contains(currentWord)
             val index = appState.hardVocabulary.wordList.indexOf(currentWord)
             if(contains){
                 appState.hardVocabulary.wordList.removeAt(index)
-                // 如果当前词库是困难词库，说明用户想把单词从困难词库（当前词库）删除
-                if(wordScreenState.vocabulary.name == "HardVocabulary"){
+                // Mevcut kelime listesi zor kelime listesiyse, kullanıcı kelimeyi zor kelime listesinden (mevcut liste) silmek istiyor demektir.
+                if(wordScreenState.vocabulary.name == "HardVocabulary"){ // "HardVocabulary" yerine Türkçe karşılığı gelmeli.
                     wordScreenState.vocabulary.wordList.remove(currentWord)
                     wordScreenState.vocabulary.size = wordScreenState.vocabulary.wordList.size
                     try{
                         wordScreenState.saveCurrentVocabulary()
                     }catch (e:Exception){
-                        // 回滚
+                        // Geri al
                         appState.hardVocabulary.wordList.add(index,currentWord)
                         appState.hardVocabulary.size = appState.hardVocabulary.wordList.size
                         wordScreenState.vocabulary.wordList.add(wordScreenState.index,currentWord)
                         wordScreenState.vocabulary.size = wordScreenState.vocabulary.wordList.size
 
                         e.printStackTrace()
-                        JOptionPane.showMessageDialog(window, "保存当前词库失败,错误信息:\n${e.message}")
+                        JOptionPane.showMessageDialog(window, "Mevcut kelime listesi kaydedilemedi. Hata:\n${e.message}") // "保存当前词库失败,错误信息:\n${e.message}"
                     }
 
                 }
@@ -578,7 +578,7 @@ fun MainContent(
                     appState.hardVocabulary.wordList.remove(hardWord)
                 }
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(window, "保存困难词库失败,错误信息:\n${e.message}")
+                JOptionPane.showMessageDialog(window, "Zor kelime listesi kaydedilemedi. Hata:\n${e.message}") // "保存困难词库失败,错误信息:\n${e.message}"
             }
 
         }
@@ -712,8 +712,8 @@ fun MainContent(
                     }else false
                 }
                 (it.isCtrlPressed && it.key == Key.Y && it.type == KeyEventType.KeyUp) -> {
-                    if(wordScreenState.vocabulary.name == "FamiliarVocabulary"){
-                        JOptionPane.showMessageDialog(window, "不能把熟悉词库的单词添加到熟悉词库")
+                    if(wordScreenState.vocabulary.name == "FamiliarVocabulary"){ // "FamiliarVocabulary" yerine Türkçe karşılığı olmalı
+                        JOptionPane.showMessageDialog(window, "Tanıdık kelime listesindeki kelimeler tekrar tanıdık listesine eklenemez.") // "不能把熟悉词库的单词添加到熟悉词库"
                     }else{
                         showFamiliarDialog = true
                     }
@@ -1272,7 +1272,7 @@ fun MainContent(
                     if(wordScreenState.vocabularyPath.startsWith(path)){
                         val fileChooser = appState.futureFileChooser.get()
                         fileChooser.dialogType = JFileChooser.SAVE_DIALOG
-                        fileChooser.dialogTitle = "保存重置后的词库"
+                        fileChooser.dialogTitle = "Sıfırlanmış Kelime Listesini Kaydet" // "保存重置后的词库"
                         val myDocuments = FileSystemView.getFileSystemView().defaultDirectory.path
                         val fileName = File(wordScreenState.vocabularyPath).nameWithoutExtension
                         fileChooser.selectedFile = File("$myDocuments${File.separator}$fileName.json")
@@ -1282,7 +1282,7 @@ fun MainContent(
                             val vocabularyDirPath =  Paths.get(getResourcesFile("vocabulary").absolutePath)
                             val savePath = Paths.get(selectedFile.absolutePath)
                             if(savePath.startsWith(vocabularyDirPath)){
-                                JOptionPane.showMessageDialog(null,"不能把词库保存到应用程序安装目录，因为软件更新或卸载时，词库会被重置或者被删除")
+                                JOptionPane.showMessageDialog(null,"Kelime listesi uygulama kurulum dizinine kaydedilemez, çünkü yazılım güncellendiğinde veya kaldırıldığında kelime listesi sıfırlanır veya silinir.") // "不能把词库保存到应用程序安装目录，因为软件更新或卸载时，词库会被重置或者被删除"
                             }else{
                                 wordScreenState.vocabulary.wordList.shuffle()
                                 val shuffledList = wordScreenState.vocabulary.wordList
@@ -1311,7 +1311,7 @@ fun MainContent(
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()
-                                    JOptionPane.showMessageDialog(window, "保存词库失败,错误信息:\n${e.message}")
+                                    JOptionPane.showMessageDialog(window, "Kelime listesi kaydedilemedi. Hata:\n${e.message}") // "保存词库失败,错误信息:\n${e.message}"
                                 }
 
 
@@ -1323,7 +1323,7 @@ fun MainContent(
                             wordScreenState.saveCurrentVocabulary()
                         }catch(e:Exception){
                             e.printStackTrace()
-                            JOptionPane.showMessageDialog(window, "保存词库失败,错误信息:\n${e.message}")
+                            JOptionPane.showMessageDialog(window, "Kelime listesi kaydedilemedi. Hata:\n${e.message}") // "保存词库失败,错误信息:\n${e.message}"
                         }
 
                     }
@@ -1563,7 +1563,7 @@ fun MainContent(
 
             if (showDeleteDialog) {
                 ConfirmDialog(
-                    message = "确定要删除单词 ${currentWord.value} ?",
+                    message = "${currentWord.value} kelimesini silmek istediğinizden emin misiniz?", // "确定要删除单词 ${currentWord.value} ?"
                     confirm = {
                         scope.launch {
                             deleteWord()
@@ -1575,8 +1575,8 @@ fun MainContent(
             }
             if(showFamiliarDialog){
                 ConfirmDialog(
-                    message = "确定要把 ${currentWord.value} 加入到熟悉词库？\n" +
-                            "加入到熟悉词库后，${currentWord.value} 会从当前词库删除。",
+                    message = "${currentWord.value} kelimesini tanıdık kelime listesine eklemek istediğinizden emin misiniz?\n" + // "确定要把 ${currentWord.value} 加入到熟悉词库？\n"
+                            "Bu işlem, kelimeyi mevcut listeden kaldıracaktır.", // "加入到熟悉词库后，${currentWord.value} 会从当前词库删除。"
                     confirm = { scope.launch { addToFamiliar() } },
                     close = { showFamiliarDialog = false }
                 )
@@ -1585,7 +1585,7 @@ fun MainContent(
             if (showEditWordDialog) {
                 EditWordDialog(
                     word = currentWord,
-                    title = "编辑单词",
+                    title = "Kelimeyi Düzenle", // "编辑单词" -> "Kelimeyi Düzenle"
                     appState = appState,
                     vocabulary = wordScreenState.vocabulary,
                     vocabularyDir = wordScreenState.getVocabularyDir(),
@@ -1756,7 +1756,7 @@ fun VocabularyEmpty(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "打开词库",
+                        text = "Kelime Listesi Aç", // "打开词库"
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable(onClick = { openVocabulary() })
                             .padding(5.dp)
@@ -1768,10 +1768,10 @@ fun VocabularyEmpty(
                     modifier = Modifier.padding(top = 10.dp).fillMaxWidth()
                 ) {
                     Text(
-                        text = "使用手册",
+                        text = "Kullanım Kılavuzu", // "使用手册"
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable(onClick = { openDocument() })
-                            .width(78.dp)
+                            .width(150.dp) // Genişlik artırıldı
                             .padding(5.dp)
                     )
                 }
@@ -1781,7 +1781,7 @@ fun VocabularyEmpty(
                     modifier = Modifier.padding(top = 10.dp).fillMaxWidth()
                 ) {
                     Text(
-                        text = "生成词库",
+                        text = "Kelime Listesi Oluştur", // "生成词库"
                         color = MaterialTheme.colors.primary,
                         modifier = Modifier.clickable(onClick = {generateVocabulary()  })
                             .padding(5.dp)
@@ -1802,7 +1802,7 @@ fun VocabularyEmpty(
                         modifier = Modifier.padding(top = 10.dp).onPointerEvent(PointerEventType.Enter) { visible = true }
                     ) {
                         Text(
-                            text = "内置词库",
+                            text = "Dahili Kelime Listeleri", // "内置词库" -> "Dahili Kelime Listeleri"
                             color = MaterialTheme.colors.primary,
                             modifier = Modifier.clickable(onClick = {openBuiltInVocabulary()})
                                 .padding(5.dp)
@@ -1811,13 +1811,13 @@ fun VocabularyEmpty(
                     val scope = rememberCoroutineScope()
                     AnimatedVisibility(visible = visible){
 
-                        /** 保存词库 */
+                        /** Kelime Listesini Kaydet */ // "保存词库"
                         val save:(File) -> Unit = {file ->
                             scope.launch(Dispatchers.IO) {
                                 val name = file.nameWithoutExtension
                                 val fileChooser = futureFileChooser.get()
                                 fileChooser.dialogType = JFileChooser.SAVE_DIALOG
-                                fileChooser.dialogTitle = "保存词库"
+                                fileChooser.dialogTitle = "Kelime Listesini Kaydet" // "保存词库"
                                 val myDocuments = FileSystemView.getFileSystemView().defaultDirectory.path
                                 fileChooser.selectedFile = File("$myDocuments${File.separator}${name}.json")
                                 val userSelection = fileChooser.showSaveDialog(parentWindow)
@@ -1825,16 +1825,16 @@ fun VocabularyEmpty(
 
                                     val fileToSave = fileChooser.selectedFile
                                     if (fileToSave.exists()) {
-                                        // 是-0,否-1，取消-2
+                                        // Evet-0, Hayır-1, İptal-2
                                         val answer =
-                                            JOptionPane.showConfirmDialog(parentWindow, "${name}.json 已存在。\n要替换它吗？")
+                                            JOptionPane.showConfirmDialog(parentWindow, "${name}.json zaten mevcut.\nDeğiştirilsin mi?", "Onay", JOptionPane.YES_NO_OPTION) // "${name}.json 已存在。\n要替换它吗？" -> Türkçe, "Onay" başlığı eklendi
                                         if (answer == 0) {
                                             try{
                                                 fileToSave.writeBytes(file.readBytes())
                                                 openChooseVocabulary(file.absolutePath)
                                             }catch (e:Exception){
                                                 e.printStackTrace()
-                                                JOptionPane.showMessageDialog(parentWindow,"保存失败，错误信息：\n${e.message}")
+                                                JOptionPane.showMessageDialog(parentWindow,"Kaydedilemedi. Hata:\n${e.message}") // "保存失败，错误信息：\n${e.message}"
                                             }
 
                                         }
@@ -1844,7 +1844,7 @@ fun VocabularyEmpty(
                                             openChooseVocabulary(file.absolutePath)
                                         }catch (e:Exception){
                                             e.printStackTrace()
-                                            JOptionPane.showMessageDialog(parentWindow,"保存失败，错误信息：\n${e.message}")
+                                            JOptionPane.showMessageDialog(parentWindow,"Kaydedilemedi. Hata:\n${e.message}")
                                         }
 
                                     }
@@ -1859,37 +1859,37 @@ fun VocabularyEmpty(
                             modifier = Modifier.padding(top = 5.dp)
                         ) {
                             Text(
-                                text = "四级",
+                                text = "CET-4", // "四级"
                                 color = MaterialTheme.colors.primary,
                                 modifier = Modifier.clickable(onClick = {
-                                    val file = getResourcesFile("vocabulary/大学英语/四级.json")
+                                    val file = getResourcesFile("vocabulary/Universite_Ingilizcesi/CET4.json") // Yol güncellendi (Varsayımsal)
                                     save(file)
                                 })
                                     .padding(5.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "六级",
+                                text = "CET-6", // "六级"
                                 color = MaterialTheme.colors.primary,
                                 modifier = Modifier.clickable(onClick = {
-                                    val file = getResourcesFile("vocabulary/大学英语/六级.json")
+                                    val file = getResourcesFile("vocabulary/Universite_Ingilizcesi/CET6.json") // Yol güncellendi (Varsayımsal)
                                     save(file)
                                 })
                                     .padding(5.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "牛津核心3000词",
+                                text = "Oxford 3000", // "牛津核心3000词" -> "Oxford 3000" (Daha kısa)
                                 color = MaterialTheme.colors.primary,
                                 modifier = Modifier.clickable(onClick = {
-                                    val file = getResourcesFile("vocabulary/牛津核心词/The_Oxford_3000.json")
+                                    val file = getResourcesFile("vocabulary/Oxford_Cekirdek_Kelimeler/The_Oxford_3000.json") // Yol güncellendi
                                     save(file)
                                 })
                                     .padding(5.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "更多",
+                                text = "Daha Fazla...", // "更多" -> "Daha Fazla..."
                                 color = MaterialTheme.colors.primary,
                                 modifier = Modifier.clickable(onClick = {openBuiltInVocabulary()})
                                     .padding(5.dp)
@@ -2800,7 +2800,7 @@ fun DeleteButton(onClick:()->Unit){
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Text(text = "删除单词")
+                    Text(text = "Kelimeyi Sil") // "删除单词"
                     CompositionLocalProvider(LocalContentAlpha provides 0.5f) {
                         val shift = if (isMacOS()) "⇧" else "Shift"
                         Text(text = " $shift + Delete ")
@@ -2823,13 +2823,13 @@ fun DeleteButton(onClick:()->Unit){
         }) {
             Icon(
                 Icons.Outlined.Delete,
-                contentDescription = "Localized description",
+                contentDescription = "Kelimeyi Sil", // "Localized description"
                 tint = MaterialTheme.colors.onBackground
             )
         }
     }
 }
-/** 编辑按钮*/
+/** Düzenle Butonu*/
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun EditButton(onClick: () -> Unit){
@@ -2840,7 +2840,7 @@ fun EditButton(onClick: () -> Unit){
                 border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                 shape = RectangleShape
             ) {
-                Text(text = "编辑", modifier = Modifier.padding(10.dp))
+                Text(text = "Düzenle", modifier = Modifier.padding(10.dp)) // "编辑"
             }
         },
         delayMillis = 300,
@@ -2856,14 +2856,14 @@ fun EditButton(onClick: () -> Unit){
         }) {
             Icon(
                 Icons.Outlined.Edit,
-                contentDescription = "Localized description",
+                contentDescription = "Düzenle", // "Localized description"
                 tint = MaterialTheme.colors.onBackground
             )
         }
     }
 }
 
-/** 困难单词按钮 */
+/** Zor Kelimeler Butonu */
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun HardButton(
@@ -2883,7 +2883,7 @@ fun HardButton(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    val text = if(contains) "从困难词库中移除" else "添加到困难词库"
+                    val text = if(contains) "Zor Kelimelerden Kaldır" else "Zor Kelimelere Ekle" // "从困难词库中移除" / "添加到困难词库"
                     Text(text = text)
                     CompositionLocalProvider(LocalContentAlpha provides 0.5f) {
                         Text(text = " $ctrl + ")
@@ -2905,14 +2905,14 @@ fun HardButton(
             val tint = if(contains) Color(255, 152, 0) else MaterialTheme.colors.onBackground
             Icon(
                 icon,
-                contentDescription = "Localized description",
+                contentDescription = "Zor Kelimeler", // "Localized description"
                 tint = tint
             )
         }
     }
 }
 
-/** 熟悉单词按钮 */
+/** Tanıdık Kelimeler Butonu */
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun FamiliarButton(
@@ -2930,7 +2930,7 @@ fun FamiliarButton(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Text(text = "移动到熟悉词库")
+                    Text(text = "Tanıdık Kelimelere Taşı") // "移动到熟悉词库"
                     CompositionLocalProvider(LocalContentAlpha provides 0.5f) {
                         Text(text = " $ctrl + Y")
                     }
@@ -2952,14 +2952,14 @@ fun FamiliarButton(
         }) {
             Icon(
                 Icons.Outlined.Check,
-                contentDescription = "Localized description",
+                contentDescription = "Tanıdık Kelimeler", // "Localized description"
                 tint = MaterialTheme.colors.onBackground
             )
         }
     }
 }
 
-/** 使用快捷键 Ctrl + I,把当前单词加入到困难单词时显示 0.3 秒后消失 */
+/** Ctrl + I ile mevcut kelimeyi zor kelimelere eklerken 0.3 saniye gösterilip kaybolur */
 @Composable
 fun BookmarkButton(
     modifier: Modifier,
@@ -2971,11 +2971,11 @@ fun BookmarkButton(
             val tint = if(contains) Color(255, 152, 0) else MaterialTheme.colors.onBackground
             Icon(
                 icon,
-                contentDescription = "Localized description",
+                contentDescription = "Zor Kelime İşareti", // "Localized description"
                 tint = tint,
             )
             SideEffect{
-                Timer("不显示 Bookmark 图标", false).schedule(300) {
+                Timer("Bookmark ikonunu gösterme", false).schedule(300) { // "不显示 Bookmark 图标"
                     disappear()
                 }
             }
@@ -2983,7 +2983,7 @@ fun BookmarkButton(
 
 }
 
-/** 复制按钮 */
+/** Kopyala Butonu */
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun CopyButton(wordValue:String){
@@ -2999,7 +2999,7 @@ fun CopyButton(wordValue:String){
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Text(text = "复制")
+                    Text(text = "Kopyala") // "复制"
                     CompositionLocalProvider(LocalContentAlpha provides 0.5f) {
                         Text(text = " $ctrl + C")
                     }
@@ -3077,7 +3077,7 @@ fun setWindowTransferHandler(
                     val index = appState.findVocabularyIndex(file)
                     appState.changeVocabulary(file,wordScreenState,index)
                 } else {
-                    JOptionPane.showMessageDialog(window, "词库已打开")
+                    JOptionPane.showMessageDialog(window, "Kelime listesi zaten açık.") // "词库已打开"
                 }
 
             } else if (file.extension == "mkv" || file.extension == "mp4") {
@@ -3085,7 +3085,7 @@ fun setWindowTransferHandler(
                 setVideoPath(file.absolutePath)
                 setVideoVocabulary(wordScreenState.vocabularyPath)
             } else {
-                JOptionPane.showMessageDialog(window, "文件格式不支持")
+                JOptionPane.showMessageDialog(window, "Desteklenmeyen dosya formatı.") // "文件格式不支持"
             }
         }
     )

@@ -31,7 +31,7 @@ fun AboutDialog(
     close: () -> Unit
 ) {
     DialogWindow(
-        title = "关于",
+        title = "Hakkında", // "关于" -> "Hakkında"
         icon = painterResource("logo/logo.png"),
         onCloseRequest = { close() },
         resizable = false,
@@ -58,22 +58,22 @@ fun AboutDialog(
                     backgroundColor = Color.Transparent
                 ) {
                     Tab(
-                        text = { Text("关于") },
+                        text = { Text("Hakkında") }, // "关于" -> "Hakkında"
                         selected = state == 0,
                         onClick = { state = 0 }
                     )
                     Tab(
-                        text = { Text("第三方软件") },
+                        text = { Text("Üçüncü Parti Yazılımlar") }, // "第三方软件" -> "Üçüncü Parti Yazılımlar"
                         selected = state == 1,
                         onClick = { state = 1 }
                     )
                     Tab(
-                        text = { Text("致谢") },
+                        text = { Text("Teşekkürler") }, // "致谢" -> "Teşekkürler"
                         selected = state == 2,
                         onClick = { state = 2 }
                     )
                     Tab(
-                        text = { Text("许可") },
+                        text = { Text("Lisans") }, // "许可" -> "Lisans"
                         selected = state == 3,
                         onClick = { state = 3 }
                     )
@@ -100,26 +100,26 @@ fun AboutDialog(
                                 modifier = Modifier.fillMaxWidth().padding(top = 12.dp)
                             ) {
                                 SelectionContainer {
-                                    Text("幕境 $version")
+                                    Text("Learna $version") // "幕境" -> "Learna"
                                 }
                             }
 
                             Row(modifier = Modifier.fillMaxWidth().padding(top = 20.dp)){
-                                Text("GitHub 地址：     ")
+                                Text("GitHub Adresi:     ") // "GitHub 地址：" -> "GitHub Adresi:"
                                 LinkText(
                                     text = "https://github.com/tangshimin/MuJing",
                                     url =  "https://github.com/tangshimin/MuJing"
                                 )
                             }
                             Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)){
-                                Text("用户反馈地址：   ")
+                                Text("Kullanıcı Geri Bildirim Adresi:   ") // "用户反馈地址：" -> "Kullanıcı Geri Bildirim Adresi:"
                                 LinkText(
                                     text = "https://support.qq.com/products/594079/",
                                     url =  "https://support.qq.com/products/594079/"
                                 )
                             }
                             Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)){
-                                Text("邮箱：                ",modifier = Modifier.padding(end = 1.dp))
+                                Text("E-posta:                ",modifier = Modifier.padding(end = 1.dp)) // "邮箱：" -> "E-posta:"
                                 LinkText(
                                     text = "tang_shimin@qq.com",
                                     url = "mailto:tang_shimin@qq.com"
@@ -148,8 +148,8 @@ fun AboutDialog(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier.fillMaxWidth()
                                 ){
-                                    Text("软件")
-                                    Text("License")
+                                    Text("Yazılım") // "软件" -> "Yazılım"
+                                    Text("Lisans") // "License" -> "Lisans" (veya İngilizce kalabilir)
                                 }
 
                                 Divider()
@@ -434,24 +434,24 @@ fun AboutDialog(
                                 Row(horizontalArrangement = Arrangement.Start,
                                     modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp)){
 
-                                    Text("本地词典：")
+                                    Text("Yerel Sözlük: ") // "本地词典：" -> "Yerel Sözlük: "
                                     LinkText(
-                                        text = "ECDICT 本地词典",
+                                        text = "ECDICT Yerel Sözlük", // "ECDICT 本地词典" -> "ECDICT Yerel Sözlük"
                                         url = "https://github.com/skywind3000/ECDICT"
                                     )
                                 }
                                 Row(horizontalArrangement = Arrangement.Start,
                                     modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp)){
-                                    Text("单词发音：单词的语音数据来源于 ")
+                                    Text("Kelime Telaffuzu: Kelime ses verileri ") // "单词发音：单词的语音数据来源于 " -> "Kelime Telaffuzu: Kelime ses verileri "
                                     LinkText(
-                                        text = "有道词典",
+                                        text = "Youdao Sözlük", // "有道词典" -> "Youdao Sözlük"
                                         url = "https://www.youdao.com/"
                                     )
-                                    Text(" 在线发音 API")
+                                    Text(" çevrimiçi telaffuz API'sinden gelir.") // " 在线发音 API" -> " çevrimiçi telaffuz API'sinden gelir."
                                 }
                                 Row(horizontalArrangement = Arrangement.Start,
                                     modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp)){
-                                    Text("本程序使用的音效：")
+                                    Text("Bu programda kullanılan ses efektleri: ") // "本程序使用的音效：" -> "Bu programda kullanılan ses efektleri: "
                                     LinkText(
                                         text = "Success!!",
                                         url = "https://freesound.org/people/jobro/sounds/60445/"
@@ -481,42 +481,41 @@ fun AboutDialog(
 
                         Column (Modifier.padding(start = 18.dp,top = 20.dp,end = 18.dp,bottom = 20.dp)){
                             Row(horizontalArrangement = Arrangement.Start){
-                                Text("感谢 ")
+                                Text("Tüm ") // "感谢 " -> "Tüm "
                                 LinkText(
                                     text = "qwerty-learner",
                                     url = "https://github.com/Kaiyiwing/qwerty-learner"
                                 )
-                                Text("的所有贡献者，让我有机会把我曾经放弃的一个 app，又找到新的方式实现。")
-
+                                Text(" katkıda bulunanlarına, bir zamanlar vazgeçtiğim bir uygulamayı yeniden hayata geçirme fırsatı verdikleri için teşekkürler.") // "的所有贡献者，让我有机会把我曾经放弃的一个 app，又找到新的方式实现。"
                             }
                             Row{
-                                Text("感谢 ")
+                                Text("") // "感谢 " kaldırıldı, cümle akışı düzenlendi.
                                 LinkText(
                                     text = "skywind3000",
                                     url = "https://github.com/skywind3000"
                                 )
-                                Text("开源")
+                                Text(" adlı kullanıcıya açık kaynaklı ") // "开源" -> " adlı kullanıcıya açık kaynaklı "
                                 LinkText(
                                     text = "ECDICT",
                                     url = "https://github.com/skywind3000/ECDICT"
                                 )
-                                Text("。")
+                                Text(" için teşekkürler.") // "。" -> " için teşekkürler."
                             }
                             Row{
-                                Text("感谢 ")
+                                Text("") // "感谢 " kaldırıldı
                                 LinkText(
                                     text = "libregd",
                                     url = "https://github.com/libregd"
                                 )
-                                Text(" 为本项目贡献了一些交互设和及非常好的功能建议，以及为 Typing Learner 设计 Logo。")
+                                Text(" adlı kullanıcıya, bu projeye bazı etkileşim tasarımları ve çok iyi özellik önerileriyle katkıda bulunduğu ve Typing Learner için Logo tasarladığı için teşekkürler.") // " 为本项目贡献了一些交互设和及非常好的功能建议，以及为 Typing Learner 设计 Logo。"
                             }
                             Row{
-                                Text("感谢")
+                                Text("") // "感谢" kaldırıldı
                                 LinkText(
-                                    text = "网易有道",
+                                    text = "NetEase Youdao", // "网易有道" -> "NetEase Youdao" (Özel isim olduğu için İngilizce bırakıldı veya daha bilinen adı kullanıldı)
                                     url = "https://www.youdao.com/"
                                 )
-                                Text("为本项目提供专业的词典发音。")
+                                Text(" adlı platforma, bu projeye profesyonel sözlük telaffuzları sağladığı için teşekkürler.") // "为本项目提供专业的词典发音。"
                             }
                         }
 
@@ -550,7 +549,7 @@ fun AboutDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     OutlinedButton(onClick = { close() }) {
-                        Text("确定")
+                        Text("Tamam") // "确定" -> "Tamam"
                     }
                 }
             }

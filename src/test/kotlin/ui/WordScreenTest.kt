@@ -23,7 +23,7 @@ class WordScreenTest {
     val composeTestRule = createComposeRule()
 
     /**
-     * 测试记忆单词界面
+     * Kelime Ezberleme Arayüzünü Test Et
      */
     @OptIn(ExperimentalFoundationApi::class,
         ExperimentalAnimationApi::class,
@@ -33,18 +33,18 @@ class WordScreenTest {
     @Test
     fun `Test WordScreen`(){
 
-        // 设置测试环境
+        // Test ortamını ayarla
         composeTestRule.setContent {
             val appState = rememberAppState()
-            // 初始化全局状态
+            // Genel durumu başlat
             appState.global = GlobalState(GlobalData())
-            // 初始化记忆单词界面的状态
+            // Kelime ezberleme arayüzünün durumunu başlat
             val wordState = remember{ WordScreenState(WordScreenData()) }
-            // 设置词库的路径
+            // Kelime dağarcığının yolunu ayarla
             wordState.vocabularyPath = File("src/test/resources/Vocabulary.json").absolutePath
-            // 加载词库
+            // Kelime dağarcığını yükle
             wordState.vocabulary = loadMutableVocabulary( wordState.vocabularyPath)
-            // 设置词库的名称
+            // Kelime dağarcığının adını ayarla
             wordState.vocabularyName = "Vocabulary"
 
             App(
@@ -55,16 +55,16 @@ class WordScreenTest {
         }
 
 
-        // 等待 Header 出现
+        // Header'ın görünmesini bekle
         composeTestRule.waitUntilExactlyOneExists (hasTestTag("Header"),10000)
 
-        // 测试第一个单词的索引
+        // İlk kelimenin dizinini test et
         composeTestRule.onNode(hasTestTag("Header"))
             .assertExists()
             .assertIsDisplayed()
             .assertTextEquals("1/96")
 
-        // 测试第一个单词
+        // İlk kelimeyi test et
         composeTestRule.onNode(hasTestTag("Word"))
             .assertExists()
             .assertIsDisplayed()
@@ -72,21 +72,21 @@ class WordScreenTest {
             .isDisplayed()
 
         composeTestRule.waitForIdle()
-        // 模拟鼠标移动，激活单词切换按钮
+        // Fare hareketini simüle et, kelime değiştirme düğmesini etkinleştir
         composeTestRule.runOnIdle {
             composeTestRule.onNode(hasTestTag("Word"))
                 .performMouseInput { click() }
         }
         composeTestRule.waitForIdle()
 
-        // 等待 NextButton 出现
+        // NextButton'ın görünmesini bekle
         composeTestRule.waitUntilExactlyOneExists (hasTestTag("NextButton"),10000)
-        // 测试 NextButton 按钮
+        // NextButton düğmesini test et
         composeTestRule.onNode(hasTestTag("NextButton"))
             .assertExists()
             .isDisplayed()
 
-        // 切换到第二个单词
+        // İkinci kelimeye geç
         composeTestRule.runOnIdle {
             composeTestRule.onNode(hasTestTag("NextButton"))
                 .assertExists()
@@ -94,16 +94,16 @@ class WordScreenTest {
         }
         composeTestRule.waitForIdle()
 
-        // 等待第二个单词出现
+        // İkinci kelimenin görünmesini bekle
         composeTestRule.waitUntilExactlyOneExists (hasText("2/96"),10000)
-        // 测试第二个单词
+        // İkinci kelimeyi test et
         composeTestRule.onNode(hasTestTag("Word"))
             .assertExists()
             .assertIsDisplayed()
             .assertTextEquals("be")
             .isDisplayed()
 
-        // 测试第二个单词的索引
+        // İkinci kelimenin dizinini test et
         composeTestRule.onNode(hasTestTag("Header"))
             .assertExists()
             .assertIsDisplayed()
@@ -111,13 +111,13 @@ class WordScreenTest {
             .isDisplayed()
 
 
-        // 测试 PreviousButton 按钮
+        // PreviousButton düğmesini test et
         composeTestRule.onNode(hasTestTag("PreviousButton"))
             .assertExists()
             .isDisplayed()
 
 
-        // 切换回第一个单词
+        // İlk kelimeye geri dön
         composeTestRule.runOnIdle {
             composeTestRule.onNode(hasTestTag("PreviousButton"))
                 .assertExists()
@@ -125,16 +125,16 @@ class WordScreenTest {
         }
         composeTestRule.waitForIdle()
 
-        // 等待第一个单词出现
+        // İlk kelimenin görünmesini bekle
         composeTestRule.waitUntilExactlyOneExists (hasText("1/96"),10000)
-        // 测试第一个单词
+        // İlk kelimeyi test et
         composeTestRule.onNode(hasTestTag("Word"))
             .assertExists()
             .assertIsDisplayed()
             .assertTextEquals("the")
             .isDisplayed()
 
-        // 测试第一个单词的索引
+        // İlk kelimenin dizinini test et
         composeTestRule.onNode(hasTestTag("Header"))
             .assertExists()
             .assertIsDisplayed()
@@ -143,12 +143,12 @@ class WordScreenTest {
 
 
 
-        // 测试设置按钮
+        // Ayarlar düğmesini test et
         composeTestRule.onNode(hasTestTag("SettingsButton"))
             .assertExists()
             .isDisplayed()
 
-        // 打开侧边栏
+        // Yan menüyü aç
         composeTestRule.runOnIdle {
             composeTestRule.onNode(hasTestTag("SettingsButton"))
                 .assertExists()
@@ -156,39 +156,39 @@ class WordScreenTest {
         }
         composeTestRule.waitForIdle()
 
-        // 等待侧边栏出现
+        // Yan menünün görünmesini bekle
         composeTestRule.waitUntilExactlyOneExists (hasTestTag("WordScreenSidebar"),10000)
-        // 测试侧边栏
+        // Yan menüyü test et
         composeTestRule.onNode(hasTestTag("WordScreenSidebar"))
             .assertExists()
             .isDisplayed()
 
-        // 测试侧边栏的内容
-        composeTestRule.onNode(hasText("听写测试")).isDisplayed()
-        composeTestRule.onNode(hasText("选择章节")).isDisplayed()
-        composeTestRule.onNode(hasText("显示单词")).isDisplayed()
-        composeTestRule.onNode(hasText("显示音标")).isDisplayed()
-        composeTestRule.onNode(hasText("显示词形")).isDisplayed()
-        composeTestRule.onNode(hasText("英文释义")).isDisplayed()
-        composeTestRule.onNode(hasText("中文释义")).isDisplayed()
-        composeTestRule.onNode(hasText("显示例句")).isDisplayed()
-        composeTestRule.onNode(hasText("显示字幕")).isDisplayed()
-        composeTestRule.onNode(hasText("击键音效")).isDisplayed()
-        composeTestRule.onNode(hasText("提示音效")).isDisplayed()
-        composeTestRule.onNode(hasText("自动切换")).isDisplayed()
-        composeTestRule.onNode(hasText("外部字幕")).isDisplayed()
-        composeTestRule.onNode(hasText("抄写字幕")).isDisplayed()
-        composeTestRule.onNode(hasText("音量控制")).isDisplayed()
-        composeTestRule.onNode(hasText("发音设置")).isDisplayed()
+        // Yan menünün içeriğini test et
+        composeTestRule.onNode(hasText("Dikte Testi")).isDisplayed()
+        composeTestRule.onNode(hasText("Bölüm Seç")).isDisplayed()
+        composeTestRule.onNode(hasText("Kelimeyi Göster")).isDisplayed()
+        composeTestRule.onNode(hasText("Fonetiği Göster")).isDisplayed()
+        composeTestRule.onNode(hasText("Morfolojiyi Göster")).isDisplayed()
+        composeTestRule.onNode(hasText("İngilizce Tanım")).isDisplayed()
+        composeTestRule.onNode(hasText("Türkçe Tanım")).isDisplayed()
+        composeTestRule.onNode(hasText("Örnek Cümleleri Göster")).isDisplayed()
+        composeTestRule.onNode(hasText("Altyazıları Göster")).isDisplayed()
+        composeTestRule.onNode(hasText("Tuş Vuruşu Ses Efekti")).isDisplayed()
+        composeTestRule.onNode(hasText("İpucu Ses Efekti")).isDisplayed()
+        composeTestRule.onNode(hasText("Otomatik Geçiş")).isDisplayed()
+        composeTestRule.onNode(hasText("Harici Altyazılar")).isDisplayed()
+        composeTestRule.onNode(hasText("Altyazıları Yaz")).isDisplayed()
+        composeTestRule.onNode(hasText("Ses Kontrolü")).isDisplayed()
+        composeTestRule.onNode(hasText("Telaffuz Ayarları")).isDisplayed()
 
-        // 关闭侧边栏
+        // Yan menüyü kapat
         composeTestRule.runOnIdle {
             composeTestRule.onNode(hasTestTag("SettingsButton"))
                 .performClick()
         }
         composeTestRule.waitForIdle()
 
-        // 等待侧边栏消失
+        // Yan menünün kaybolmasını bekle
         composeTestRule.waitUntilDoesNotExist(hasTestTag("WordScreenSidebar"),10000)
     }
 }

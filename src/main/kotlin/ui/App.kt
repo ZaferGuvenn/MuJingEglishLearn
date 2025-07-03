@@ -361,15 +361,15 @@ private fun computeTitle(
     return if (isNotEmpty) {
         when (name) {
             "FamiliarVocabulary" -> {
-                "熟悉词库"
+                "Tanıdık Kelimeler" // "熟悉词库" -> "Tanıdık Kelimeler"
             }
             "HardVocabulary" -> {
-                "困难词库"
+                "Zor Kelimeler" // "困难词库" -> "Zor Kelimeler"
             }
             else -> name
         }
     } else {
-        "请选择词库"
+        "Lütfen Kelime Listesi Seçin" // "请选择词库" -> "Lütfen Kelime Listesi Seçin"
     }
 }
 private fun computeTitle(subtitlesState: SubtitlesState) :String{
@@ -377,13 +377,13 @@ private fun computeTitle(subtitlesState: SubtitlesState) :String{
     return if(mediaPath.isNotEmpty()){
         try{
             val fileName = File(mediaPath).nameWithoutExtension
-            fileName + " - " + subtitlesState.trackDescription
+            fileName + " - " + subtitlesState.trackDescription // trackDescription'ın kendisi de çevrilecek bir UI elemanı olabilir, şimdilik bırakıyorum.
         }catch (exception:Exception){
-            "字幕浏览器"
+            "Altyazı Tarayıcısı" // "字幕浏览器" -> "Altyazı Tarayıcısı"
         }
 
     }else{
-        "字幕浏览器"
+        "Altyazı Tarayıcısı" // "字幕浏览器" -> "Altyazı Tarayıcısı"
     }
 }
 
@@ -394,11 +394,11 @@ private fun computeTitle(textState: TextState) :String{
             val fileName = File(textPath).nameWithoutExtension
             fileName
         }catch (exception :Exception){
-            "抄写文本"
+            "Metin Kopyala" // "抄写文本" -> "Metin Kopyala"
         }
 
     }else {
-        "抄写文本"
+        "Metin Kopyala" // "抄写文本" -> "Metin Kopyala"
     }
 }
 
@@ -413,9 +413,9 @@ private fun FrameWindowScope.WindowMenuBar(
     wordScreenState: WordScreenState,
     close: () -> Unit,
 ) = MenuBar {
-    Menu("词库(V)", mnemonic = 'V') {
+    Menu("Kelime Listesi(K)", mnemonic = 'K') { // "词库(V)" -> "Kelime Listesi(K)"
         var showFilePicker by remember {mutableStateOf(false)}
-        Item("打开词库(O)", mnemonic = 'O') { showFilePicker = true }
+        Item("Kelime Listesi Aç(A)", mnemonic = 'A') { showFilePicker = true } // "打开词库(O)" -> "Kelime Listesi Aç(A)"
         val extensions = if(isMacOS()) listOf("public.json") else listOf("json")
         FilePicker(
             show = showFilePicker,
@@ -440,11 +440,11 @@ private fun FrameWindowScope.WindowMenuBar(
 
             showFilePicker = false
         }
-        Menu("打开最近词库(R)",enabled = appState.recentList.isNotEmpty(), mnemonic = 'R') {
+        Menu("Son Kullanılanlar(S)",enabled = appState.recentList.isNotEmpty(), mnemonic = 'S') { // "打开最近词库(R)" -> "Son Kullanılanlar(S)"
             for (i in 0 until appState.recentList.size){
                 val recentItem = appState.recentList.getOrNull(i)
                 if(recentItem!= null){
-                    Item(text = recentItem.name, onClick = {
+                    Item(text = recentItem.name, onClick = { // recentItem.name zaten Türkçe olmalı (JSON'dan gelecek)
                         val recentFile = File(recentItem.path)
                         if (recentFile.exists()) {
                             val changed = appState.changeVocabulary(recentFile,wordScreenState, recentItem.index)
@@ -457,7 +457,7 @@ private fun FrameWindowScope.WindowMenuBar(
 
                         } else {
                             appState.removeRecentItem(recentItem)
-                            JOptionPane.showMessageDialog(window, "文件地址错误：\n${recentItem.path}")
+                            JOptionPane.showMessageDialog(window, "Dosya yolu hatası:\n${recentItem.path}") // "文件地址错误：\n" -> "Dosya yolu hatası:\n"
                         }
 
                         appState.loadingFileChooserVisible = false
@@ -467,26 +467,26 @@ private fun FrameWindowScope.WindowMenuBar(
                 }
             }
         }
-        Item("新建词库(N)", mnemonic = 'N', onClick = {
+        Item("Yeni Kelime Listesi(Y)", mnemonic = 'Y', onClick = { // "新建词库(N)" -> "Yeni Kelime Listesi(Y)"
             appState.newVocabulary = true
         })
-        Item("编辑词库(E)", mnemonic = 'E', onClick = {
+        Item("Kelime Listesini Düzenle(D)", mnemonic = 'D', onClick = { // "编辑词库(E)" -> "Kelime Listesini Düzenle(D)"
             appState.editVocabulary = true
         })
         Separator()
         var showBuiltInVocabulary by remember{mutableStateOf(false)}
-        Item("选择内置词库(B)", mnemonic = 'B', onClick = {showBuiltInVocabulary = true})
+        Item("Dahili Kelime Listesi Seç(B)", mnemonic = 'B', onClick = {showBuiltInVocabulary = true}) // "选择内置词库(B)" -> "Dahili Kelime Listesi Seç(B)" (B harfi "Built-in" için kalabilir veya "D" yapılabilir)
         BuiltInVocabularyDialog(
             show = showBuiltInVocabulary,
             close = {showBuiltInVocabulary = false},
             futureFileChooser = appState.futureFileChooser
         )
-        Item("熟悉词库(I)", mnemonic = 'I',onClick = {
+        Item("Tanıdık Kelimeler(T)", mnemonic = 'T',onClick = { // "熟悉词库(I)" -> "Tanıdık Kelimeler(T)"
             val file = getFamiliarVocabularyFile()
             if(file.exists()){
                 val vocabulary =loadVocabulary(file.absolutePath)
                 if(vocabulary.wordList.isEmpty()){
-                    JOptionPane.showMessageDialog(window,"熟悉词库现在还没有单词")
+                    JOptionPane.showMessageDialog(window,"Tanıdık kelime listesinde henüz kelime yok") // "熟悉词库现在还没有单词" -> "Tanıdık kelime listesinde henüz kelime yok"
                 }else{
                     val changed = appState.changeVocabulary(file, wordScreenState,wordScreenState.familiarVocabularyIndex)
                     if(changed){
@@ -496,10 +496,10 @@ private fun FrameWindowScope.WindowMenuBar(
                 }
 
             }else{
-                JOptionPane.showMessageDialog(window,"熟悉词库现在还没有单词")
+                JOptionPane.showMessageDialog(window,"Tanıdık kelime listesinde henüz kelime yok") // "熟悉词库现在还没有单词" -> "Tanıdık kelime listesinde henüz kelime yok"
             }
         })
-        Item("困难词库(K)", enabled = appState.hardVocabulary.wordList.isNotEmpty(), mnemonic = 'K',onClick = {
+        Item("Zor Kelimeler(Z)", enabled = appState.hardVocabulary.wordList.isNotEmpty(), mnemonic = 'Z',onClick = { // "困难词库(K)" -> "Zor Kelimeler(Z)"
             val file = getHardVocabularyFile()
             val changed = appState.changeVocabulary(file, wordScreenState,wordScreenState.hardVocabularyIndex)
             if(changed){
@@ -510,14 +510,14 @@ private fun FrameWindowScope.WindowMenuBar(
         })
 
         Separator()
-        Item("合并词库(M)", mnemonic = 'M', onClick = {
+        Item("Kelime Listelerini Birleştir(M)", mnemonic = 'M', onClick = { // "合并词库(M)" -> "Kelime Listelerini Birleştir(M)" (M harfi "Merge" için kalabilir)
             appState.mergeVocabulary = true
         })
-        Item("过滤词库(F)", mnemonic = 'F', onClick = {
+        Item("Kelime Listesini Filtrele(F)", mnemonic = 'F', onClick = { // "过滤词库(F)" -> "Kelime Listesini Filtrele(F)"
             appState.filterVocabulary = true
         })
         var matchVocabulary by remember{ mutableStateOf(false) }
-        Item("匹配词库(P)", mnemonic = 'P', onClick = {
+        Item("Kelime Listesi Eşleştir(E)", mnemonic = 'E', onClick = { // "匹配词库(P)" -> "Kelime Listesi Eşleştir(E)"
             matchVocabulary = true
         })
         if(matchVocabulary){
@@ -538,16 +538,16 @@ private fun FrameWindowScope.WindowMenuBar(
         }
 
         Item(
-            "链接字幕词库(L)", mnemonic = 'L',
+            "Altyazı Kelime Listesini Bağla(L)", mnemonic = 'L', // "链接字幕词库(L)" -> "Altyazı Kelime Listesini Bağla(L)" (L harfi "Link" için kalabilir)
             onClick = { showLinkVocabulary = true },
         )
-        Item("导入词库到熟悉词库(I)", mnemonic = 'F', onClick = {
+        Item("Tanıdık Listeye Aktar(A)", mnemonic = 'A', onClick = { // "导入词库到熟悉词库(I)" -> "Tanıdık Listeye Aktar(A)" (I yerine A "Aktar")
             appState.importFamiliarVocabulary = true
         })
 
         Separator()
         var showWordFrequency by remember { mutableStateOf(false) }
-        Item("根据词频生成词库(C)", mnemonic = 'C', onClick = {showWordFrequency = true })
+        Item("Kelime Sıklığına Göre Oluştur(S)", mnemonic = 'S', onClick = {showWordFrequency = true }) // "根据词频生成词库(C)" -> "Kelime Sıklığına Göre Oluştur(S)"
         if(showWordFrequency){
             WordFrequencyDialog(
                 futureFileChooser = appState.futureFileChooser,
@@ -557,18 +557,18 @@ private fun FrameWindowScope.WindowMenuBar(
                 close = {showWordFrequency = false}
             )
         }
-        Item("用文档生成词库(D)", mnemonic = 'D', onClick = {
+        Item("Belgeden Kelime Listesi Oluştur(B)", mnemonic = 'B', onClick = { // "用文档生成词库(D)" -> "Belgeden Kelime Listesi Oluştur(B)"
             appState.generateVocabularyFromDocument = true
         })
-        Item("用字幕生成词库(Z)", mnemonic = 'Z', onClick = {
+        Item("Altyazıdan Kelime Listesi Oluştur(A)", mnemonic = 'A', onClick = { // "用字幕生成词库(Z)" -> "Altyazıdan Kelime Listesi Oluştur(A)"
             appState.generateVocabularyFromSubtitles = true
         })
-        Item("用视频生成词库(V)", mnemonic = 'V', onClick = {
+        Item("Videodan Kelime Listesi Oluştur(V)", mnemonic = 'V', onClick = { // "用视频生成词库(V)" -> "Videodan Kelime Listesi Oluştur(V)"
             appState.generateVocabularyFromVideo = true
         })
         Separator()
         var showSettingsDialog by remember { mutableStateOf(false) }
-        Item("设置(S)", mnemonic = 'S', onClick = { showSettingsDialog = true })
+        Item("Ayarlar(A)", mnemonic = 'A', onClick = { showSettingsDialog = true }) // "设置(S)" -> "Ayarlar(A)"
         if(showSettingsDialog){
             SettingsDialog(
                 close = {showSettingsDialog = false},
@@ -578,14 +578,14 @@ private fun FrameWindowScope.WindowMenuBar(
         }
         if(isWindows()){
             Separator()
-            Item("退出(X)", mnemonic = 'X', onClick = { close() })
+            Item("Çıkış(Ç)", mnemonic = 'Ç', onClick = { close() }) // "退出(X)" -> "Çıkış(Ç)"
         }
 
     }
-    Menu("字幕(S)", mnemonic = 'S') {
+    Menu("Altyazılar(A)", mnemonic = 'A') { // "字幕(S)" -> "Altyazılar(A)"
         val enableTypingSubtitles = (appState.global.type != ScreenType.SUBTITLES)
         Item(
-            "字幕浏览器(T)", mnemonic = 'T',
+            "Altyazı Tarayıcısı(T)", mnemonic = 'T', // "字幕浏览器(T)" -> "Altyazı Tarayıcısı(T)"
             enabled = enableTypingSubtitles,
             onClick = {
                 appState.global.type = ScreenType.SUBTITLES
@@ -603,15 +603,15 @@ private fun FrameWindowScope.WindowMenuBar(
             )
         }
         Item(
-            "歌词转字幕(C)",mnemonic = 'C',
+            "Şarkı Sözünü Altyazıya Dönüştür(D)",mnemonic = 'D', // "歌词转字幕(C)" -> "Şarkı Sözünü Altyazıya Dönüştür(D)"
             enabled = true,
             onClick = {showLyricDialog = true}
         )
     }
-    Menu("文本(T)", mnemonic = 'T') {
+    Menu("Metin(M)", mnemonic = 'M') { // "文本(T)" -> "Metin(M)"
         val enable = appState.global.type != ScreenType.TEXT
         Item(
-            "抄写文本(T)", mnemonic = 'T',
+            "Metin Kopyala(K)", mnemonic = 'K', // "抄写文本(T)" -> "Metin Kopyala(K)"
             enabled = enable,
             onClick = {
                 appState.global.type = ScreenType.TEXT
@@ -628,14 +628,14 @@ private fun FrameWindowScope.WindowMenuBar(
             )
         }
         Item(
-            "文本格式化(F)", mnemonic = 'F',
+            "Metin Formatlama(F)", mnemonic = 'F', // "文本格式化(F)" -> "Metin Formatlama(F)"
             onClick = { showTextFormatDialog = true },
         )
     }
-    Menu("帮助(H)", mnemonic = 'H') {
+    Menu("Yardım(Y)", mnemonic = 'Y') { // "帮助(H)" -> "Yardım(Y)"
         var documentWindowVisible by remember { mutableStateOf(false) }
         var currentPage by remember { mutableStateOf("features") }
-        Item("使用手册(D)", mnemonic = 'D', onClick = { documentWindowVisible = true})
+        Item("Kullanım Kılavuzu(K)", mnemonic = 'K', onClick = { documentWindowVisible = true}) // "使用手册(D)" -> "Kullanım Kılavuzu(K)"
         if(documentWindowVisible){
             DocumentWindow(
                 close = {documentWindowVisible = false},
@@ -644,28 +644,28 @@ private fun FrameWindowScope.WindowMenuBar(
             )
         }
         var shortcutKeyDialogVisible by remember { mutableStateOf(false) }
-        Item("快捷键(K)", mnemonic = 'K', onClick = {shortcutKeyDialogVisible = true})
+        Item("Kısayol Tuşları(T)", mnemonic = 'T', onClick = {shortcutKeyDialogVisible = true}) // "快捷键(K)" -> "Kısayol Tuşları(T)"
         if(shortcutKeyDialogVisible){
             ShortcutKeyDialog(close ={shortcutKeyDialogVisible = false} )
         }
         var directoryDialogVisible by remember { mutableStateOf(false) }
-        Item("特殊文件夹(F)",mnemonic = 'F', onClick = {directoryDialogVisible = true})
+        Item("Özel Klasörler(O)",mnemonic = 'O', onClick = {directoryDialogVisible = true}) // "特殊文件夹(F)" -> "Özel Klasörler(O)"
         if(directoryDialogVisible){
             SpecialDirectoryDialog(close ={directoryDialogVisible = false})
         }
         var donateDialogVisible by remember { mutableStateOf(false) }
-        Item("捐赠", onClick = { donateDialogVisible = true })
+        Item("Bağış Yap(B)", onClick = { donateDialogVisible = true }) // "捐赠" -> "Bağış Yap(B)" (Mnemonic eklendi)
         if(donateDialogVisible){
             DonateDialog (
                 close = {donateDialogVisible = false}
             )
         }
-        Item("检查更新(U)", mnemonic = 'U', onClick = {
+        Item("Güncellemeleri Kontrol Et(G)", mnemonic = 'G', onClick = { // "检查更新(U)" -> "Güncellemeleri Kontrol Et(G)"
             appState.showUpdateDialog = true
             appState.latestVersion = ""
         })
         var aboutDialogVisible by remember { mutableStateOf(false) }
-        Item("关于(A)", mnemonic = 'A', onClick = { aboutDialogVisible = true })
+        Item("Hakkında(H)", mnemonic = 'H', onClick = { aboutDialogVisible = true }) // "关于(A)" -> "Hakkında(H)"
         if (aboutDialogVisible) {
             AboutDialog(
                 version = BuildConfig.APP_VERSION,
@@ -708,7 +708,7 @@ fun Toolbar(
                     border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                     shape = RectangleShape
                 ) {
-                    Text(text = "记忆单词", modifier = Modifier.padding(10.dp))
+                    Text(text = "Kelime Öğrenme", modifier = Modifier.padding(10.dp)) // "记忆单词" -> "Kelime Öğrenme"
                 }
             },
             delayMillis = 50,
@@ -746,7 +746,7 @@ fun Toolbar(
                     border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                     shape = RectangleShape
                 ) {
-                    Text(text = "字幕浏览器", modifier = Modifier.padding(10.dp))
+                    Text(text = "Altyazı Tarayıcısı", modifier = Modifier.padding(10.dp)) // "字幕浏览器" -> "Altyazı Tarayıcısı"
                 }
             },
             delayMillis = 50,
@@ -786,7 +786,7 @@ fun Toolbar(
                     border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                     shape = RectangleShape
                 ) {
-                    Text(text = "抄写文本", modifier = Modifier.padding(10.dp))
+                    Text(text = "Metin Kopyala", modifier = Modifier.padding(10.dp)) // "抄写文本" -> "Metin Kopyala"
                 }
             },
             delayMillis = 50,
@@ -824,7 +824,7 @@ fun Toolbar(
                     border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                     shape = RectangleShape
                 ) {
-                    Text(text = "视频播放器", modifier = Modifier.padding(10.dp))
+                    Text(text = "Video Oynatıcı", modifier = Modifier.padding(10.dp)) // "视频播放器" -> "Video Oynatıcı"
                 }
             },
             delayMillis = 50,
@@ -854,7 +854,7 @@ fun Toolbar(
                     border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                     shape = RectangleShape
                 ) {
-                    Text(text = "搜索", modifier = Modifier.padding(10.dp))
+                    Text(text = "Ara", modifier = Modifier.padding(10.dp)) // "搜索" -> "Ara"
                 }
             },
             delayMillis = 50,
@@ -917,7 +917,7 @@ fun Settings(
                             shape = RectangleShape
                         ) {
                             val ctrl = LocalCtrl.current
-                            Text(text = "设置 $ctrl+1", modifier = Modifier.padding(10.dp))
+                            Text(text = "Ayarlar $ctrl+1", modifier = Modifier.padding(10.dp)) // "设置" -> "Ayarlar"
                         }
                     },
                     delayMillis = 100,
@@ -973,7 +973,7 @@ fun MenuDialogs(state: AppState) {
     if (state.filterVocabulary) {
         GenerateVocabularyDialog(
             state = state,
-            title = "过滤词库",
+            title = "Kelime Listesini Filtrele", // "过滤词库" -> "Kelime Listesini Filtrele"
             type = VocabularyType.DOCUMENT
         )
     }
@@ -986,14 +986,14 @@ fun MenuDialogs(state: AppState) {
     if (state.generateVocabularyFromDocument) {
         GenerateVocabularyDialog(
             state = state,
-            title = "用文档生成词库",
+            title = "Belgeden Kelime Listesi Oluştur", // "用文档生成词库" -> "Belgeden Kelime Listesi Oluştur"
             type = VocabularyType.DOCUMENT
         )
     }
     if (state.generateVocabularyFromSubtitles) {
         GenerateVocabularyDialog(
             state = state,
-            title = "用字幕生成词库",
+            title = "Altyazıdan Kelime Listesi Oluştur", // "用字幕生成词库" -> "Altyazıdan Kelime Listesi Oluştur"
             type = VocabularyType.SUBTITLES
         )
     }
@@ -1001,7 +1001,7 @@ fun MenuDialogs(state: AppState) {
     if (state.generateVocabularyFromVideo) {
         GenerateVocabularyDialog(
             state = state,
-            title = "用视频生成词库",
+            title = "Videodan Kelime Listesi Oluştur", // "用视频生成词库" -> "Videodan Kelime Listesi Oluştur"
             type = VocabularyType.MKV
         )
     }
@@ -1032,7 +1032,7 @@ fun MenuDialogs(state: AppState) {
 @Composable
 fun LoadingDialog() {
     DialogWindow(
-        title = "正在加载文件选择器",
+        title = "Dosya Seçici Yükleniyor...", // "正在加载文件选择器" -> "Dosya Seçici Yükleniyor..."
         icon = painterResource("logo/logo.png"),
         onCloseRequest = {},
         undecorated = true,

@@ -29,7 +29,7 @@ fun ChooseEditVocabulary(
 ) {
 
     Window(
-        title = "选择要编辑词库",
+        title = "Düzenlenecek Kelime Listesini Seç", // "选择要编辑词库" -> "Düzenlenecek Kelime Listesini Seç"
         icon = painterResource("logo/logo.png"),
         resizable = false,
         state = rememberWindowState(
@@ -50,7 +50,7 @@ fun ChooseEditVocabulary(
                             horizontalArrangement = Arrangement.Start,
                             modifier = Modifier.fillMaxWidth()
                                 .padding(start = 10.dp)
-                        ) { Text("最近词库") }
+                        ) { Text("Son Kullanılanlar") } // "最近词库" -> "Son Kullanılanlar"
                         Box(
                             Modifier.fillMaxWidth().height(400.dp).padding(10.dp)
                                 .border(BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)))
@@ -60,13 +60,13 @@ fun ChooseEditVocabulary(
                                 if(wordState.vocabularyName.isNotEmpty()){
                                     val name = when (wordState.vocabularyName) {
                                         "FamiliarVocabulary" -> {
-                                            "熟悉词库"
+                                            "Tanıdık Kelimeler" // "熟悉词库" -> "Tanıdık Kelimeler"
                                         }
                                         "HardVocabulary" -> {
-                                            "困难词库"
+                                            "Zor Kelimeler" // "困难词库" -> "Zor Kelimeler"
                                         }
                                         else -> {
-                                            wordState.vocabularyName
+                                            wordState.vocabularyName // Bu zaten JSON'dan Türkçe gelecek
                                         }
                                     }
                                     ListItem(
@@ -82,7 +82,7 @@ fun ChooseEditVocabulary(
                                             }
                                         },
                                         trailing = {
-                                            Text("当前词库    ", color = MaterialTheme.colors.primary)
+                                            Text("Mevcut Kelime Listesi    ", color = MaterialTheme.colors.primary) // "当前词库    " -> "Mevcut Kelime Listesi    "
                                         }
                                     )
                                 }
@@ -90,7 +90,7 @@ fun ChooseEditVocabulary(
                                 recentList.forEach { item ->
                                     if (wordState.vocabularyName != item.name) {
                                         ListItem(
-                                            text = { Text(item.name, color = MaterialTheme.colors.onBackground) },
+                                            text = { Text(item.name, color = MaterialTheme.colors.onBackground) }, // item.name zaten Türkçe olacak
                                             modifier = Modifier.clickable {
 
                                                 val recentFile = File(item.path)
@@ -98,7 +98,7 @@ fun ChooseEditVocabulary(
                                                     openEditVocabulary(item.path)
                                                 } else {
                                                     removeRecentItem(item)
-                                                    JOptionPane.showMessageDialog(window, "文件地址错误：\n${item.path}")
+                                                    JOptionPane.showMessageDialog(window, "Dosya yolu hatası:\n${item.path}") // "文件地址错误：\n" -> "Dosya yolu hatası:\n"
                                                 }
 
 
@@ -120,7 +120,7 @@ fun ChooseEditVocabulary(
                     OutlinedButton(
                         onClick = { showFilePicker = true }) {
                         Text(
-                            text = "选择词库",
+                            text = "Kelime Listesi Seç", // "选择词库" -> "Kelime Listesi Seç"
                         )
                     }
 

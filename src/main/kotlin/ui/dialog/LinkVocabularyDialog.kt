@@ -50,8 +50,8 @@ import javax.swing.JOptionPane
 import javax.swing.filechooser.FileSystemView
 
 /**
- * 链接字幕词库窗口
- * 把字幕词库链接到文档词库
+ * Altyazı Kelime Listesi Bağlama Penceresi
+ * Altyazı kelime listesini belge kelime listesine bağlar.
  */
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalSerializationApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -60,51 +60,51 @@ fun LinkVocabularyDialog(
     close: () -> Unit
 ) {
     /**
-     * 协程构建器
+     * Coroutine scope oluşturucu
      */
     val scope = rememberCoroutineScope()
 
     /**
-     * 要链接的词库,通常是内置词库
+     * Bağlanacak kelime listesi, genellikle dahili bir kelime listesidir
      */
     var vocabulary by remember{ mutableStateOf<MutableVocabulary?>(null) }
 
 
 
     /**
-     * 选择的字幕词库所在的文件夹的绝对路径
+     * Seçilen altyazı kelime listesinin bulunduğu dizinin mutlak yolu
      */
     var vocabularyDir by remember { mutableStateOf("") }
 
     /**
-     * 要链接的词库所在的文件夹的绝对路径,比如要给四级词库链接字幕，这个地址就是四级词库所在的文件夹
+     * Bağlanacak kelime listesinin bulunduğu dizinin mutlak yolu, örneğin CET-4 kelime listesine altyazı bağlanacaksa, bu adres CET-4 kelime listesinin bulunduğu dizindir.
      */
     var directoryPath by remember { mutableStateOf("") }
 
     /**
-     * 当前词库链接到字幕词库的字幕的数量
+     * Mevcut kelime listesinin altyazı kelime listesine bağladığı altyazı sayısı
      */
     var linkCounter by remember { mutableStateOf(0) }
 
     /**
-     * 准备链接的单词和字幕
+     * Bağlanmaya hazırlanan kelimeler ve altyazılar
      */
     val prepareLinks = remember { mutableStateMapOf<String, List<ExternalCaption>>() }
 
 
     /**
-     * 字幕名称
+     * Altyazı adı
      */
     var subtitlesName by remember { mutableStateOf("") }
 
     var vocabularyType by remember { mutableStateOf(VocabularyType.DOCUMENT) }
-    var vocabularyWrong by remember { mutableStateOf(false) }
-    var extractCaptionResultInfo by remember { mutableStateOf("") }
-    var saveEnable by remember { mutableStateOf(false) }
-    var showFilePicker by remember { mutableStateOf(false) }
+    var vocabularyWrong by remember { mutableStateOf(false) } // Kelime listesi hatası
+    var extractCaptionResultInfo by remember { mutableStateOf("") } // Altyazı çıkarma sonuç bilgisi
+    var saveEnable by remember { mutableStateOf(false) } // Kaydet butonu aktif mi
+    var showFilePicker by remember { mutableStateOf(false) } // Dosya seçici gösterilsin mi
 
     /**
-     * 点击【链接】后执行的回调函数
+     * [Bağla] tıklandığında çalıştırılacak geri çağrı fonksiyonu
      */
     val import: () -> Unit = {
         if (prepareLinks.isNotEmpty()) {
@@ -129,7 +129,7 @@ fun LinkVocabularyDialog(
     }
 
     /**
-     * 用户选择字幕词库后，用这个函数提取相关信息
+     * Kullanıcı altyazı kelime listesini seçtikten sonra ilgili bilgileri çıkarmak için bu fonksiyonu kullanın
      */
     val extractCaption: (File) -> Unit = {
         scope.launch (Dispatchers.Default){
@@ -138,7 +138,7 @@ fun LinkVocabularyDialog(
                 vocabularyType = selectedVocabulary.type
                 var linkedCounter = 0
 
-                // 字幕词库或 MKV 词库，字幕保存在单词的 captions 属性中
+                // Altyazı kelime listesi veya MKV kelime listesi, altyazılar kelimenin captions özelliğinde saklanır
                 if (selectedVocabulary.type != VocabularyType.DOCUMENT) {
                     val wordCaptionsMap = HashMap<String, List<Caption>>()
                     selectedVocabulary.wordList.forEach { word ->
@@ -148,8 +148,8 @@ fun LinkVocabularyDialog(
                         if (wordCaptionsMap.containsKey(word.value.lowercase(Locale.getDefault()))) {
                             val captions = wordCaptionsMap[word.value]
                             val links = mutableListOf<ExternalCaption>()
-                            // 用于预览
-                            // 字幕最多3条，这个 counter 是剩余的数量
+                            // Önizleme için
+                            // En fazla 3 altyazı, bu sayaç kalan sayıyı gösterir
                             var counter = 3 - word.externalCaptions.size
                             if (counter in 1..3) {
                                 captions?.forEachIndexed { _, caption ->
@@ -177,7 +177,7 @@ fun LinkVocabularyDialog(
                                 }
                             } else {
 
-                                // 字幕已经有3条了，查询是否有一样的
+                                // Altyazı zaten 3 tane, aynısı var mı diye kontrol et
                                 captions?.forEachIndexed { _, caption ->
                                     val externalCaption = ExternalCaption(
                                         selectedVocabulary.relateVideoPath,
@@ -202,7 +202,7 @@ fun LinkVocabularyDialog(
                     }
 
                 } else {
-                    // 文档词库，字幕保存在单词的 externalCaptions 属性中
+                    // Belge kelime listesi, altyazılar kelimenin externalCaptions özelliğinde saklanır
                     val wordCaptionsMap = HashMap<String, List<ExternalCaption>>()
                     selectedVocabulary.wordList.forEach { word ->
                         wordCaptionsMap.put(word.value, word.externalCaptions)
@@ -211,8 +211,8 @@ fun LinkVocabularyDialog(
                         if (wordCaptionsMap.containsKey(word.value.lowercase(Locale.getDefault()))) {
                             val externalCaptions = wordCaptionsMap[word.value]
                             val links = mutableListOf<ExternalCaption>()
-//                        // 用于预览
-                            // 字幕最多3条，这个 counter 是剩余的数量
+//                        // Önizleme için
+                            // En fazla 3 altyazı, bu sayaç kalan sayıyı gösterir
                             var counter = 3 - word.externalCaptions.size
                             if (counter in 1..3) {
                                 externalCaptions?.forEachIndexed { _, externalCaption ->
@@ -229,7 +229,7 @@ fun LinkVocabularyDialog(
                                     }
                                 }
                             } else {
-                                // 字幕已经有3条了，查询是否有一样的
+                                // Altyazı zaten 3 tane, aynısı var mı diye kontrol et
                                 externalCaptions?.forEachIndexed { _, externalCaption ->
                                     if (word.externalCaptions.contains(externalCaption)) {
                                         linkedCounter++
@@ -245,14 +245,14 @@ fun LinkVocabularyDialog(
                     }
                 }
 
-                // previewWords isEmpty 有两种情况：
-                // 1. 已经链接了一次。
-                // 2. 没有匹配的字幕
+                // previewWords boşsa iki durum vardır:
+                // 1. Zaten bir kez bağlandı.
+                // 2. Eşleşen altyazı yok
                 if (prepareLinks.isEmpty()) {
                     extractCaptionResultInfo = if (linkedCounter == 0) {
-                        "没有匹配的字幕，请重新选择"
+                        "Eşleşen altyazı bulunamadı, lütfen yeniden seçin."
                     } else {
-                        "${selectedVocabulary.name} 有${linkedCounter}条相同的字幕已经链接，请重新选择"
+                        "${selectedVocabulary.name} için ${linkedCounter} adet aynı altyazı zaten bağlanmış, lütfen yeniden seçin."
                     }
                     vocabularyWrong = true
                 }
@@ -261,23 +261,23 @@ fun LinkVocabularyDialog(
     }
 
     /**
-     * 处理输入的文件
+     * Giriş dosyasını işle
      */
     val handleInputFile:(File) -> Unit = {file ->
-        // 选择文档词库或内置词库
+        // Belge kelime listesini veya dahili kelime listesini seç
         if(vocabulary == null){
             val newVocabulary =  MutableVocabulary(loadVocabulary(file.absolutePath))
             if(newVocabulary.type != VocabularyType.DOCUMENT){
                 JOptionPane.showMessageDialog(null,
-                    "词库的类型不对。\n" +
-                        "不能选择用字幕或MKV视频生成的词库。\n" +
-                        "如果要链接两个有字幕的词库，请选择合并词库。"
+                    "Kelime listesi türü yanlış.\n" +
+                        "Altyazı veya MKV videosundan oluşturulmuş kelime listeleri seçilemez.\n" +
+                        "İki altyazılı kelime listesini bağlamak istiyorsanız, lütfen 'Kelime Listelerini Birleştir'i seçin."
                 )
             }else{
                 vocabulary = newVocabulary
             }
             directoryPath = file.parentFile.absolutePath
-            // 选择字幕词库
+            // Altyazı kelime listesini seç
         }else{
             vocabularyDir = file.parentFile.absolutePath
             extractCaption(file)
@@ -287,7 +287,7 @@ fun LinkVocabularyDialog(
 
 
     DialogWindow(
-        title = "链接字幕词库",
+        title = "Altyazı Kelime Listesi Bağla",
         icon = painterResource("logo/logo.png"),
         onCloseRequest = {
             clear()
@@ -300,7 +300,7 @@ fun LinkVocabularyDialog(
         ),
     ) {
         windowBackgroundFlashingOnCloseFixHack()
-        //设置窗口的拖放处理函数
+        // Pencerenin sürükle-bırak işleyicisini ayarla
         LaunchedEffect(Unit){
             val transferHandler = createTransferHandler(
                 showWrongMessage = { message ->
@@ -312,7 +312,7 @@ fun LinkVocabularyDialog(
                         if (file.extension == "json") {
                             handleInputFile(file)
                         } else {
-                            JOptionPane.showMessageDialog(window, "词库的格式不正确")
+                            JOptionPane.showMessageDialog(window, "Kelime listesi formatı yanlış.")
                         }
 
 
@@ -323,14 +323,13 @@ fun LinkVocabularyDialog(
         }
 
 
-        /** 保存词库 */
-        /** 保存词库 */
+        /** Kelime Listesini Kaydet */
         val save:() -> Unit = {
             scope.launch (Dispatchers.IO){
 
                 val fileChooser = appState.futureFileChooser.get()
                 fileChooser.dialogType = JFileChooser.SAVE_DIALOG
-                fileChooser.dialogTitle = "保存词库"
+                fileChooser.dialogTitle = "Kelime Listesini Kaydet"
                 val myDocuments = FileSystemView.getFileSystemView().defaultDirectory.path
                 val appVocabulary = getResourcesFile("vocabulary")
                 val parent = if (directoryPath.startsWith(appVocabulary.absolutePath)) {
@@ -351,7 +350,7 @@ fun LinkVocabularyDialog(
                         close()
                     }catch(e:Exception){
                         e.printStackTrace()
-                        JOptionPane.showMessageDialog(window,"保存词库失败,错误信息：\n${e.message}")
+                        JOptionPane.showMessageDialog(window,"Kelime listesi kaydedilemedi. Hata:\n${e.message}")
                     }
 
                 }
@@ -371,7 +370,7 @@ fun LinkVocabularyDialog(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxSize().align(Alignment.Center)
                         ) {
-                            // 当前词库已经链接的外部字幕
+                            // Mevcut kelime listesine zaten bağlı olan harici altyazılar
                             val externalNameMap = remember { mutableStateMapOf<String,Int>() }
                             var deleted by remember{ mutableStateOf(false)}
 
@@ -396,7 +395,7 @@ fun LinkVocabularyDialog(
                                     Row(
                                         horizontalArrangement = Arrangement.Center,
                                         modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
-                                    ) { Text(vocabulary!!.name) }
+                                    ) { Text(vocabulary!!.name ?: "İsimsiz Kelime Listesi") } // vocabulary.name null ise varsayılan bir isim göster
                                     val bottom = if(externalNameMap.isEmpty()) 50.dp else 0.dp
                                     Divider(Modifier.padding(bottom = bottom))
                                 }
@@ -422,7 +421,7 @@ fun LinkVocabularyDialog(
                                                     val name = File(path).nameWithoutExtension
                                                     if (showConfirmationDialog) {
                                                         ConfirmDialog(
-                                                            message = "确定要删除 $name 的所有字幕吗?",
+                                                            message = "$name için tüm altyazılar silinsin mi?", // "确定要删除 $name 的所有字幕吗?"
                                                             confirm = {
                                                                 vocabulary?.wordList?.forEach { word ->
                                                                     val tempList = mutableListOf<ExternalCaption>()
@@ -433,7 +432,7 @@ fun LinkVocabularyDialog(
                                                                     }
                                                                     word.externalCaptions.removeAll(tempList)
                                                                 }
-                                                                // 如果选择的词库有问题，提示用户词库错误，删除词库后就取消提示错误。？
+                                                                // Seçilen kelime listesi sorunluysa, kullanıcıya kelime listesi hatası göster, kelime listesi silindikten sonra hata mesajını kaldır.
                                                                 if (
                                                                     subtitlesName == path) {
                                                                     vocabularyWrong = false
@@ -452,11 +451,11 @@ fun LinkVocabularyDialog(
                                                         overflow = TextOverflow.Ellipsis,
                                                         modifier = Modifier.width(250.dp).padding(end = 10.dp)
                                                     )
-                                                    Text("$count", modifier = Modifier.width(60.dp))
+                                                    Text("$count adet", modifier = Modifier.width(60.dp)) // "$count" -> "$count adet"
                                                     IconButton(onClick = { showConfirmationDialog = true },modifier = Modifier.padding(end = 10.dp)) {
                                                         Icon(
                                                             imageVector = Icons.Filled.Delete,
-                                                            contentDescription = "",
+                                                            contentDescription = "Sil", // "" -> "Sil"
                                                             tint = MaterialTheme.colors.onBackground
                                                         )
                                                     }
@@ -496,7 +495,7 @@ fun LinkVocabularyDialog(
                                         vocabularyWrong = false
 
                                 }) {
-                                    Text("1 选择词库")
+                                    Text("1. Kelime Listesi Seç") // "1 选择词库" -> "1. Kelime Listesi Seç"
                                 }
                                 Spacer(Modifier.width(20.dp))
                                 OutlinedButton(
@@ -506,18 +505,18 @@ fun LinkVocabularyDialog(
                                         vocabularyWrong = false
 
                                 }) {
-                                    Text("2 选择字幕词库")
+                                    Text("2. Altyazı Listesi Seç") // "2 选择字幕词库" -> "2. Altyazı Listesi Seç"
                                 }
                                 Spacer(Modifier.width(20.dp))
                                 OutlinedButton(onClick = { save() }, enabled = saveEnable) {
-                                    Text("保存")
+                                    Text("Kaydet") // "保存" -> "Kaydet"
                                 }
                                 Spacer(Modifier.width(20.dp))
                                 OutlinedButton(onClick = {
                                     clear()
                                     close()
                                 }) {
-                                    Text("取消")
+                                    Text("İptal") // "取消" -> "İptal"
                                 }
                             }
                             val extensions = if(isMacOS()) listOf("public.json") else listOf("json")
@@ -539,7 +538,7 @@ fun LinkVocabularyDialog(
                         Column (
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.align(Alignment.TopCenter).padding(top = 10.dp)){
-                            Text("提示：不要把词库保存到应用程序的安装目录")
+                            Text("İpucu: Kelime listesini uygulamanın kurulum dizinine kaydetmeyin.") // "提示：不要把词库保存到应用程序的安装目录"
                             TooltipArea(
                                 tooltip = {
                                     Surface(
@@ -547,7 +546,7 @@ fun LinkVocabularyDialog(
                                         border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                                         shape = RectangleShape
                                     ) {
-                                        Text(text = "帮助", modifier = Modifier.padding(10.dp))
+                                        Text(text = "Yardım", modifier = Modifier.padding(10.dp)) // "帮助" -> "Yardım"
                                     }
                                 },
                                 delayMillis = 50,
@@ -586,7 +585,7 @@ fun LinkVocabularyDialog(
                                 horizontalArrangement = Arrangement.Center,
                                 modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp)
                             ) {
-                                Text("总共${prepareLinks.size}个单词,${linkCounter}条字幕")
+                                Text("Toplam ${prepareLinks.size} kelime, ${linkCounter} altyazı") // "总共${prepareLinks.size}个单词,${linkCounter}条字幕"
                             }
                             Divider()
                             Box(modifier = Modifier.fillMaxWidth().height(500.dp)) {
@@ -698,11 +697,11 @@ fun LinkVocabularyDialog(
                                     import()
                                     clear()
                                 }) {
-                                    Text("链接")
+                                    Text("Bağla") // "链接" -> "Bağla"
                                 }
                                 Spacer(Modifier.width(20.dp))
                                 OutlinedButton(onClick = { clear() }) {
-                                    Text("取消")
+                                    Text("İptal") // "取消" -> "İptal"
                                 }
                             }
                         }

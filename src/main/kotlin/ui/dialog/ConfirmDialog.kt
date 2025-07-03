@@ -25,16 +25,16 @@ import androidx.compose.ui.window.rememberDialogState
 import ui.window.windowBackgroundFlashingOnCloseFixHack
 
 /**
- * 确认对话框
- * @param message 要显示的消息
- * @param confirm 点击确认之后调用的函数
- * @param close 点击取消之后调用的函数
+ * Onay İletişim Kutusu
+ * @param message Gösterilecek mesaj
+ * @param confirm Onaylandıktan sonra çağrılacak fonksiyon
+ * @param close İptal edildikten sonra çağrılacak fonksiyon
  */
 @ExperimentalComposeUiApi
 @Composable
 fun ConfirmDialog(message: String, confirm: () -> Unit, close: () -> Unit) {
     DialogWindow(
-        title = "删除",
+        title = "Sil", // "删除" -> "Sil"
         onCloseRequest = { close() },
         undecorated = true,
         resizable = false,
@@ -79,11 +79,11 @@ fun ConfirmDialog(message: String, confirm: () -> Unit, close: () -> Unit) {
                 Spacer(Modifier.height(20.dp))
                 Row {
                     OutlinedButton(onClick = { confirm() }) {
-                        Text("确定(Y)")
+                        Text("Onayla(Y)") // "确定(Y)" -> "Onayla(Y)"
                     }
                     Spacer(Modifier.width(10.dp))
                     OutlinedButton(onClick = { close() }) {
-                        Text("取消(N)")
+                        Text("İptal(N)") // "取消(N)" -> "İptal(N)"
                     }
                 }
             }

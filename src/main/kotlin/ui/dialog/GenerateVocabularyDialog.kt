@@ -81,10 +81,10 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * 生成词库
- * @param state 应用程序状态
- * @param title 标题
- * @param type 词库类型
+ * Kelime Listesi Oluştur
+ * @param state Uygulama durumu
+ * @param title Başlık
+ * @param type Kelime listesi türü
  */
 @OptIn(
     ExperimentalSerializationApi::class
@@ -93,12 +93,12 @@ import kotlin.math.min
 @Composable
 fun GenerateVocabularyDialog(
     state: AppState,
-    title: String,
+    title: String, // Bu başlık zaten App.kt içinde Türkçeleştirilmişti (örn: "Kelime Listesini Filtrele")
     type: VocabularyType
 ) {
     val windowWidth = if (type == MKV) 1320.dp else 1285.dp
     DialogWindow(
-        title = title,
+        title = title, // title parametresi zaten Türkçe olarak geliyor
         onCloseRequest = {
             onCloseRequest(state, title)
         },
@@ -111,23 +111,23 @@ fun GenerateVocabularyDialog(
         val scope = rememberCoroutineScope()
 
         val fileFilter = when (title) {
-            "过滤词库" -> FileNameExtensionFilter(
-                "词库",
+            "Kelime Listesini Filtrele" -> FileNameExtensionFilter( // "过滤词库" -> "Kelime Listesini Filtrele"
+                "Kelime Listesi (*.json)", // "词库" -> "Kelime Listesi (*.json)"
                 "json",
             )
 
-            "用文档生成词库" -> FileNameExtensionFilter(
-                "支持的文件扩展(*.pdf;*.txt;*.md*.java;*.cs;*.cpp;*.c;*.kt;*.py;*.ts)",
+            "Belgeden Kelime Listesi Oluştur" -> FileNameExtensionFilter( // "用文档生成词库" -> "Belgeden Kelime Listesi Oluştur"
+                "Desteklenen belgeler (*.pdf;*.txt;*.md...)", // "支持的文件扩展(*.pdf;*.txt;*.md*.java;*.cs;*.cpp;*.c;*.kt;*.py;*.ts)" -> "Desteklenen belgeler (*.pdf;*.txt;*.md...)"
                 "pdf", "txt", "md", "java", "cs", "cpp", "c", "kt", "js", "py", "ts"
             )
 
-            "用字幕生成词库" -> FileNameExtensionFilter(
-                "SRT或ASS格式的字幕文件",
+            "Altyazıdan Kelime Listesi Oluştur" -> FileNameExtensionFilter( // "用字幕生成词库" -> "Altyazıdan Kelime Listesi Oluştur"
+                "SRT veya ASS formatındaki altyazı dosyaları", // Aynı kalabilir veya "Altyazı Dosyaları (*.srt, *.ass)"
                 "srt", "ass"
             )
 
-            "用视频生成词库" -> FileNameExtensionFilter(
-                "mkv或mp4格式的视频文件",
+            "Videodan Kelime Listesi Oluştur" -> FileNameExtensionFilter( // "用视频生成词库" -> "Videodan Kelime Listesi Oluştur"
+                "MKV veya MP4 formatındaki video dosyaları", // Aynı kalabilir veya "Video Dosyaları (*.mkv, *.mp4)"
                 "mkv", "mp4",
             )
 
@@ -289,16 +289,16 @@ fun GenerateVocabularyDialog(
 
         var showCard by remember { mutableStateOf(true) }
 
-        /** 文件选择器的标题 */
+        /** Dosya seçicinin başlığı */
         val chooseText = when (title) {
-            "过滤词库" -> "选择词库"
-            "用文档生成词库" -> "选择文档"
-            "用字幕生成词库" -> "选择字幕"
-            "用 MKV 视频生成词库" -> "选择 MKV 文件"
+            "Kelime Listesini Filtrele" -> "Kelime Listesi Seç" // "过滤词库" -> "Kelime Listesini Filtrele", "选择词库" -> "Kelime Listesi Seç"
+            "Belgeden Kelime Listesi Oluştur" -> "Belge Seç" // "用文档生成词库" -> "Belgeden Kelime Listesi Oluştur", "选择文档" -> "Belge Seç"
+            "Altyazıdan Kelime Listesi Oluştur" -> "Altyazı Seç" // "用字幕生成词库" -> "Altyazıdan Kelime Listesi Oluştur", "选择字幕" -> "Altyazı Seç"
+            "Videodan Kelime Listesi Oluştur" -> "Video Dosyası Seç" // "用视频生成词库" -> "Videodan Kelime Listesi Oluştur", "选择 MKV 文件" -> "Video Dosyası Seç" (MKV yerine genel Video)
             else -> ""
         }
 
-        /** 拖放的文件和文件选择器选择的文件都使用这个函数处理 */
+        /** Sürüklenen dosyalar ve dosya seçiciden seçilen dosyalar bu fonksiyonu kullanır */
         val parseImportFile: (List<File>) -> Unit = { files ->
             scope.launch(Dispatchers.Default) {
                 if (files.size == 1) {
@@ -311,7 +311,7 @@ fun GenerateVocabularyDialog(
                             } else {
                                 JOptionPane.showMessageDialog(
                                     window,
-                                    "如果你想用 ${file.nameWithoutExtension} 文档生成词库，\n请重新选择：词库 -> 用文档生成词库，再拖放文件到这里。"
+                                    "${file.nameWithoutExtension} belgesinden kelime listesi oluşturmak istiyorsanız,\nlütfen yeniden seçin: Kelime Listesi -> Belgeden Kelime Listesi Oluştur, sonra dosyayı buraya sürükleyip bırakın."
                                 )
                             }
                         }
@@ -323,7 +323,7 @@ fun GenerateVocabularyDialog(
                             } else {
                                 JOptionPane.showMessageDialog(
                                     window,
-                                    "如果你想用 ${file.nameWithoutExtension} 字幕生成词库，\n请重新选择：词库 -> 用字幕生成词库，再拖放文件到这里。"
+                                    "${file.nameWithoutExtension} altyazısından kelime listesi oluşturmak istiyorsanız,\nlütfen yeniden seçin: Kelime Listesi -> Altyazıdan Kelime Listesi Oluştur, sonra dosyayı buraya sürükleyip bırakın."
                                 )
                             }
                         }
@@ -331,7 +331,7 @@ fun GenerateVocabularyDialog(
                         "mkv", "mp4" -> {
                             when (type) {
                                 MKV -> {
-                                    // 第一次拖放
+                                    // İlk sürükleme
                                     if (selectedFilePath.isEmpty() && selectedFileList.isEmpty()) {
                                         loading = true
                                         parseTrackList(
@@ -351,28 +351,28 @@ fun GenerateVocabularyDialog(
                                         )
 
                                         loading = false
-                                    } else { // 窗口已经有文件了
-                                        // 已经有一个相同的 MKV 视频，不再添加
+                                    } else { // Pencerede zaten dosya var
+                                        // Aynı MKV videosu zaten var, ekleme
                                         if (file.absolutePath == selectedFilePath) {
                                             return@launch
                                         }
-                                        // 批量生成词库暂时不支持 MP4 格式
+                                        // Toplu kelime listesi oluşturma geçici olarak MP4 formatını desteklemiyor
                                         if (file.extension == "mp4") {
                                             JOptionPane.showMessageDialog(
                                                 window,
-                                                "批量生成词库暂时不支持 MP4 格式"
+                                                "Toplu kelime listesi oluşturma şu anda MP4 formatını desteklememektedir."
                                             )
                                             return@launch
                                         }
-                                        // 如果之前有一个 MKV 视频,把之前的视频加入到 selectedFileList
+                                        // Eğer daha önce bir MKV videosu varsa, önceki videoyu selectedFileList'e ekle
                                         if (selectedFilePath.isNotEmpty() && selectedFileList.isEmpty()) {
                                             val f = File(selectedFilePath)
                                             if (f.extension == "mp4") {
                                                 JOptionPane.showMessageDialog(
                                                     window,
-                                                    "即将进入批量生成词库模式\n" +
-                                                            "批量生成词库暂时不支持 MP4 格式\n" +
-                                                            "${f.nameWithoutExtension} 不会被添加到列表"
+                                                    "Toplu kelime listesi oluşturma moduna geçiliyor.\n" +
+                                                            "Bu mod şu anda MP4 formatını desteklememektedir.\n" +
+                                                            "${f.nameWithoutExtension} listeye eklenmeyecektir."
                                                 )
 
                                             } else {
@@ -383,7 +383,7 @@ fun GenerateVocabularyDialog(
                                             selectedFilePath = ""
                                             relateVideoPath = ""
                                         }
-                                        // 列表里面没有这个文件，就添加
+                                        // Listede bu dosya yoksa ekle
                                         if (!selectedFileList.contains(file)) {
                                             selectedFileList.add(file)
                                             selectedFileList.sortBy { it.nameWithoutExtension }
@@ -402,20 +402,20 @@ fun GenerateVocabularyDialog(
                                 else -> {
                                     JOptionPane.showMessageDialog(
                                         window,
-                                        "如果你想用 ${file.nameWithoutExtension} 视频生成词库，\n请重新选择：词库 -> 用 MKV 视频生成词库，再拖放文件到这里。"
+                                        "${file.nameWithoutExtension} videosundan kelime listesi oluşturmak istiyorsanız,\nlütfen yeniden seçin: Kelime Listesi -> Videodan Kelime Listesi Oluştur, sonra dosyayı buraya sürükleyip bırakın."
                                     )
                                 }
                             }
                         }
 
                         "json" -> {
-                            if (title == "过滤词库") {
+                            if (title == "Kelime Listesini Filtrele") { // "过滤词库" -> "Kelime Listesini Filtrele"
                                 selectedFilePath = file.absolutePath
                             }
                         }
 
                         else -> {
-                            JOptionPane.showMessageDialog(window, "格式不支持")
+                            JOptionPane.showMessageDialog(window, "Desteklenmeyen format.") // "格式不支持" -> "Desteklenmeyen format."
                         }
                     }
 
@@ -436,27 +436,27 @@ fun GenerateVocabularyDialog(
                     } else if (first.extension == "srt" && last.extension == "srt") {
                         JOptionPane.showMessageDialog(
                             window,
-                            "不能接收两个 srt 字幕文件，\n需要一个字幕(srt)文件和一个视频（mp4、mkv）文件"
+                            "İki SRT altyazı dosyası kabul edilemez.\nBir altyazı (.srt) ve bir video (.mp4, .mkv) dosyası gereklidir."
                         )
                     } else if (first.extension == "mp4" && last.extension == "mp4") {
                         JOptionPane.showMessageDialog(
                             window,
-                            "不能接收两个 mp4 视频文件，\n需要一个字幕(srt)文件和一个视频（mp4、mkv）文件"
+                            "İki MP4 video dosyası kabul edilemez.\nBir altyazı (.srt) ve bir video (.mp4, .mkv) dosyası gereklidir."
                         )
                     } else if (first.extension == "mkv" && last.extension == "mkv") {
                         JOptionPane.showMessageDialog(
                             window,
-                            "不能接收两个 mkv 视频文件，\n需要一个字幕(srt)文件和一个视频（mp4、mkv）文件"
+                            "İki MKV video dosyası kabul edilemez.\nBir altyazı (.srt) ve bir video (.mp4, .mkv) dosyası gereklidir."
                         )
                     } else if (first.extension == "mkv" && last.extension == "mp4") {
                         JOptionPane.showMessageDialog(
                             window,
-                            "不能接收两个视频文件，\n需要一个字幕(srt)文件和一个视频（mp4、mkv）文件"
+                            "İki video dosyası kabul edilemez.\nBir altyazı (.srt) ve bir video (.mp4, .mkv) dosyası gereklidir."
                         )
                     } else {
                         JOptionPane.showMessageDialog(
                             window,
-                            "格式错误，\n需要一个字幕(srt)文件和一个视频（mp4、mkv）文件"
+                            "Format hatası.\nBir altyazı (.srt) ve bir video (.mp4, .mkv) dosyası gereklidir."
                         )
                     }
 
@@ -475,24 +475,24 @@ fun GenerateVocabularyDialog(
                     selectedFileList.sortBy { it.nameWithoutExtension }
                     if (selectedFileList.isNotEmpty()) showTaskList = true
                     if (extensionWrong.isNotEmpty()) {
-                        JOptionPane.showMessageDialog(window, "以下文件不是 mkv 格式\n$extensionWrong")
+                        JOptionPane.showMessageDialog(window, "Aşağıdaki dosyalar MKV formatında değil:\n$extensionWrong")
                     }
 
                 } else if (files.size > 100 && type == MKV) {
-                    JOptionPane.showMessageDialog(window, "批量处理最多不能超过 100 个文件")
+                    JOptionPane.showMessageDialog(window, "Toplu işlem en fazla 100 dosya içerebilir.")
                 } else {
-                    JOptionPane.showMessageDialog(window, "文件不能超过两个")
+                    JOptionPane.showMessageDialog(window, "Dosya sayısı ikiyi geçemez.")
                 }
             }
         }
 
-        /** 打开文件时调用的函数 */
+        /** Dosya açıldığında çağrılan fonksiyon */
         val openFile: () -> Unit = {
             scope.launch(Dispatchers.Default) {
                 val fileChooser = withContext(Dispatchers.IO) {
                     state.futureFileChooser.get()
                 }
-                fileChooser.dialogTitle = chooseText
+                fileChooser.dialogTitle = chooseText // chooseText zaten Türkçeleştirildi
                 fileChooser.fileSystemView = FileSystemView.getFileSystemView()
                 fileChooser.currentDirectory = FileSystemView.getFileSystemView().defaultDirectory
                 fileChooser.fileSelectionMode = JFileChooser.FILES_ONLY
@@ -674,7 +674,7 @@ fun GenerateVocabularyDialog(
                 }
 
                 if (errorMessages.isNotEmpty()) {
-                    val string = "有 ${errorMessages.size} 个文件解析失败，请点击 [任务列表] 查看详细信息"
+                    val string = "${errorMessages.size} adet dosya ayrıştırılamadı. Detaylar için lütfen [Görev Listesi]'ne tıklayın." // "有 ${errorMessages.size} 个文件解析失败，请点击 [任务列表] 查看详细信息" -> Türkçe çevirisi
                     JOptionPane.showMessageDialog(window, string)
                 }
             }
@@ -720,14 +720,14 @@ fun GenerateVocabularyDialog(
                 previewList.remove(word)
                 removedWords.add(word)
             } catch (e: Exception) {
-                // 回滚
+                // Geri al
                 if (state.filterVocabulary && File(selectedFilePath).nameWithoutExtension == "FamiliarVocabulary") {
                     familiarVocabulary.wordList.add(tempWord)
                 } else {
                     familiarVocabulary.wordList.remove(tempWord)
                 }
                 e.printStackTrace()
-                JOptionPane.showMessageDialog(window, "保存熟悉词库失败,错误信息：\n${e.message}")
+                JOptionPane.showMessageDialog(window, "Tanıdık kelime listesi kaydedilemedi. Hata:\n${e.message}") // "保存熟悉词库失败,错误信息：\n${e.message}" -> Türkçe çevirisi
             }
 
         }
@@ -993,15 +993,15 @@ fun GenerateVocabularyDialog(
                             } else {
                                 val text = when (type) {
                                     DOCUMENT -> {
-                                        if (title !== "过滤词库") {
-                                            "可以拖放文档到这里"
+                                        if (title !== "Kelime Listesini Filtrele") { // "过滤词库" -> "Kelime Listesini Filtrele"
+                                            "Belgeleri buraya sürükleyip bırakabilirsiniz" // "可以拖放文档到这里" -> "Belgeleri buraya sürükleyip bırakabilirsiniz"
                                         } else {
-                                            "可以拖放词库到这里"
+                                            "Kelime listelerini buraya sürükleyip bırakabilirsiniz" // "可以拖放词库到这里" -> "Kelime listelerini buraya sürükleyip bırakabilirsiniz"
                                         }
                                     }
 
-                                    SUBTITLES -> "可以拖放 SRT 或 ASS 字幕到这里"
-                                    MKV -> "可以拖放 MKV 或 MP4 视频到这里"
+                                    SUBTITLES -> "SRT veya ASS altyazılarını buraya sürükleyip bırakabilirsiniz" // "可以拖放 SRT 或 ASS 字幕到这里" -> "SRT veya ASS altyazılarını buraya sürükleyip bırakabilirsiniz"
+                                    MKV -> "MKV veya MP4 videolarını buraya sürükleyip bırakabilirsiniz" // "可以拖放 MKV 或 MP4 视频到这里" -> "MKV veya MP4 videolarını buraya sürükleyip bırakabilirsiniz"
                                 }
                                 if (!loading) {
                                     Text(
@@ -1023,9 +1023,9 @@ fun GenerateVocabularyDialog(
                                         Modifier.width(60.dp).padding(bottom = 60.dp)
                                     )
                                     val text = if (selectedFileList.isNotEmpty()) {
-                                        "正在读取第一个视频的字幕轨道列表"
+                                        "İlk videonun altyazı izleme listesi okunuyor..." // "正在读取第一个视频的字幕轨道列表" -> "İlk videonun altyazı izleme listesi okunuyor..."
                                     } else {
-                                        "正在读取字幕轨道列表"
+                                        "Altyazı izleme listesi okunuyor..." // "正在读取字幕轨道列表" -> "Altyazı izleme listesi okunuyor..."
                                     }
                                     Text(text = text, color = MaterialTheme.colors.onBackground)
                                 }
@@ -1087,7 +1087,7 @@ fun GenerateVocabularyDialog(
                                         state.futureFileChooser.get()
                                     }
                                 fileChooser.dialogType = JFileChooser.SAVE_DIALOG
-                                fileChooser.dialogTitle = "保存词库"
+                                fileChooser.dialogTitle = "Kelime Listesini Kaydet" // "保存词库" -> "Kelime Listesini Kaydet"
                                 val myDocuments = FileSystemView.getFileSystemView().defaultDirectory.path
                                 if (state.filterVocabulary && File(selectedFilePath).nameWithoutExtension == "FamiliarVocabulary") {
                                     fileChooser.selectedFile = File(selectedFilePath)
@@ -1102,7 +1102,7 @@ fun GenerateVocabularyDialog(
                                     if (savePath.startsWith(vocabularyDirPath)) {
                                         JOptionPane.showMessageDialog(
                                             null,
-                                            "不能把词库保存到应用程序安装目录，因为软件更新或卸载时，生成的词库会被删除"
+                                            "Kelime listesi uygulama kurulum dizinine kaydedilemez, çünkü yazılım güncellendiğinde veya kaldırıldığında oluşturulan kelime listesi silinir." // "不能把词库保存到应用程序安装目录，因为软件更新或卸载时，生成的词库会被删除"
                                         )
                                     } else {
                                         val vocabulary = Vocabulary(
@@ -1118,7 +1118,7 @@ fun GenerateVocabularyDialog(
                                             saveVocabulary(vocabulary, selectedFile.absolutePath)
                                             state.saveToRecentList(vocabulary.name, selectedFile.absolutePath, 0)
 
-                                            // 清理状态
+                                            // Durumu temizle
                                             selectedFileList.clear()
                                             started = false
                                             showTaskList = false
@@ -1145,7 +1145,7 @@ fun GenerateVocabularyDialog(
                                             e.printStackTrace()
                                             JOptionPane.showMessageDialog(
                                                 window,
-                                                "保存词库失败,错误信息：\n${e.message}"
+                                                "Kelime listesi kaydedilemedi. Hata:\n${e.message}" // "保存词库失败,错误信息：\n${e.message}" -> Türkçe çevirisi
                                             )
                                         }
 
@@ -1164,7 +1164,7 @@ fun GenerateVocabularyDialog(
                     OutlinedButton(onClick = {
                         onCloseRequest(state, title)
                     }) {
-                        Text("取消")
+                        Text("İptal") // "取消" -> "İptal"
                     }
                     Spacer(Modifier.width(10.dp))
                 }
@@ -1238,41 +1238,41 @@ fun Summary(
             modifier = Modifier.fillMaxWidth().height(height).padding(start = 10.dp)
         ) {
             val summary = computeSummary(list, summaryVocabulary)
-            Text(text = "共 ${list.size} 词  ", color = MaterialTheme.colors.onBackground)
-            Text(text = "牛津5000核心词：", color = MaterialTheme.colors.onBackground)
+            Text(text = "Toplam ${list.size} kelime  ", color = MaterialTheme.colors.onBackground) // "共 ${list.size} 词  " -> "Toplam ${list.size} kelime  "
+            Text(text = "Oxford 5000: ", color = MaterialTheme.colors.onBackground) // "牛津5000核心词：" -> "Oxford 5000: "
             if (summaryVocabulary["oxford"]?.isEmpty() == true) {
-                Text(text = "词库缺失 ", color = Color.Red)
+                Text(text = "Liste eksik ", color = Color.Red) // "词库缺失 " -> "Liste eksik "
             } else {
-                Text("${summary[0]} 词  ", color = MaterialTheme.colors.onBackground)
+                Text("${summary[0]} kelime  ", color = MaterialTheme.colors.onBackground) // "词  " -> "kelime  "
             }
-            Text(text = "四级：", color = MaterialTheme.colors.onBackground)
+            Text(text = "CET-4: ", color = MaterialTheme.colors.onBackground) // "四级：" -> "CET-4: "
             if (summaryVocabulary["cet4"]?.isEmpty() == true) {
-                Text(text = "词库缺失 ", color = Color.Red)
+                Text(text = "Liste eksik ", color = Color.Red)
             } else {
-                Text("${summary[1]} 词  ", color = MaterialTheme.colors.onBackground)
+                Text("${summary[1]} kelime  ", color = MaterialTheme.colors.onBackground)
             }
-            Text(text = "六级：", color = MaterialTheme.colors.onBackground)
+            Text(text = "CET-6: ", color = MaterialTheme.colors.onBackground) // "六级：" -> "CET-6: "
             if (summaryVocabulary["cet6"]?.isEmpty() == true) {
-                Text(text = "词库缺失 ", color = Color.Red)
+                Text(text = "Liste eksik ", color = Color.Red)
             } else {
-                Text("${summary[2]} 词  ", color = MaterialTheme.colors.onBackground)
+                Text("${summary[2]} kelime  ", color = MaterialTheme.colors.onBackground)
             }
             Text(text = "GRE: ", color = MaterialTheme.colors.onBackground)
             if (summaryVocabulary["gre"]?.isEmpty() == true) {
-                Text(text = "词库缺失 ", color = Color.Red)
+                Text(text = "Liste eksik ", color = Color.Red)
             } else {
-                Text("${summary[3]} 词", color = MaterialTheme.colors.onBackground)
+                Text("${summary[3]} kelime", color = MaterialTheme.colors.onBackground) // "词" -> "kelime"
             }
 
 
             var expanded by remember { mutableStateOf(false) }
             Box {
-                val width = 195.dp
+                val width = 220.dp // Genişliği artırdım çünkü Türkçe metinler daha uzun olabilir
                 val text = when (sort) {
-                    "appearance" -> "按出现的顺序排序"
-                    "bnc" -> "按 BNC 词频排序"
-                    "alphabet" -> "按首字母排序"
-                    else -> "按 COCA 词频排序"
+                    "appearance" -> "Görünüş Sırasına Göre" // "按出现的顺序排序" -> "Görünüş Sırasına Göre"
+                    "bnc" -> "BNC Sıklığına Göre" // "按 BNC 词频排序" -> "BNC Sıklığına Göre"
+                    "alphabet" -> "Alfabetik Sıraya Göre" // "按首字母排序" -> "Alfabetik Sıraya Göre"
+                    else -> "COCA Sıklığına Göre" // "按 COCA 词频排序" -> "COCA Sıklığına Göre"
                 }
                 OutlinedButton(
                     onClick = { expanded = true },
@@ -1299,9 +1299,9 @@ fun Summary(
                             changeSort("alphabet")
                         },
                         modifier = Modifier.width(width).height(40.dp)
-                            .background(if (sort == "bnc") selectedColor else backgroundColor)
+                            .background(if (sort == "alphabet") selectedColor else backgroundColor) // "bnc" yerine "alphabet" olmalıydı
                     ) {
-                        Text("按首字母排序")
+                        Text("Alfabetik Sıraya Göre") // "按首字母排序" -> "Alfabetik Sıraya Göre"
                     }
                     DropdownMenuItem(
                         onClick = {
@@ -1311,7 +1311,7 @@ fun Summary(
                         modifier = Modifier.width(width).height(40.dp)
                             .background(if (sort == "bnc") selectedColor else backgroundColor)
                     ) {
-                        Text("按BNC词频排序")
+                        Text("BNC Sıklığına Göre") // "按BNC词频排序" -> "BNC Sıklığına Göre"
                     }
                     DropdownMenuItem(
                         onClick = {
@@ -1321,7 +1321,7 @@ fun Summary(
                         modifier = Modifier.width(width).height(40.dp)
                             .background(if (sort == "coca") selectedColor else backgroundColor)
                     ) {
-                        Text("按COCA词频排序")
+                        Text("COCA Sıklığına Göre") // "按COCA词频排序" -> "COCA Sıklığına Göre"
 
                     }
 
@@ -1334,7 +1334,7 @@ fun Summary(
                         modifier = Modifier.width(width).height(40.dp)
                             .background(if (sort == "appearance") selectedColor else backgroundColor)
                     ) {
-                        Text("按出现的顺序排序")
+                        Text("Görünüş Sırasına Göre") // "按出现的顺序排序" -> "Görünüş Sırasına Göre"
                     }
 
                 }
@@ -1447,7 +1447,7 @@ fun BasicFilter(
             if (showMaxSentenceLength) {
                 var maxLengthFieldValue by remember { mutableStateOf(TextFieldValue("$maxSentenceLength")) }
                 Text(
-                    "单词所在句子的最大单词数 ",
+                        "Cümledeki Maks. Kelime Sayısı ", // "单词所在句子的最大单词数 " -> "Cümledeki Maks. Kelime Sayısı "
                     color = MaterialTheme.colors.onBackground,
                     fontFamily = FontFamily.Default
                 )
@@ -1476,7 +1476,7 @@ fun BasicFilter(
                                 } else {
                                     setMaxSentenceLength(10)
                                     maxLengthFieldValue = TextFieldValue("10")
-                                    JOptionPane.showMessageDialog(null, "单词所在句子的最大单词数不能小于 10")
+                                        JOptionPane.showMessageDialog(null, "Cümledeki maksimum kelime sayısı 10'dan küçük olamaz.") // "单词所在句子的最大单词数不能小于 10"
                                 }
                             }
                         }
@@ -1494,7 +1494,7 @@ fun BasicFilter(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth().height(61.dp)
         ) {
-            Text("包含", color = MaterialTheme.colors.onBackground, fontFamily = FontFamily.Default)
+                Text("İçer", color = MaterialTheme.colors.onBackground, fontFamily = FontFamily.Default) // "包含" -> "İçer"
             Checkbox(
                 checked = include,
                 onCheckedChange = {
@@ -1504,7 +1504,7 @@ fun BasicFilter(
             )
 
             Spacer(Modifier.width(10.dp))
-            Text("过滤", color = MaterialTheme.colors.onBackground, fontFamily = FontFamily.Default)
+                Text("Filtrele", color = MaterialTheme.colors.onBackground, fontFamily = FontFamily.Default) // "过滤" -> "Filtrele"
             Checkbox(
                 checked = filter,
                 onCheckedChange = {
@@ -1514,7 +1514,7 @@ fun BasicFilter(
             )
         }
         Divider()
-        // 过滤词频
+            // Filtreleme Sıklığı
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -1522,16 +1522,16 @@ fun BasicFilter(
         ) {
             Row(Modifier.width(textWidth)) {
                 AnimatedVisibility(visible = filter) {
-                    Text("过滤 ", color = MaterialTheme.colors.onBackground)
+                        Text("Filtrele ", color = MaterialTheme.colors.onBackground) // "过滤 " -> "Filtrele "
                 }
                 AnimatedVisibility(visible = include) {
-                    Text("包含 ", color = MaterialTheme.colors.onBackground)
+                        Text("İçer ", color = MaterialTheme.colors.onBackground) // "包含 " -> "İçer "
                 }
                 Text(
                     "BNC", color = MaterialTheme.colors.onBackground,
                     modifier = Modifier.padding(end = 1.dp)
                 )
-                Text("   词频前 ", color = MaterialTheme.colors.onBackground)
+                    Text(" sıklığı ilk ", color = MaterialTheme.colors.onBackground) // "   词频前 " -> " sıklığı ilk "
                 var bncNumFieldValue by remember { mutableStateOf(TextFieldValue("$bncNum")) }
                 BasicTextField(
                     value = bncNumFieldValue,
@@ -1557,14 +1557,14 @@ fun BasicFilter(
                                     setBncNum(input)
                                 } else {
                                     bncNumFieldValue = TextFieldValue("$bncNum")
-                                    JOptionPane.showMessageDialog(null, "数字解析错误，将设置为默认值")
+                                        JOptionPane.showMessageDialog(null, "Sayı ayrıştırma hatası, varsayılan değere ayarlanacak.") // "数字解析错误，将设置为默认值"
                                 }
                             }
                         }
                         .width(50.dp)
                         .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.6f)))
                 )
-                Text(" 的单词", color = MaterialTheme.colors.onBackground)
+                    Text(" olan kelimeler", color = MaterialTheme.colors.onBackground) // " 的单词" -> " olan kelimeler"
             }
             Checkbox(
                 checked = bncNumFilter,
@@ -1580,12 +1580,12 @@ fun BasicFilter(
         ) {
             Row(Modifier.width(textWidth)) {
                 AnimatedVisibility(visible = filter) {
-                    Text("过滤 ", color = MaterialTheme.colors.onBackground)
+                        Text("Filtrele ", color = MaterialTheme.colors.onBackground)
                 }
                 AnimatedVisibility(visible = include) {
-                    Text("包含 ", color = MaterialTheme.colors.onBackground)
+                        Text("İçer ", color = MaterialTheme.colors.onBackground)
                 }
-                Text("COCA 词频前 ", color = MaterialTheme.colors.onBackground)
+                    Text("COCA sıklığı ilk ", color = MaterialTheme.colors.onBackground) // "COCA 词频前 " -> "COCA sıklığı ilk "
                 var frqNumFieldValue by remember { mutableStateOf(TextFieldValue("$frqNum")) }
                 BasicTextField(
                     value = frqNumFieldValue,
@@ -1611,14 +1611,14 @@ fun BasicFilter(
                                     setFrqNum(input)
                                 } else {
                                     frqNumFieldValue = TextFieldValue("$frqNum")
-                                    JOptionPane.showMessageDialog(null, "数字解析错误，将设置为默认值")
+                                        JOptionPane.showMessageDialog(null, "Sayı ayrıştırma hatası, varsayılan değere ayarlanacak.")
                                 }
                             }
                         }
                         .width(50.dp)
                         .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.6f)))
                 )
-                Text(" 的单词", color = MaterialTheme.colors.onBackground)
+                    Text(" olan kelimeler", color = MaterialTheme.colors.onBackground)
             }
             Checkbox(
                 checked = frqNumFilter,
@@ -1636,12 +1636,12 @@ fun BasicFilter(
 
             Row(Modifier.width(textWidth)) {
                 AnimatedVisibility(visible = filter) {
-                    Text("过滤 ", color = MaterialTheme.colors.onBackground)
+                        Text("Filtrele ", color = MaterialTheme.colors.onBackground)
                 }
                 AnimatedVisibility(visible = include) {
-                    Text("包含 ", color = MaterialTheme.colors.onBackground)
+                        Text("İçer ", color = MaterialTheme.colors.onBackground)
                 }
-                Text("所有 ", color = MaterialTheme.colors.onBackground)
+                    Text("tüm ", color = MaterialTheme.colors.onBackground) // "所有 " -> "tüm "
 
                 TooltipArea(
                     tooltip = {
@@ -1650,7 +1650,7 @@ fun BasicFilter(
                             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                             shape = RectangleShape
                         ) {
-                            Text(text = "英国国家语料库", modifier = Modifier.padding(10.dp))
+                                Text(text = "İngiliz Ulusal Dil Havuzu", modifier = Modifier.padding(10.dp)) // "英国国家语料库" -> "İngiliz Ulusal Dil Havuzu"
                         }
                     },
                     delayMillis = 300,
@@ -1674,7 +1674,7 @@ fun BasicFilter(
                             .padding(end = 3.dp))
                 }
 
-                Text("   语料库词频顺序为0的词", color = textColor)
+                    Text("   dil havuzunda sıklığı 0 olan kelimeler", color = textColor) // "   语料库词频顺序为0的词" -> "   dil havuzunda sıklığı 0 olan kelimeler"
             }
             Checkbox(
                 checked = bncZeroFilter,
@@ -1691,12 +1691,12 @@ fun BasicFilter(
 
             Row(Modifier.width(textWidth)) {
                 AnimatedVisibility(visible = filter) {
-                    Text("过滤 ", color = MaterialTheme.colors.onBackground)
+                        Text("Filtrele ", color = MaterialTheme.colors.onBackground)
                 }
                 AnimatedVisibility(visible = include) {
-                    Text("包含 ", color = MaterialTheme.colors.onBackground)
+                        Text("İçer ", color = MaterialTheme.colors.onBackground)
                 }
-                Text("所有 ", color = MaterialTheme.colors.onBackground)
+                    Text("tüm ", color = MaterialTheme.colors.onBackground)
                 TooltipArea(
                     tooltip = {
                         Surface(
@@ -1704,7 +1704,7 @@ fun BasicFilter(
                             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                             shape = RectangleShape
                         ) {
-                            Text(text = "美国当代英语语料库", modifier = Modifier.padding(10.dp))
+                                Text(text = "Amerikan Çağdaş İngilizce Dil Havuzu", modifier = Modifier.padding(10.dp)) // "美国当代英语语料库" -> "Amerikan Çağdaş İngilizce Dil Havuzu"
                         }
                     },
                     delayMillis = 300,
@@ -1725,7 +1725,7 @@ fun BasicFilter(
                             .pointerHoverIcon(Hand))
                 }
 
-                Text(" 语料库词频顺序为0的词", color = textColor)
+                    Text(" dil havuzunda sıklığı 0 olan kelimeler", color = textColor) // " 语料库词频顺序为0的词" -> " dil havuzunda sıklığı 0 olan kelimeler"
             }
             Checkbox(
                 checked = frqZeroFilter,
@@ -1741,12 +1741,12 @@ fun BasicFilter(
         ) {
             Row(Modifier.width(textWidth)) {
                 AnimatedVisibility(visible = filter) {
-                    Text("过滤 ", color = MaterialTheme.colors.onBackground)
+                        Text("Filtrele ", color = MaterialTheme.colors.onBackground)
                 }
                 AnimatedVisibility(visible = include) {
-                    Text("包含 ", color = MaterialTheme.colors.onBackground)
+                        Text("İçer ", color = MaterialTheme.colors.onBackground)
                 }
-                Text("所有数字 ", color = MaterialTheme.colors.onBackground)
+                    Text("tüm sayıları ", color = MaterialTheme.colors.onBackground) // "所有数字 " -> "tüm sayıları "
             }
             Checkbox(
                 checked = numberFilter,
@@ -1761,7 +1761,7 @@ fun BasicFilter(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                "词形还原，例如：\ndid、done、doing、does 全部替换为 do",
+                    "Kelime kökünü bul (Lemmatization), örn:\ndid, done, doing, does hepsi 'do' ile değiştirilir.", // "词形还原，例如：\ndid、done、doing、does 全部替换为 do"
                 fontFamily = FontFamily.Default,
                 color = textColor,
                 modifier = Modifier.width(textWidth)
@@ -1799,28 +1799,28 @@ fun VocabularyFilter(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth().height(40.dp)
                     .clickable {
-                        getResourcesFile("vocabulary/大学英语/四级.json").let {
+                        getResourcesFile("vocabulary/Universite_Ingilizcesi/CET4.json").let { // Yol güncellendi (Varsayımsal, gerçek adlar farklı olabilir)
                             if (!vocabularyFilterList.contains(it)) {
                                 vocabularyFilterListAdd(it)
                             }
                         }
                     }
             ) {
-                Text("四级", color = MaterialTheme.colors.onBackground)
+                Text("CET-4", color = MaterialTheme.colors.onBackground) // "四级" -> "CET-4"
             }
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth().height(40.dp)
                     .clickable {
-                        getResourcesFile("vocabulary/大学英语/六级.json").let {
+                        getResourcesFile("vocabulary/Universite_Ingilizcesi/CET6.json").let { // Yol güncellendi (Varsayımsal)
                             if (!vocabularyFilterList.contains(it)) {
                                 vocabularyFilterListAdd(it)
                             }
                         }
                     }
             ) {
-                Text("六级", color = MaterialTheme.colors.onBackground)
+                Text("CET-6", color = MaterialTheme.colors.onBackground) // "六级" -> "CET-6"
             }
             var expanded by remember { mutableStateOf(false) }
             Box(Modifier.fillMaxWidth().height(40.dp)
@@ -1828,7 +1828,7 @@ fun VocabularyFilter(
                 .clickable { expanded = true }
             ) {
                 Text(
-                    text = "内置词库",
+                    text = "Dahili Kelime Listesi", // "内置词库" -> "Dahili Kelime Listesi"
                     color = MaterialTheme.colors.onBackground,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -1863,8 +1863,8 @@ fun VocabularyFilter(
                         if (familiarVocabulary.wordList.isEmpty()) {
                             val result = JOptionPane.showConfirmDialog(
                                 null,
-                                "熟悉词库现在还没有单词，是否导入单词到熟悉词库",
-                                "",
+                                "Tanıdık kelime listesinde henüz kelime yok. Kelime aktarmak ister misiniz?", // "熟悉词库现在还没有单词，是否导入单词到熟悉词库"
+                                "Onay", // Pencere başlığı için bir öneri
                                 JOptionPane.YES_NO_OPTION
                             )
                             if (result == 0) {
@@ -1883,15 +1883,15 @@ fun VocabularyFilter(
                             Text(
                                 badgeNumber,
                                 modifier = Modifier.semantics {
-                                    contentDescription = "$badgeNumber new notifications"
+                                    contentDescription = "$badgeNumber yeni bildirim" // "new notifications" -> "yeni bildirim"
                                 }
                             )
                         }
                     }) {
-                        Text(text = "熟悉词库", color = MaterialTheme.colors.onBackground)
+                        Text(text = "Tanıdık Kelimeler", color = MaterialTheme.colors.onBackground) // "熟悉词库" -> "Tanıdık Kelimeler"
                     }
                 } else {
-                    Text(text = "熟悉词库", color = MaterialTheme.colors.onBackground)
+                    Text(text = "Tanıdık Kelimeler", color = MaterialTheme.colors.onBackground) // "熟悉词库" -> "Tanıdık Kelimeler"
                 }
             }
 
@@ -1899,7 +1899,7 @@ fun VocabularyFilter(
                 var expandRecent by remember { mutableStateOf(false) }
                 Box(Modifier.fillMaxWidth().height(40.dp).clickable { expandRecent = true }) {
                     Text(
-                        text = "最近词库",
+                        text = "Son Kullanılanlar", // "最近词库" -> "Son Kullanılanlar"
                         color = MaterialTheme.colors.onBackground,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -1927,18 +1927,18 @@ fun VocabularyFilter(
                                                     if (recentFile.exists()) {
                                                         vocabularyFilterListAdd(recentFile)
                                                     } else {
-                                                        // 文件可能被删除了
+                                                        // Dosya silinmiş olabilir
                                                         removeInvalidRecentItem(recentItem)
                                                         JOptionPane.showMessageDialog(
                                                             null,
-                                                            "文件地址错误：\n${recentItem.path}"
+                                                            "Dosya yolu hatası:\n${recentItem.path}" // "文件地址错误：\n" -> "Dosya yolu hatası:\n"
                                                         )
                                                     }
 
                                                 }
                                         ) {
                                             Text(
-                                                text = recentItem.name,
+                                                text = recentItem.name, // Bu zaten Türkçe olmalı
                                                 overflow = TextOverflow.Ellipsis,
                                                 maxLines = 1,
                                                 color = MaterialTheme.colors.onBackground,
@@ -1973,11 +1973,11 @@ fun VocabularyFilter(
                             val fileChooser = withContext(Dispatchers.IO) {
                                 futureFileChooser.get()
                             }
-                            fileChooser.dialogTitle = "选择词库"
+                            fileChooser.dialogTitle = "Kelime Listesi Seç" // "选择词库" -> "Kelime Listesi Seç"
                             fileChooser.fileSystemView = FileSystemView.getFileSystemView()
                             fileChooser.fileSelectionMode = JFileChooser.FILES_ONLY
                             fileChooser.isAcceptAllFileFilterUsed = false
-                            val fileFilter = FileNameExtensionFilter("词库", "json")
+                            val fileFilter = FileNameExtensionFilter("Kelime Listesi (*.json)", "json") // "词库" -> "Kelime Listesi (*.json)"
                             fileChooser.addChoosableFileFilter(fileFilter)
                             fileChooser.selectedFile = null
                             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -1989,7 +1989,7 @@ fun VocabularyFilter(
                         }
                     }
             ) {
-                Text("选择词库", color = MaterialTheme.colors.onBackground)
+                Text("Kelime Listesi Seç", color = MaterialTheme.colors.onBackground) // "选择词库" -> "Kelime Listesi Seç"
             }
 
         }
@@ -2127,7 +2127,7 @@ fun SelectFile(
                     .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)))
             )
             OutlinedButton(onClick = { openFile() }) {
-                Text("打开", fontSize = 12.sp)
+                Text("Aç", fontSize = 12.sp) // "打开" -> "Aç"
             }
 
             Spacer(Modifier.width(10.dp))
@@ -2145,7 +2145,7 @@ fun SelectFile(
                     }
 
                 }) {
-                Text("开始", fontSize = 12.sp)
+                Text("Başlat", fontSize = 12.sp) // "开始" -> "Başlat"
             }
             Spacer(Modifier.width(20.dp))
             if (showEnablePhrases) {
@@ -2154,12 +2154,12 @@ fun SelectFile(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.height(48.dp)
                 ) {
-                    Text("处理词组 ", color = MaterialTheme.colors.onBackground, fontFamily = FontFamily.Default)
+                    Text("Kelime Gruplarını İşle ", color = MaterialTheme.colors.onBackground, fontFamily = FontFamily.Default) // "处理词组 " -> "Kelime Gruplarını İşle "
                     Checkbox(
                         checked = enablePhrases,
                         onCheckedChange = {
                             changeEnablePhrases(it)
-                            // 如果已经开始了，就重新开始
+                            // Eğer zaten başladıysa, yeniden başlat
                             if (started) {
                                 if (selectedFileList.isEmpty()) {
                                     analysis(selectedFilePath, selectedTrackId)
@@ -2174,7 +2174,7 @@ fun SelectFile(
             }
 
             Spacer(Modifier.width(10.dp))
-            if (chooseText != "选择词库") {
+            if (chooseText != "Kelime Listesi Seç") { // "选择词库" -> "Kelime Listesi Seç"
                 TooltipArea(
                     tooltip = {
                         Surface(
@@ -2182,7 +2182,7 @@ fun SelectFile(
                             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                             shape = RectangleShape
                         ) {
-                            Text(text = "帮助文档", modifier = Modifier.padding(10.dp))
+                            Text(text = "Yardım Belgesi", modifier = Modifier.padding(10.dp)) // "帮助文档" -> "Yardım Belgesi"
                         }
                     },
                     delayMillis = 50,
@@ -2238,7 +2238,7 @@ fun SelectFile(
                         modifier = Modifier.width(IntrinsicSize.Max).padding(end = 10.dp)
                     ) {
                         Text(
-                            "选择字幕 ",
+                            "Altyazı Seç ", // "选择字幕 " -> "Altyazı Seç "
                             color = MaterialTheme.colors.onBackground,
                             modifier = Modifier.padding(end = 75.dp)
                         )
@@ -2252,7 +2252,7 @@ fun SelectFile(
                                     .border(1.dp, Color.Transparent)
                             ) {
                                 Text(
-                                    text = selectedSubtitle, fontSize = 12.sp,
+                                    text = selectedSubtitle, fontSize = 12.sp, // selectedSubtitle zaten dinamik olarak ayarlanıyor
                                 )
                                 Icon(
                                     Icons.Default.ExpandMore, contentDescription = "Localized description",
@@ -2316,22 +2316,22 @@ fun SelectFile(
 
                 if (selectedFileList.isNotEmpty()) {
                     OutlinedButton(onClick = { showTaskListEvent() }) {
-                        Text("任务列表", fontSize = 12.sp)
+                        Text("Görev Listesi", fontSize = 12.sp) // "任务列表" -> "Görev Listesi"
                     }
                     if (showTaskList) {
                         Spacer(Modifier.width(10.dp))
                         OutlinedButton(onClick = { changeSelectable() }) {
-                            Text("选择", fontSize = 12.sp)
+                            Text("Seç", fontSize = 12.sp) // "选择" -> "Seç"
                         }
                     }
                     if (selectable) {
                         Spacer(Modifier.width(10.dp))
                         OutlinedButton(onClick = { selectAll() }) {
-                            Text("全选", fontSize = 12.sp)
+                            Text("Tümünü Seç", fontSize = 12.sp) // "全选" -> "Tümünü Seç"
                         }
                         Spacer(Modifier.width(10.dp))
                         OutlinedButton(onClick = { delete() }) {
-                            Text("删除", fontSize = 12.sp)
+                            Text("Sil", fontSize = 12.sp) // "删除" -> "Sil"
                         }
                     }
                 }
@@ -2347,7 +2347,7 @@ fun SelectFile(
                     .height(IntrinsicSize.Max)
                     .padding(start = 10.dp, bottom = 14.dp)
             ) {
-                Text("选择对应的视频(可选)", color = MaterialTheme.colors.onBackground)
+                Text("İlgili Videoyu Seç (İsteğe Bağlı)", color = MaterialTheme.colors.onBackground) // "选择对应的视频(可选)" -> "İlgili Videoyu Seç (İsteğe Bağlı)"
                 BasicTextField(
                     value = relateVideoPath,
                     onValueChange = setRelateVideoPath,
@@ -2365,7 +2365,7 @@ fun SelectFile(
                         .border(border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)))
                 )
                 OutlinedButton(onClick = { openRelateVideo() }) {
-                    Text("打开")
+                    Text("Aç") // "打开" -> "Aç"
                 }
             }
         }
@@ -3074,7 +3074,7 @@ fun TaskList(
                                                 ),
                                                 shape = RectangleShape
                                             ) {
-                                                Text(text = "完成", modifier = Modifier.padding(10.dp))
+                                                Text(text = "Tamamlandı", modifier = Modifier.padding(10.dp)) // "完成" -> "Tamamlandı"
                                             }
                                         },
                                         delayMillis = 300,

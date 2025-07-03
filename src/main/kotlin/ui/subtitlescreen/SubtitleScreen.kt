@@ -181,11 +181,11 @@ fun SubtitleScreen(
                             )
                             if (showOpenFile) showOpenFile = false
                         } else {
-                            JOptionPane.showMessageDialog(window, "文件已打开")
+                            JOptionPane.showMessageDialog(window, "Dosya zaten açık.") // "文件已打开"
                         }
 
                     } else if (formatList.contains(file.extension)) {
-                        JOptionPane.showMessageDialog(window, "需要同时选择 ${file.extension} 视频 + srt 字幕")
+                        JOptionPane.showMessageDialog(window, "${file.extension} formatındaki video ile birlikte bir SRT altyazı dosyası seçmelisiniz.") // "需要同时选择 ${file.extension} 视频 + srt 字幕"
                     } else if (file.extension == "srt") {
                         subtitlesState.trackID = -1
                         subtitlesState.trackSize = 0
@@ -198,11 +198,11 @@ fun SubtitleScreen(
                         mediaType = computeMediaType(subtitlesState.mediaPath)
                         if(openMode == OpenMode.Open) showOpenFile = false
                         if(showOpenFile) showOpenFile = false
-                        JOptionPane.showMessageDialog(window, "只打开了一个字幕，部分功能将无法使用")
+                        JOptionPane.showMessageDialog(window, "Sadece altyazı dosyası açıldı, bazı özellikler kullanılamayabilir.") // "只打开了一个字幕，部分功能将无法使用"
                     } else if (file.extension == "json") {
-                        JOptionPane.showMessageDialog(window, "想要打开词库文件，需要先切换到记忆单词界面")
+                        JOptionPane.showMessageDialog(window, "Kelime listesi açmak için lütfen önce 'Kelime Öğrenme' ekranına geçin.") // "想要打开词库文件，需要先切换到记忆单词界面"
                     } else {
-                        JOptionPane.showMessageDialog(window, "格式不支持")
+                        JOptionPane.showMessageDialog(window, "Desteklenmeyen format.") // "格式不支持"
                     }
 
                     loading = false
@@ -210,7 +210,7 @@ fun SubtitleScreen(
         }else if(files.size == 2){
             val first = files.first()
             val last = files.last()
-            val modeString = if(openMode== OpenMode.Open) "打开" else "拖拽"
+            val modeString = if(openMode== OpenMode.Open) "Açılan" else "Sürüklenen" // "打开" vs "拖拽"
 
 
             if(first.extension == "srt" && formatList.contains(last.extension)){
@@ -238,21 +238,20 @@ fun SubtitleScreen(
                 if(openMode == OpenMode.Open) showOpenFile = false
                 if(showOpenFile) showOpenFile = false
             }else if(first.extension == "mp4" && last.extension == "mp4"){
-                JOptionPane.showMessageDialog(window, "${modeString}了2个 MP4 格式的视频，\n需要1个媒体（mp3、aac、wav、mp4、mkv）和1个 srt 字幕")
+                JOptionPane.showMessageDialog(window, "$modeString 2 MP4 video dosyası. Bir medya dosyası (mp3, aac, wav, mp4, mkv) ve bir SRT altyazı dosyası gereklidir.")
             }else if(first.extension == "mkv" && last.extension == "mkv"){
-                JOptionPane.showMessageDialog(window, "${modeString}了2个 MKV 格式的视频，\n"
-                        +"可以选择一个有字幕的 mkv 格式的视频，\n或者一个 MKV 格式的视频和1个 srt 字幕")
+                JOptionPane.showMessageDialog(window, "$modeString 2 MKV video dosyası. Altyazılı bir MKV videosu veya bir MKV video ile bir SRT altyazı dosyası seçebilirsiniz.")
             }else if(first.extension == "srt" && last.extension == "srt"){
-                JOptionPane.showMessageDialog(window, "${modeString}了2个字幕，\n需要1个媒体（mp3、aac、wav、mp4、mkv）和1个 srt 字幕")
+                JOptionPane.showMessageDialog(window, "$modeString 2 altyazı dosyası. Bir medya dosyası (mp3, aac, wav, mp4, mkv) ve bir SRT altyazı dosyası gereklidir.")
             }else if(videoFormatList.contains(first.extension) && videoFormatList.contains(last.extension)){
-                JOptionPane.showMessageDialog(window, "${modeString}了2个视频，\n需要1个媒体（mp3、aac、wav、mp4、mkv）和1个 srt 字幕")
+                JOptionPane.showMessageDialog(window, "$modeString 2 video dosyası. Bir medya dosyası (mp3, aac, wav, mp4, mkv) ve bir SRT altyazı dosyası gereklidir.")
             }else if(audioFormatList.contains(first.extension) &&  audioFormatList.contains(last.extension)){
-                JOptionPane.showMessageDialog(window, "${modeString}了2个音频，\n需要1个媒体（mp3、aac、wav、mp4、mkv）和1个 srt 字幕")
+                JOptionPane.showMessageDialog(window, "$modeString 2 ses dosyası. Bir medya dosyası (mp3, aac, wav, mp4, mkv) ve bir SRT altyazı dosyası gereklidir.")
             }else {
-                JOptionPane.showMessageDialog(window, "文件格式不支持")
+                JOptionPane.showMessageDialog(window, "Desteklenmeyen dosya formatı.") // "文件格式不支持"
             }
         }else{
-            JOptionPane.showMessageDialog(window, "不能超过两个文件")
+            JOptionPane.showMessageDialog(window, "En fazla iki dosya seçilebilir.") // "不能超过两个文件"
         }
         subtitlesState.saveTypingSubtitlesState()
     }
@@ -264,14 +263,14 @@ fun SubtitleScreen(
         openLoadingDialog()
         scope.launch (Dispatchers.Default) {
                 val fileChooser = futureFileChooser.get()
-                fileChooser.dialogTitle = "打开"
+                fileChooser.dialogTitle = "Aç" // "打开" -> "Aç"
                 fileChooser.fileSystemView = FileSystemView.getFileSystemView()
                 fileChooser.currentDirectory = FileSystemView.getFileSystemView().defaultDirectory
                 fileChooser.fileSelectionMode = JFileChooser.FILES_ONLY
                 fileChooser.isAcceptAllFileFilterUsed = false
                 fileChooser.isMultiSelectionEnabled = true
                 val fileFilter = FileNameExtensionFilter(
-                    "1个 mkv 或 mp4 视频，或 1个字幕(srt) + 1个媒体(mp4、mkv、mp3、wav、aac)",
+                    "1 MKV/MP4 video VEYA 1 altyazı (.srt) + 1 medya (.mp4, .mkv, .mp3, .wav, .aac)", // "1个 mkv 或 mp4 视频，或 1个字幕(srt) + 1个媒体(mp4、mkv、mp3、wav、aac)"
                     "mp3",
                     "wav",
                     "aac",
@@ -374,8 +373,8 @@ fun SubtitleScreen(
                 }
 
             } else {
-                JOptionPane.showMessageDialog(null,"视频地址错误:${file.absolutePath}\n" +
-                        "可能原视频被移动、删除或者重命名了。")
+                JOptionPane.showMessageDialog(null,"Video adresi hatası: ${file.absolutePath}\n" + // "视频地址错误:"
+                        "Video taşınmış, silinmiş veya yeniden adlandırılmış olabilir.") // "可能原视频被移动、删除或者重命名了。"
             }
         }
     }
@@ -453,8 +452,8 @@ fun SubtitleScreen(
                     loading = false
             }
         }else if(!videoFile.exists()){
-            JOptionPane.showMessageDialog(null,"视频地址错误:${videoFile.absolutePath}\n" +
-                    "可能原视频被移动、删除或者重命名了。")
+            JOptionPane.showMessageDialog(null,"Video adresi hatası: ${videoFile.absolutePath}\n" + // "视频地址错误:"
+                    "Video taşınmış, silinmiş veya yeniden adlandırılmış olabilir.") // "可能原视频被移动、删除或者重命名了。"
         }
     }
 
@@ -951,7 +950,7 @@ fun SubtitleScreen(
                         border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                         shape = RectangleShape
                     ) {
-                        Text(text = "打开文件 $ctrl + O", modifier = Modifier.padding(10.dp))
+                        Text(text = "Dosya Aç $ctrl + O", modifier = Modifier.padding(10.dp)) // "打开文件" -> "Dosya Aç"
                     }
                 },
                 delayMillis = 50,
@@ -975,7 +974,7 @@ fun SubtitleScreen(
                     )
                 }
             }
-            RemoveButton( onClick = {removeSubtitles()},toolTip = "关闭当前字幕")
+            RemoveButton( onClick = {removeSubtitles()},toolTip = "Mevcut Altyazıyı Kapat") // "关闭当前字幕" -> "Mevcut Altyazıyı Kapat"
         }
 
 
@@ -1039,8 +1038,8 @@ fun OpenFileComponent(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()){
                 val text = if(trackList.isEmpty()){
-                    "可以拖放一个有字幕的 MKV 或 MP4 视频到这里\n"+
-                    "也可以拖放一个 SRT 字幕加一个视频一起到这里"
+                    "Altyazılı bir MKV veya MP4 videosunu buraya sürükleyebilirsiniz\n"+ // "可以拖放一个有字幕的 MKV 或 MP4 视频到这里\n"
+                    "Ya da bir SRT altyazı ve bir videoyu birlikte buraya sürükleyebilirsiniz" // "也可以拖放一个 SRT 字幕加一个视频一起到这里"
                 }else{
                     ""
                 }
@@ -1059,11 +1058,11 @@ fun OpenFileComponent(
                     OutlinedButton(
                         modifier = Modifier.padding(top = 10.dp,end = 20.dp),
                         onClick = { openFileChooser() }) {
-                        Text("打开")
+                        Text("Aç") // "打开" -> "Aç"
                     }
                 }else{
                     Text(
-                        text = "选择字幕",
+                        text = "Altyazı Seç", // "选择字幕" -> "Altyazı Seç"
                         modifier = Modifier.padding(top = 10.dp,end = 20.dp),
                         color = MaterialTheme.colors.onBackground,
                     )
@@ -1089,7 +1088,7 @@ fun OpenFileComponent(
                         setSelectedPath("")
                         cancel()
                     }) {
-                        Text("取消")
+                        Text("İptal") // "取消" -> "İptal"
                     }
                 }
             }

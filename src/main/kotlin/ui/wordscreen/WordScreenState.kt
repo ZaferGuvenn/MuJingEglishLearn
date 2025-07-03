@@ -18,7 +18,7 @@ import java.awt.Rectangle
 import java.io.File
 import javax.swing.JOptionPane
 
-/** 记忆单词的数据类 */
+/** Kelime ezberleme için veri sınıfı */
 @ExperimentalSerializationApi
 @Serializable
 data class WordScreenData(
@@ -49,110 +49,110 @@ data class WordScreenData(
     var playerHeight: Int = 502,
 )
 
-/** 记忆单词的可观察状态 */
+/** Kelime ezberleme için gözlemlenebilir durum */
 @OptIn(ExperimentalSerializationApi::class)
 class WordScreenState(wordScreenData: WordScreenData) {
 
-    // 可持久化的状态 开始
+    // Kalıcılaştırılabilir durum BAŞLANGIÇ
     /**
-     * 单词组件的可见性
+     * Kelime bileşeninin görünürlüğü
      */
     var wordVisible by mutableStateOf(wordScreenData.wordVisible)
 
     /**
-     * 音标组件的可见性
+     * Fonetik bileşeninin görünürlüğü
      */
     var phoneticVisible by mutableStateOf(wordScreenData.phoneticVisible)
 
     /**
-     * 词型组件的可见性
+     * Morfoloji bileşeninin görünürlüğü
      */
     var morphologyVisible by mutableStateOf(wordScreenData.morphologyVisible)
 
     /**
-     * 定义组件的可见性
+     * Tanım bileşeninin görünürlüğü
      */
     var definitionVisible by mutableStateOf(wordScreenData.definitionVisible)
 
     /**
-     * 翻译组件的可见性
+     * Çeviri bileşeninin görünürlüğü
      */
     var translationVisible by mutableStateOf(wordScreenData.translationVisible)
 
     /**
-     * 字幕组件的可见性
+     * Altyazı bileşeninin görünürlüğü
      */
     var subtitlesVisible by mutableStateOf(wordScreenData.subtitlesVisible)
 
     /**
-     * 例句组件的可见性
+     * Örnek cümle bileşeninin görünürlüğü
      */
     var sentencesVisible by mutableStateOf(wordScreenData.sentencesVisible)
 
     /**
-     * 是否播放提示音
+     * İpucu sesi çalınıyor mu
      */
     var isPlaySoundTips by mutableStateOf(wordScreenData.isPlaySoundTips)
 
     /**
-     * 提示音音量
+     * İpucu sesi seviyesi
      */
     var soundTipsVolume by mutableStateOf(wordScreenData.soundTipsVolume)
 
     /**
-     * 选择发音，有英音、美音、日语
+     * Telaffuz seçimi, İngiliz İngilizcesi, Amerikan İngilizcesi, Japonca seçenekleri mevcuttur
      */
     var pronunciation by mutableStateOf(wordScreenData.pronunciation)
 
     /**
-     * 单词发音的播放次数
+     * Kelime telaffuzunun çalma sayısı
      */
     var playTimes by mutableStateOf(wordScreenData.playTimes)
 
     /**
-     * 是否是自动切换
+     * Otomatik geçiş mi
      */
     var isAuto by mutableStateOf(wordScreenData.isAuto)
 
     /**
-     * 单词的重复次数
+     * Kelimenin tekrar sayısı
      */
     var repeatTimes by mutableStateOf(wordScreenData.repeatTimes)
 
     /**
-     * 当前单词的索引，从0开始，在标题栏显示的时候 +1
+     * Geçerli kelimenin dizini, 0'dan başlar, başlık çubuğunda görüntülendiğinde +1
      */
     var index by mutableStateOf(wordScreenData.index)
 
     /**
-     * 困难词库的索引，从0开始，在标题栏显示的时候 +1
+     * Zor kelime dağarcığının dizini, 0'dan başlar, başlık çubuğunda görüntülendiğinde +1
      */
     var hardVocabularyIndex by mutableStateOf(wordScreenData.hardVocabularyIndex)
 
     /**
-     * 熟悉词库的索引，从0开始，在标题栏显示的时候 +1
+     * Tanıdık kelime dağarcığının dizini, 0'dan başlar, başlık çubuğunda görüntülendiğinde +1
      */
     var familiarVocabularyIndex by mutableStateOf(wordScreenData.hardVocabularyIndex)
 
     /**
-     * 当前单词的章节，从1开始
+     * Geçerli kelimenin bölümü, 1'den başlar
      */
     var chapter by mutableStateOf((wordScreenData.index / 20) + 1)
 
     /**
-     * 词库的名称
+     * Kelime dağarcığının adı
      */
     var vocabularyName by mutableStateOf(wordScreenData.vocabularyName)
 
     /**
-     * 当前正在学习的词库的路径
+     * Şu anda öğrenilmekte olan kelime dağarcığının yolu
      */
     var vocabularyPath by mutableStateOf(wordScreenData.vocabularyPath)
 
-    /** 外部字幕的可见性 */
+    /** Harici altyazıların görünürlüğü */
     var externalSubtitlesVisible by mutableStateOf(wordScreenData.externalSubtitlesVisible)
 
-    /** 抄写字幕，打开后播放了某条字幕后，光标就切换到字幕，就可以抄写字幕了 */
+    /** Altyazıları yaz, açıldıktan sonra belirli bir altyazı oynatıldığında imleç altyazıya geçer, böylece altyazılar yazılabilir */
     var isWriteSubtitles by mutableStateOf(wordScreenData.isWriteSubtitles)
 
     var isChangeVideoBounds by mutableStateOf(wordScreenData.isChangeVideoBounds)
@@ -165,55 +165,55 @@ class WordScreenState(wordScreenData: WordScreenData) {
 
     var playerHeight by mutableStateOf(wordScreenData.playerHeight)
 
-    // 可持久化的状态 结束
+    // Kalıcılaştırılabilir durum SON
 
-    /** 单词输入框输入的结果*/
+    /** Kelime giriş kutusuna girilen sonuç*/
     val wordTypingResult =  mutableStateListOf<Pair<Char, Boolean>>()
 
-    /** 单词输入框里的字符串*/
+    /** Kelime giriş kutusundaki dize*/
     var wordTextFieldValue by  mutableStateOf("")
 
-    /** 当前单词的正确次数 */
+    /** Geçerli kelimenin doğru sayısı */
     var wordCorrectTime by mutableStateOf(0)
 
-    /** 当前单词的错误次数 */
+    /** Geçerli kelimenin yanlış sayısı */
     var wordWrongTime by mutableStateOf(0)
 
-    /** 第一条字幕的输入字符串*/
+    /** İlk altyazının giriş dizesi*/
     var captionsTextFieldValue1 by  mutableStateOf("")
 
-    /** 第二条字幕的输入字符串*/
+    /** İkinci altyazının giriş dizesi*/
     var captionsTextFieldValue2 by  mutableStateOf("")
 
-    /** 第三条字幕的输入字符串*/
+    /** Üçüncü altyazının giriş dizesi*/
     var captionsTextFieldValue3 by mutableStateOf("")
 
-    /** 字幕输入框的结果 */
+    /** Altyazı giriş kutusunun sonucu */
     val captionsTypingResultMap =
         mutableStateMapOf<Int, MutableList<Pair<Char, Boolean>>>()
 
-    /** 当前正在学习的词库 */
+    /** Şu anda öğrenilmekte olan kelime dağarcığı */
     var vocabulary = loadMutableVocabulary(vocabularyPath)
 
-    /** 记忆单词界面的记忆策略 */
+    /** Kelime ezberleme arayüzünün ezberleme stratejisi */
     var memoryStrategy by mutableStateOf(MemoryStrategy.Normal)
 
-    /** 要听写的单词 */
+    /** Dikte edilecek kelimeler */
     val dictationWords = mutableStateListOf<Word>()
 
-    /** 听写单词时的索引 */
+    /** Dikte kelimeleri sırasındaki dizin */
     var dictationIndex by mutableStateOf(0)
 
-    /** 要单独听写测试的单词 */
+    /** Ayrı olarak dikte testi yapılacak kelimeler */
     val reviewWords = mutableStateListOf<Word>()
 
-    /** 听写错误的单词 */
+    /** Dikte sırasında yanlış yazılan kelimeler */
     val wrongWords = mutableStateListOf<Word>()
 
-    /** 进入听写模式之前需要保存变量 `typing` 的一些状态,退出听写模式后恢复 */
+    /** Dikte moduna girmeden önce `typing` değişkeninin bazı durumlarını kaydetmek gerekir, dikte modundan çıktıktan sonra geri yüklenir */
     private val visibleMap = mutableStateMapOf<String, Boolean>()
     // visible
-    /** 获得当前单词 */
+    /** Geçerli kelimeyi al */
     fun getCurrentWord(): Word {
 
         return when (memoryStrategy){
@@ -235,13 +235,13 @@ class WordScreenState(wordScreenData: WordScreenData) {
         return File(vocabularyPath).parentFile
     }
 
-    /** 根据索引返回单词 */
+    /** Dizine göre kelime döndür */
     private fun getWord(index: Int): Word {
         val size = vocabulary.wordList.size
         return if (index in 0 until size) {
             vocabulary.wordList[index]
         } else {
-            // 如果用户使用编辑器修改了索引，并且不在单词列表的范围以内，就把索引改成0。
+            // Kullanıcı düzenleyiciyi kullanarak dizini değiştirirse ve kelime listesi aralığında değilse, dizini 0 olarak değiştirin.
             this.index = 0
             saveWordScreenState()
             vocabulary.wordList[0]
@@ -251,15 +251,15 @@ class WordScreenState(wordScreenData: WordScreenData) {
 
 
     /**
-     * 为听写模式创建一个随机词汇表
-    - 伪代码
+     * Dikte modu için rastgele bir kelime dağarcığı oluştur
+    - Sözde kod
     - 1 -> 0,19
     - 2 -> 20,39
     - 3 -> 40,59
-    - if chapter == 2
-    - start = 2 * 20 -20, end = 2 * 20  -1
-    - if chapter == 3
-    - start = 3 * 20 -20, end = 3 * 20 - 1
+    - eğer bölüm == 2
+    - başlangıç = 2 * 20 -20, bitiş = 2 * 20  -1
+    - eğer bölüm == 3
+    - başlangıç = 3 * 20 -20, bitiş = 3 * 20 - 1
      */
     fun generateDictationWords(currentWord: String): List<Word> {
         val start = chapter * 20 - 20
@@ -268,18 +268,18 @@ class WordScreenState(wordScreenData: WordScreenData) {
             end = vocabulary.wordList.size
         }
         var list = vocabulary.wordList.subList(start, end).shuffled()
-        // 如果打乱顺序的列表的第一个单词，和当前章节的最后一个词相等，就不会触发重组
+        // Karıştırılmış listenin ilk kelimesi geçerli bölümün son kelimesine eşitse, yeniden oluşturma tetiklenmez
         while (list[0].value == currentWord) {
             list = vocabulary.wordList.subList(start, end).shuffled()
         }
         return list
     }
 
-    /** 进入听写模式，进入听写模式要保存好当前的状态，退出听写模式后再恢复 */
+    /** Dikte moduna gir, dikte moduna girerken geçerli durumu kaydet, dikte modundan çıktıktan sonra geri yükle */
     fun hiddenInfo(
         dictationState: DictationState
     ) {
-        // 先保存状态
+        // Önce durumu kaydet
         visibleMap["isAuto"] = isAuto
         visibleMap["wordVisible"] = wordVisible
         visibleMap["phoneticVisible"] = phoneticVisible
@@ -287,7 +287,7 @@ class WordScreenState(wordScreenData: WordScreenData) {
         visibleMap["morphologyVisible"] = morphologyVisible
         visibleMap["translationVisible"] = translationVisible
         visibleMap["subtitlesVisible"] = subtitlesVisible
-        // 再改变状态
+        // Sonra durumu değiştir
         isAuto = true
         wordVisible = false
         phoneticVisible = dictationState.phoneticVisible
@@ -298,9 +298,9 @@ class WordScreenState(wordScreenData: WordScreenData) {
 
     }
 
-    /** 退出听写模式，恢复应用状态 */
+    /** Dikte modundan çık, uygulama durumunu geri yükle */
     fun showInfo(clear:Boolean = true) {
-        // 恢复状态
+        // Durumu geri yükle
         isAuto = visibleMap["isAuto"]!!
         wordVisible = visibleMap["wordVisible"]!!
         phoneticVisible = visibleMap["phoneticVisible"]!!
@@ -315,7 +315,7 @@ class WordScreenState(wordScreenData: WordScreenData) {
 
     }
 
-    /** 清除当前单词的状态 */
+    /** Geçerli kelimenin durumunu temizle */
     val clearInputtedState:() -> Unit = {
         wordTypingResult.clear()
         wordTextFieldValue = ""
@@ -328,7 +328,7 @@ class WordScreenState(wordScreenData: WordScreenData) {
     }
 
 
-    /** 保存当前的词库 */
+    /** Geçerli kelime dağarcığını kaydet */
     fun saveCurrentVocabulary() {
 
         runBlocking {
@@ -345,13 +345,13 @@ class WordScreenState(wordScreenData: WordScreenData) {
     }
 
 
-    /** 保存记忆单词的设置信息 */
+    /** Kelime ezberleme ayar bilgilerini kaydet */
     fun saveWordScreenState() {
         val encodeBuilder = Json {
             prettyPrint = true
             encodeDefaults = true
         }
-        // 只有在正常记忆单词和复习错误单词时的状态改变才需要持久化
+        // Yalnızca normal kelime ezberleme ve yanlış kelimeleri gözden geçirme sırasındaki durum değişikliklerinin kalıcılaştırılması gerekir
         if (memoryStrategy != MemoryStrategy.Dictation && memoryStrategy != MemoryStrategy.DictationTest) {
             runBlocking {
                 launch {
@@ -411,7 +411,7 @@ fun rememberPronunciation():String = remember{
     wordState.pronunciation
 }
 
-/** 加载应用记忆单词界面的设置信息 */
+/** Uygulama kelime ezberleme arayüzünün ayar bilgilerini yükle */
 @OptIn(ExperimentalSerializationApi::class)
 private fun loadWordState(): WordScreenState {
     val wordScreenSettings = getWordSettingsFile()
@@ -420,7 +420,7 @@ private fun loadWordState(): WordScreenState {
             val decodeFormat = Json { ignoreUnknownKeys = true }
             val wordScreenData = decodeFormat.decodeFromString<WordScreenData>(wordScreenSettings.readText())
             val wordScreenState = WordScreenState(wordScreenData)
-            // 主要是为了避免再次重启是出现”找不到词库"对话框
+            // Esas olarak yeniden başlattıktan sonra "kelime dağarcığı bulunamadı" iletişim kutusunun görünmesini önlemek içindir
             if(wordScreenState.vocabulary.name.isEmpty() &&
                 wordScreenState.vocabulary.relateVideoPath.isEmpty() &&
                 wordScreenState.vocabulary.wordList.isEmpty()){
@@ -431,7 +431,7 @@ private fun loadWordState(): WordScreenState {
             wordScreenState
         } catch (exception: Exception) {
             FlatLightLaf.setup()
-            JOptionPane.showMessageDialog(null, "设置信息解析错误，将使用默认设置。\n地址：$wordScreenSettings")
+            JOptionPane.showMessageDialog(null, "Ayar bilgileri ayrıştırma hatası, varsayılan ayarlar kullanılacak.\nAdres: $wordScreenSettings")
             WordScreenState(WordScreenData())
         }
 
@@ -440,7 +440,7 @@ private fun loadWordState(): WordScreenState {
     }
 }
 
-/** 获取记忆单词的配置文件 */
+/** Kelime ezberleme yapılandırma dosyasını al */
 private fun getWordSettingsFile(): File {
     val settingsDir = getSettingsDirectory()
     return File(settingsDir, "TypingWordSettings.json")

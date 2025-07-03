@@ -45,10 +45,10 @@ import javax.swing.JOptionPane
 
 
 /**
- * 解析文档
- * @param pathName 文件路径
- * @param sentenceLength 单词所在句子的最大单词数
- * @param setProgressText 设置进度文本
+ * Belgeyi ayrıştır
+ * @param pathName Dosya yolu
+ * @param sentenceLength Kelimenin bulunduğu cümlenin maksimum kelime sayısı
+ * @param setProgressText İlerleme metnini ayarla
  */
 @OptIn(ExperimentalComposeUiApi::class)
 @Throws(IOException::class)
@@ -65,7 +65,7 @@ fun parseDocument(
 
     try{
         if (extension == "pdf") {
-            setProgressText("正在加载文档")
+            setProgressText("Belge yükleniyor")
             val document: PDDocument = PDDocument.load(file)
             //Instantiate PDFTextStripper class
             val pdfStripper = PDFTextStripper()
@@ -73,7 +73,7 @@ fun parseDocument(
             document.close()
         } else if (otherExtensions.contains(extension)) {
             text = file.readText()
-            // 移除 windows text 文件的 BOM
+            // Windows metin dosyalarının BOM'unu kaldır
             if (extension =="txt" && text.isNotEmpty() && text[0].code == 65279) {
                 text = text.substring(1)
             }
@@ -84,28 +84,28 @@ fun parseDocument(
         JOptionPane.showMessageDialog(null,exception.message)
     }
 
-    // 单词 -> 句子映射，用于保存单词在文档中的位置
+    // Kelime -> cümle eşlemesi, kelimelerin belgedeki konumunu kaydetmek için kullanılır
     val map = mutableMapOf<String, MutableList<String>>()
 
-    // 加载分词模型
+    // Kelime ayırma modelini yükle
     val tokenModel = ResourceLoader.Default.load("opennlp/opennlp-en-ud-ewt-tokens-1.0-1.9.3.bin").use { inputStream ->
         TokenizerModel(inputStream)
     }
     val tokenizer = TokenizerME(tokenModel)
-    // 加载词性标注模型
+    // Konuşma bölümü etiketleme modelini yükle
     val posModel = ResourceLoader.Default.load("opennlp/opennlp-en-ud-ewt-pos-1.0-1.9.3.bin").use { inputStream ->
         POSModel(inputStream)
     }
     val posTagger = POSTaggerME(posModel)
-    // 加载分块模型
+    // Öbekleme modelini yükle
     val chunkerModel = ResourceLoader.Default.load("opennlp/en-chunker.bin").use { inputStream ->
         ChunkerModel(inputStream)
     }
     val chunker = ChunkerME(chunkerModel)
 
-    setProgressText("正在断句")
+    setProgressText("Cümleler bölünüyor")
     val sentences = sentenceDetect(text)
-    setProgressText("正在分词")
+    setProgressText("Kelimeler ayrılıyor")
     sentences.forEach { sentence ->
         val wordList = if(enablePhrases){
             tokenizeAndChunkText(sentence, tokenizer, posTagger, chunker)
@@ -116,7 +116,7 @@ fun parseDocument(
             val clippedSentence = clipSentence(word, tokenizer, sentence, sentenceLength)
             val formatSentence = clippedSentence.replace("\r\n", " ").replace("\n", " ")
             val lowercase = word.lowercase(Locale.getDefault())
-            // 在代码片段里的关键字之间用 . 或 _ 符号分隔
+            // Kod parçacıklarındaki anahtar kelimeler arasında . veya _ sembolleriyle ayır
             val delimiters = listOf(".", "_")
             delimiters.forEach { delimiter ->
                 if (lowercase.contains(delimiter)) {
@@ -126,7 +126,7 @@ fun parseDocument(
                             val list = mutableListOf(formatSentence)
                             map[str] = list
                         } else {
-                            // 如果单词的位置列表小于 3，就添加
+                            // Kelimenin konum listesi 3'ten küçükse ekle
                             if (map[str]!!.size < 3) {
                                 map[str]?.add(formatSentence)
                             }
@@ -139,7 +139,7 @@ fun parseDocument(
                 val list = mutableListOf(formatSentence)
                 map[lowercase] = list
             } else {
-                // 如果单词的位置列表小于 3，就添加
+                // Kelimenin konum listesi 3'ten küçükse ekle
                 if (map[lowercase]!!.size < 3) {
                     map[lowercase]?.add(formatSentence)
                 }
@@ -149,7 +149,7 @@ fun parseDocument(
 
     }
 
-    setProgressText("从文档提取出 ${map.size} 个单词，正在批量查询单词，如果词典里没有的就丢弃")
+    setProgressText("Belgeden ${map.size} kelime çıkarıldı, kelimeler toplu olarak sorgulanıyor, sözlükte olmayanlar atılacak")
     val validList = Dictionary.queryList(map.keys.toList())
 
     val filterList = listOf(
@@ -162,7 +162,7 @@ fun parseDocument(
         if (map[word.value] != null) {
             var pos = ""
             map[word.value]!!.forEach { sentence ->
-                // 丢弃句子开始的标点符号
+                // Cümlenin başındaki noktalama işaretlerini atla
                 pos = if(filterList.contains(sentence[0].toString())){
                     sentence.substring(1) + "\n"
                 }else{
@@ -172,13 +172,13 @@ fun parseDocument(
             word.pos =pos.trim()
         }
     }
-    setProgressText("${validList.size} 个有效单词")
+    setProgressText("${validList.size} geçerli kelime")
     setProgressText("")
     return validList
 }
 
 /**
- * 剪裁句子
+ * Cümleyi kırp
  */
 fun clipSentence(
     word: String,
@@ -198,14 +198,14 @@ fun clipSentence(
             }
             return clipSentence
         }else{
-            // 单词是短语
+            // Kelime bir öbektir
             val formatSentence = sentences.replace("\r\n", " ").replace("\n", " ")
            val strIndex = formatSentence.indexOf(word)
             if(strIndex == -1){
                 return formatSentence
             }
-            // 以 strIndex 为中心，向前找到 sentenceLength/2 空格确定开始，如果开始位置小于 0，就从 0 开始
-            // 向后找到 sentenceLength/2 空格确定结束，如果结束位置大于 sentences 的长度，就以 sentences 的长度为结束
+            // strIndex'i merkez alarak, başlangıcı belirlemek için geriye doğru sentenceLength/2 boşluk bul, başlangıç konumu 0'dan küçükse 0'dan başla
+            // Bitişi belirlemek için ileriye doğru sentenceLength/2 boşluk bul, bitiş konumu sentences uzunluğundan büyükse sentences uzunluğunu bitiş olarak al
             var start = strIndex
             var end = strIndex
             var spaceCount = 0
@@ -240,7 +240,7 @@ fun clipSentence(
 }
 
 /**
- * 使用 OpenNLP 的 SentenceDetectorME 模型来检测句子
+ * Cümleleri algılamak için OpenNLP'nin SentenceDetectorME modelini kullanın
  */
 @OptIn(ExperimentalComposeUiApi::class)
 fun sentenceDetect(text: String): List<String> {
@@ -256,7 +256,7 @@ fun sentenceDetect(text: String): List<String> {
 }
 
 /**
- * 使用词性标注和分块分词，分割单词和短语
+ * Kelimeleri ve öbekleri bölmek için konuşma bölümü etiketleme ve öbekleme kullanın
  */
 fun tokenizeAndChunkText(
     text: String,
@@ -265,14 +265,14 @@ fun tokenizeAndChunkText(
     chunker: ChunkerME
 ): MutableSet<String> {
     val logger = LoggerFactory.getLogger("tokenizeAndChunkText")
-    // 进行分词
+    // Kelime ayırma yap
     val tokens = tokenizer.tokenize(text)
-    // 进行词性标注
+    // Konuşma bölümü etiketleme yap
     val posTags = posTagger.tag(tokens)
-    // 进行分块
+    // Öbekleme yap
     val chunks = chunker.chunkAsSpans(tokens, posTags)
 
-    // 过滤掉常用的标点符号
+    // Sık kullanılan noktalama işaretlerini filtrele
     // .!?;:(){}[]\-—'"`~@#$%^&*+=|\/<>,，。、；：？！（）【】｛｝—…《》“”‘’,
     val filterList = listOf(
         ".", "!", "?", ";", ":", "(", ")", "{", "}", "[", "]", "-", "—",
@@ -287,24 +287,24 @@ fun tokenizeAndChunkText(
         for(i in chunk.start until chunk.end){
            word += "${tokens[i]} "
         }
-        // 丢弃单词首尾的空格
+        // Kelimenin başındaki ve sonundaki boşlukları atla
         word = word.trim()
-        // 如果单词的第一个字符是标点符号，就丢弃标点
+        // Kelimenin ilk karakteri noktalama işaretiyse, noktalamayı atla
         if (word.length>1 && filterList.contains(word[0].toString())) {
-            logger.info("$word 丢弃开始标点")
+            logger.info("$word başlangıç noktalama işaretini atla")
             word = word.substring(1)
         }
-        // 如果单词的最后一个字符是标点符号，就丢弃标点
+        // Kelimenin son karakteri noktalama işaretiyse, noktalamayı atla
         if (word.length>1 && filterList.contains(word[word.length - 1].toString())) {
-            logger.info("$word 丢弃结束标点")
+            logger.info("$word bitiş noktalama işaretini atla")
             word = word.substring(0, word.length - 1)
         }
-        // 再一次丢弃单词首尾的空格
+        // Kelimenin başındaki ve sonundaki boşlukları bir kez daha atla
         word = word.trim()
         wordList.add(word)
     }
     val result = mutableSetOf<String>()
-    // 过滤掉常用的标点符号
+    // Sık kullanılan noktalama işaretlerini filtrele
     wordList.forEach { word ->
         if (!filterList.contains(word)) {
             result.add(word)
@@ -314,15 +314,15 @@ fun tokenizeAndChunkText(
 }
 
 /**
- * 分割单词
+ * Kelimeleri böl
  */
 fun tokenizeText(
     text: String,
     tokenizer: Tokenizer,
 ): MutableSet<String> {
-    // 进行分词
+    // Kelime ayırma yap
     val tokens = tokenizer.tokenize(text)
-    // 过滤掉常用的标点符号
+    // Sık kullanılan noktalama işaretlerini filtrele
     // .!?;:(){}[]\-—'"`~@#$%^&*+=|\/<>,，。、；：？！（）【】｛｝—…《》“”‘’,
     val filterList = listOf(
         ".", "!", "?", ";", ":", "(", ")", "{", "}", "[", "]", "-", "—",
@@ -333,7 +333,7 @@ fun tokenizeText(
 
     val wordList =tokens.toMutableList()
     val result = mutableSetOf<String>()
-    // 过滤掉常用的标点符号
+    // Sık kullanılan noktalama işaretlerini filtrele
     wordList.forEach { word ->
         if (!filterList.contains(word)) {
             result.add(word)
@@ -343,7 +343,7 @@ fun tokenizeText(
 }
 
 /**
- * 解析 SRT 字幕文件
+ * SRT altyazı dosyasını ayrıştır
  */
 @OptIn(ExperimentalComposeUiApi::class)
 @Throws(IOException::class)
@@ -355,25 +355,25 @@ fun parseSRT(
     val srtFile = File(pathName)
     val hasRichText = hasRichText(srtFile)
     if(hasRichText){
-        setProgressText("字幕有富文本标签，先移除富文本标签")
+        setProgressText("Altyazıda zengin metin etiketleri var, önce zengin metin etiketlerini kaldırın")
         removeRichText(srtFile)
     }
 
     val map: MutableMap<String, MutableList<Caption>> = HashMap()
-    // 保存顺序
+    // Sırayı kaydet
     val orderList = mutableListOf<String>()
     try {
-        // 加载分词模型
+        // Kelime ayırma modelini yükle
         val tokenModel = ResourceLoader.Default.load("opennlp/opennlp-en-ud-ewt-tokens-1.0-1.9.3.bin").use { inputStream ->
             TokenizerModel(inputStream)
         }
         val tokenizer = TokenizerME(tokenModel)
-        // 加载词性标注模型
+        // Konuşma bölümü etiketleme modelini yükle
         val posModel = ResourceLoader.Default.load("opennlp/opennlp-en-ud-ewt-pos-1.0-1.9.3.bin").use { inputStream ->
             POSModel(inputStream)
         }
         val posTagger = POSTaggerME(posModel)
-        // 加载分块模型
+        // Öbekleme modelini yükle
         val chunkerModel = ResourceLoader.Default.load("opennlp/en-chunker.bin").use { inputStream ->
             ChunkerModel(inputStream)
         }
@@ -389,17 +389,17 @@ fun parseSRT(
         }
         val inputStream: InputStream = FileInputStream(file)
 
-        setProgressText("正在解析字幕文件")
+        setProgressText("Altyazı dosyası ayrıştırılıyor")
         val timedTextObject: TimedTextObject = formatSRT.parseFile(file.name, inputStream, charset)
 
         val captions: TreeMap<Int, subtitleFile.Caption> = timedTextObject.captions
         val captionList: Collection<subtitleFile.Caption> = captions.values
-        setProgressText("正在分词")
+        setProgressText("Kelimeler ayrılıyor")
         for (caption in captionList) {
             var content = replaceSpecialCharacter(caption.content)
             content = removeLocationInfo(content)
             val dataCaption = Caption(
-                // getTime(format) 返回的时间不能播放
+                // getTime(format) tarafından döndürülen süre oynatılamaz
                 start = caption.start.getTime("hh:mm:ss,ms"),
                 end = caption.end.getTime("hh:mm:ss,ms"),
                 content = content
@@ -422,9 +422,9 @@ fun parseSRT(
                 }
             }
         }
-        setProgressText("从字幕文件中提取出 ${orderList.size} 个单词，正在批量查询单词，如果词典里没有就丢弃")
+        setProgressText("Altyazı dosyasından ${orderList.size} kelime çıkarıldı, kelimeler toplu olarak sorgulanıyor, sözlükte olmayanlar atılacak")
         val validList = Dictionary.queryList(orderList)
-        setProgressText("${validList.size} 个有效单词")
+        setProgressText("${validList.size} geçerli kelime")
         validList.forEach { word ->
             if (map[word.value] != null) {
                 word.captions = map[word.value]!!
@@ -439,7 +439,7 @@ fun parseSRT(
 }
 
 /**
- * 解析 ASS 字幕文件
+ * ASS altyazı dosyasını ayrıştır
  */
 @Throws(IOException::class)
 fun parseASS(
@@ -450,22 +450,22 @@ fun parseASS(
     val applicationDir = getSettingsDirectory()
     val assFile = File(pathName)
     val srtFile = File("$applicationDir/temp.srt")
-    setProgressText("开始转换字幕")
+    setProgressText("Altyazı dönüştürülmeye başlanıyor")
     val result = convertToSrt(assFile.absolutePath, srtFile.absolutePath)
     if(result == "finished"){
-        setProgressText("字幕转换完成")
+        setProgressText("Altyazı dönüştürme tamamlandı")
         val list =  parseSRT(srtFile.absolutePath,enablePhrases,setProgressText)
         srtFile.delete()
         return list
     }else{
-        setProgressText("字幕转换失败")
+        setProgressText("Altyazı dönüştürme başarısız oldu")
         srtFile.delete()
         return emptyList()
     }
 }
 
 /**
- * 使用 FFmpeg 解析视频文件
+ * Video dosyasını FFmpeg kullanarak ayrıştır
  */
 fun parseVideo(
     pathName: String,
@@ -474,9 +474,9 @@ fun parseVideo(
     setProgressText: (String) -> Unit,
 ): List<Word> {
     val applicationDir = getSettingsDirectory()
-    setProgressText("正在提取字幕")
+    setProgressText("Altyazılar çıkarılıyor")
     val result =  extractSubtitles(pathName, trackId, "$applicationDir/temp.srt")
-    setProgressText("提取字幕完成")
+    setProgressText("Altyazı çıkarma tamamlandı")
     if(result == "finished"){
         val list = parseSRT("$applicationDir/temp.srt",enablePhrases,setProgressText)
         File("$applicationDir/temp.srt").delete()
@@ -497,7 +497,7 @@ fun parseMKV(
     try {
         reader = EBMLReader(pathName)
 
-        setProgressText("正在解析 MKV 文件")
+        setProgressText("MKV dosyası ayrıştırılıyor")
 
         /**
          * Check to see if this is a valid MKV file
@@ -548,7 +548,7 @@ fun parseMKV(
         for (i in 0 until reader.cuesCount) {
             reader.readSubtitlesInCueFrame(i)
         }
-        setProgressText("正在分词")
+        setProgressText("Kelimeler ayrılıyor")
         ResourceLoader.Default.load("opennlp/opennlp-en-ud-ewt-tokens-1.0-1.9.3.bin").use { inputStream ->
             val model = TokenizerModel(inputStream)
             val tokenizer: Tokenizer = TokenizerME(model)
@@ -601,9 +601,9 @@ fun parseMKV(
             e.printStackTrace()
         }
     }
-    setProgressText("从视频中提取出${orderList.size}个单词，正在批量查询单词，如果词典里没有就丢弃")
+    setProgressText("Videodan ${orderList.size} kelime çıkarıldı, kelimeler toplu olarak sorgulanıyor, sözlükte olmayanlar atılacak")
     val validList = Dictionary.queryList(orderList)
-    setProgressText("${validList.size}个有效单词")
+    setProgressText("${validList.size} geçerli kelime")
     validList.forEach { word ->
         if (map[word.value] != null) {
             word.captions = map[word.value]!!
@@ -615,7 +615,7 @@ fun parseMKV(
 
 
 /**
- * 批量读取 MKV
+ * MKV'leri toplu olarak oku
  */
 @OptIn(ExperimentalComposeUiApi::class)
 fun batchReadMKV(
@@ -629,7 +629,7 @@ fun batchReadMKV(
     val errorMessage = mutableMapOf<File, String>()
     val orderList = mutableListOf<Word>()
     val logger = LoggerFactory.getLogger("batchReadMKV")
-    // 加载语言检测模型
+    // Dil algılama modelini yükle
     val langModel = ResourceLoader.Default.load("opennlp/langdetect-183.bin").use { inputStream ->
         LanguageDetectorModel(inputStream)
     }
@@ -643,8 +643,8 @@ fun batchReadMKV(
         try {
             reader = EBMLReader(file.absolutePath)
             if (!reader.readHeader()) {
-                logger.error("这个视频不是 MKV 标准的文件")
-                errorMessage[file] = "不是 MKV 文件"
+                logger.error("Bu video MKV standart bir dosya değil")
+                errorMessage[file] = "MKV dosyası değil"
                 updateTaskState(Pair(file, false))
                 setCurrentTask(null)
                 continue
@@ -653,8 +653,8 @@ fun batchReadMKV(
             reader.readTracks()
             val numSubtitles: Int = reader.subtitles.size
             if (numSubtitles == 0) {
-                errorMessage[file] = "没有字幕"
-                logger.error("${file.nameWithoutExtension} 没有字幕")
+                errorMessage[file] = "Altyazı yok"
+                logger.error("${file.nameWithoutExtension} altyazı yok")
                 updateTaskState(Pair(file, false))
                 setCurrentTask(null)
                 continue
@@ -665,7 +665,7 @@ fun batchReadMKV(
             }
 
             var trackID = -1
-            // 轨道名称和轨道 ID 的映射,可能有多个英语字幕
+            // İz adı ve iz ID'si eşlemesi, birden fazla İngilizce altyazı olabilir
             val trackMap = mutableMapOf<String,Int>()
             for (i in 0 until reader.subtitles.size) {
                 val subtitles = reader.subtitles[i]
@@ -673,7 +673,7 @@ fun batchReadMKV(
                     val name = if(subtitles.name.isNullOrEmpty()) "English" else subtitles.name
                     trackMap[name] = i
                 } else {
-                    // 提取一小部分字幕，使用 OpenNLP 的语言检测工具检测字幕的语言
+                    // Altyazının küçük bir bölümünü çıkarın, altyazının dilini algılamak için OpenNLP'nin dil algılama aracını kullanın
                     val captionSize = subtitles.allReadCaptions.size
                     val subList = if(captionSize>10){
                         subtitles.readUnreadSubtitles().subList(0, 10)
@@ -695,17 +695,17 @@ fun batchReadMKV(
                 }
             }
 
-            // 优先选择 SDH 字幕
+            // SDH altyazılarını önceliklendir
             for ((name, id) in trackMap) {
                 if (name.contains("SDH", ignoreCase = true)) {
                     trackID = id
-                    logger.info("$name 字幕，TrackID: $id")
+                    logger.info("$name altyazı, TrackID: $id")
                     break
                 }
             }
             if(trackID == -1){
                 trackID = trackMap.values.first()
-                logger.info("English 字幕，TrackID: $trackID")
+                logger.info("İngilizce altyazı, TrackID: $trackID")
             }
 
             if (trackID != -1) {
@@ -718,8 +718,8 @@ fun batchReadMKV(
                 orderList.addAll(words)
                 updateTaskState(Pair(file, true))
             } else {
-                errorMessage[file] = "没有找到英语字幕"
-                logger.error("${file.nameWithoutExtension} 没有找到英语字幕")
+                errorMessage[file] = "İngilizce altyazı bulunamadı"
+                logger.error("${file.nameWithoutExtension} İngilizce altyazı bulunamadı")
                 updateTaskState(Pair(file, false))
                 setCurrentTask(null)
                 continue
@@ -732,8 +732,8 @@ fun batchReadMKV(
                 errorMessage[file] = exception.message.orEmpty()
                 logger.error("${file.nameWithoutExtension} ${exception.message.orEmpty()}")
             } else {
-                errorMessage[file] = "IO 异常"
-                logger.error("${file.nameWithoutExtension} IO 异常\n ${exception.printStackTrace()}")
+                errorMessage[file] = "IO istisnası"
+                logger.error("${file.nameWithoutExtension} IO istisnası\n ${exception.printStackTrace()}")
             }
             continue
         } catch (exception: UnSupportSubtitlesException) {
@@ -742,17 +742,17 @@ fun batchReadMKV(
                 errorMessage[file] = exception.message.orEmpty()
                 logger.error("${file.nameWithoutExtension} ${exception.message.orEmpty()}")
             } else {
-                errorMessage[file] = "字幕格式不支持"
-                logger.error("${file.nameWithoutExtension} 字幕格式不支持")
+                errorMessage[file] = "Altyazı biçimi desteklenmiyor"
+                logger.error("${file.nameWithoutExtension} altyazı biçimi desteklenmiyor")
             }
 
-            logger.error("${file.nameWithoutExtension} 字幕格式不支持\n ${exception.printStackTrace()}")
+            logger.error("${file.nameWithoutExtension} altyazı biçimi desteklenmiyor\n ${exception.printStackTrace()}")
             setCurrentTask(null)
             continue
         } catch (exception: NullPointerException) {
             updateTaskState(Pair(file, false))
-            errorMessage[file] = "空指针异常"
-            logger.error("${file.nameWithoutExtension} 空指针异常\n ${ exception.printStackTrace()}")
+            errorMessage[file] = "Boş işaretçi istisnası"
+            logger.error("${file.nameWithoutExtension} boş işaretçi istisnası\n ${ exception.printStackTrace()}")
             setCurrentTask(null)
             continue
         } finally {
@@ -770,7 +770,7 @@ fun batchReadMKV(
 
 
 /**
- * 替换一些特殊字符
+ * Bazı özel karakterleri değiştir
  */
 fun replaceSpecialCharacter(captionContent: String): String {
     var content = captionContent
@@ -788,7 +788,7 @@ fun replaceSpecialCharacter(captionContent: String): String {
     return content
 }
 
-/** 有一些字幕并不是在一个的固定位置，而是标注在人物旁边，这个函数删除位置信息 */
+/** Bazı altyazılar sabit bir konumda değil, karakterlerin yanında işaretlenmiştir, bu fonksiyon konum bilgilerini siler */
 fun removeLocationInfo(content: String): String {
     val pattern = Pattern.compile("\\{.*\\}")
     val matcher = pattern.matcher(content)

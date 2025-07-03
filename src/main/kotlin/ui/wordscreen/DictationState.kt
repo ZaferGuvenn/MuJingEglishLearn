@@ -16,7 +16,7 @@ import javax.swing.JOptionPane
 
 
 /**
- * 听写单词的数据类
+ * Dikte kelimeleri için veri sınıfı
  */
 @ExperimentalSerializationApi
 @Serializable
@@ -30,41 +30,41 @@ data class DataDictationState(
 )
 
 /**
- * 听写单词时的状态
+ * Kelimeleri dikte ederken durum
  */
 @OptIn(ExperimentalSerializationApi::class)
 class DictationState(dataDictationState: DataDictationState){
     /**
-     * 音标组件的可见性
+     * Fonetik bileşenin görünürlüğü
      */
     var phoneticVisible by mutableStateOf(dataDictationState.phoneticVisible)
 
     /**
-     * 词型组件的可见性
+     * Morfoloji bileşeninin görünürlüğü
      */
     var morphologyVisible by mutableStateOf(dataDictationState.morphologyVisible)
 
     /**
-     * 定义组件的可见性
+     * Tanım bileşeninin görünürlüğü
      */
     var definitionVisible by mutableStateOf(dataDictationState.definitionVisible)
 
     /**
-     * 翻译组件的可见性
+     * Çeviri bileşeninin görünürlüğü
      */
     var translationVisible by mutableStateOf(dataDictationState.translationVisible)
 
     /**
-     * 字幕组件的可见性
+     * Altyazı bileşeninin görünürlüğü
      */
     var subtitlesVisible by mutableStateOf(dataDictationState.subtitlesVisible)
 
     /**
-     * 例句组件的可见性
+     * Örnek cümle bileşeninin görünürlüğü
      */
     var sentencesVisible by mutableStateOf(dataDictationState.subtitlesVisible)
 
-    /** 保存听写时的配置信息 */
+    /** Dikte ederken yapılandırma bilgilerini kaydet */
     fun saveDictationState() {
         runBlocking {
             launch (Dispatchers.IO){
@@ -95,7 +95,7 @@ fun rememberDictationState(): DictationState = remember{
     loadDictationState()
 }
 
-/** 加载听写单词时界面的设置信息 */
+/** Dikte kelimeleri için arayüz ayar bilgilerini yükle */
 @OptIn(ExperimentalSerializationApi::class)
 private fun loadDictationState(): DictationState {
     val dictationSettings = getDictationFile()
@@ -107,7 +107,7 @@ private fun loadDictationState(): DictationState {
             dictationState
         } catch (exception: Exception) {
             FlatLightLaf.setup()
-            JOptionPane.showMessageDialog(null, "设置信息解析错误，将使用默认设置。\n地址：$dictationSettings")
+            JOptionPane.showMessageDialog(null, "Ayar bilgileri ayrıştırma hatası, varsayılan ayarlar kullanılacak.\nAdres: $dictationSettings")
             DictationState(DataDictationState())
         }
 
@@ -116,7 +116,7 @@ private fun loadDictationState(): DictationState {
     }
 }
 
-/** 获取记忆单词的配置文件 */
+/** Ezberlenecek kelimelerin yapılandırma dosyasını al */
 private fun getDictationFile(): File {
     val settingsDir = getSettingsDirectory()
     return File(settingsDir, "DictationSettings.json")

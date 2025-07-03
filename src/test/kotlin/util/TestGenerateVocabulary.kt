@@ -69,17 +69,17 @@ class TestGenerateVocabulary {
     @OptIn(ExperimentalComposeUiApi::class)
     @Test
     fun `Test Segmenting Words and Phrases`(){
-        // 加载分词模型
+        // Kelime ayırma modelini yükle
         val tokenModel = ResourceLoader.Default.load("opennlp/opennlp-en-ud-ewt-tokens-1.0-1.9.3.bin").use { inputStream ->
             TokenizerModel(inputStream)
         }
         val tokenizer = TokenizerME(tokenModel)
-        // 加载词性标注模型
+        // Konuşma bölümü etiketleme modelini yükle
         val posModel = ResourceLoader.Default.load("opennlp/opennlp-en-ud-ewt-pos-1.0-1.9.3.bin").use { inputStream ->
             POSModel(inputStream)
         }
         val posTagger = POSTaggerME(posModel)
-        // 加载分块模型
+        // Öbekleme modelini yükle
         val chunkerModel = ResourceLoader.Default.load("opennlp/en-chunker.bin").use { inputStream ->
             ChunkerModel(inputStream)
         }

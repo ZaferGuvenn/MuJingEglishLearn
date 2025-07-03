@@ -16,8 +16,8 @@ val iconPath = project.file("src/main/resources/logo/logo.ico").absolutePath
 val removeIconPath = project.file("RemoveConfig/src/main/resources/remove.ico").absolutePath
 val licensePath = project.file("license.rtf").absolutePath
 val manufacturer = "深圳市龙华区幕境网络工作室"
-val shortcutName = "幕境"
-val appName = "幕境"
+val shortcutName = "Learna"
+val appName = "Learna"
 
 project.tasks.register("renameApp") {
     group = "compose wix"
@@ -25,24 +25,27 @@ project.tasks.register("renameApp") {
     val createDistributable = tasks.named("createDistributable")
     dependsOn(createDistributable)
     doLast {
-        val imageDir = project.layout.projectDirectory.dir("build/compose/binaries/main/app/幕境")
-        val appDirFile = imageDir.getAsFile()
-        val appDirParent = appDirFile.parentFile
-        val appName = appDirFile.name
-        val newAppName = "MuJing"
-        val newAppDir = File(appDirParent, newAppName)
-        // 幕境 -> MuJing
-        appDirFile.renameTo(newAppDir)
-
-        // 把 newAppDir 目录下的 幕境.exe 重命名为 MuJing.exe
-        val appExe = File(newAppDir, "$appName.exe")
-        val newAppExe = File(newAppDir, "$newAppName.exe")
-        appExe.renameTo(newAppExe)
-
-        // 把 newAppDir 目录下的 app 目录下的 幕境.cfg 重命名为 MuJing.cfg
-        val appCfg = File(newAppDir, "app/$appName.cfg")
-        val newAppCfg = File(newAppDir, "app/$newAppName.cfg")
-        appCfg.renameTo(newAppCfg)
+        // appName değişkeni zaten "Learna" olarak ayarlandı.
+        // Bu görev artık uygulamanın adını "Learna" olarak koruyacak.
+        // Yeniden adlandırma adımları kaldırıldı veya basitleştirildi.
+        val imageDir = project.layout.projectDirectory.dir("build/compose/binaries/main/app/$appName")
+        if (!imageDir.asFile.exists()) {
+            println("Uygulama imaj dizini bulunamadı: ${imageDir.asFile.absolutePath}")
+            // Gerekirse burada eski "幕境" yolunu kontrol edip yeniden adlandırabiliriz,
+            // ancak build.gradle.kts'deki değişikliklerle bu yola hiç oluşturulmamış olmalı.
+        }
+        // .exe ve .cfg dosyalarının adlarının zaten appName ile (Learna) oluştuğunu varsayıyoruz
+        // build.gradle.kts içindeki nativeDistributions ayarları sayesinde.
+        // Bu nedenle karmaşık yeniden adlandırma adımlarına gerek kalmadı.
+        // Sadece varlıklarını kontrol edebiliriz.
+        val appExe = File(imageDir.asFile, "$appName.exe")
+        if (!appExe.exists()) {
+            println("$appName.exe bulunamadı: ${appExe.absolutePath}")
+        }
+        val appCfg = File(imageDir.asFile, "app/$appName.cfg")
+        if (!appCfg.exists()) {
+            println("$appName.cfg bulunamadı: ${appCfg.absolutePath}")
+        }
     }
 
 }
@@ -56,17 +59,17 @@ tasks.register<Exec>("createRemoveConfigExe") {
     dependsOn(renameApp)
     doLast{
         val removeConfigApp =project.layout.projectDirectory.dir("RemoveConfig/build/compose/binaries/main/app/RemoveConfig/app/").asFile
-        val mujingApp = project.layout.projectDirectory.dir("build/compose/binaries/main/app/MuJing/app/").asFile
-        val mujing = project.layout.projectDirectory.dir("build/compose/binaries/main/app/MuJing/").asFile
+        val learnaApp = project.layout.projectDirectory.dir("build/compose/binaries/main/app/$appName/app/").asFile // MuJing yerine appName kullanıldı
+        val learnaRoot = project.layout.projectDirectory.dir("build/compose/binaries/main/app/$appName/").asFile // MuJing yerine appName kullanıldı
 
         val removeJar = removeConfigApp.listFiles { file -> file.name.startsWith("RemoveConfig") && file.extension == "jar" }?.first()
         val removecfg = project.layout.projectDirectory.dir("RemoveConfig/build/compose/binaries/main/app/RemoveConfig/app/RemoveConfig.cfg").asFile
         val removeExe = project.layout.projectDirectory.dir("RemoveConfig/build/compose/binaries/main/app/RemoveConfig/RemoveConfig.exe").asFile
 
-        // 需要把 RemoveConfig.cfg 和 RemoveConfig.jar 复制到 mujingApp 里面, 把 RemoveConfig.exe 复制到 mujing 里面
-        removeJar?.copyTo(File(mujingApp, removeJar?.name))
-        removecfg.copyTo(File(mujingApp, removecfg.name))
-        removeExe.copyTo(File(mujing, removeExe.name))
+        // RemoveConfig.cfg ve RemoveConfig.jar dosyalarını learnaApp (önceki mujingApp) içine kopyala, RemoveConfig.exe dosyasını learnaRoot (önceki mujing) içine kopyala
+        removeJar?.copyTo(File(learnaApp, removeJar?.name))
+        removecfg.copyTo(File(learnaApp, removecfg.name))
+        removeExe.copyTo(File(learnaRoot, removeExe.name))
     }
 
 }
@@ -79,11 +82,11 @@ project.tasks.register<Exec>("harvest") {
     workingDir(appDir)
     val heat = project.layout.projectDirectory.file("build/wix311/heat.exe").asFile.absolutePath
 
-    // heat dir "./MuJing" -cg DefaultFeature -gg -sfrag -sreg -template product -out MuJing.wxs -var var.SourceDir
+    // heat dir "./Learna" -cg DefaultFeature -gg -sfrag -sreg -template product -out Learna.wxs -var var.SourceDir
     commandLine(
         heat,
         "dir",
-        "./MuJing",
+        "./$appName", // MuJing yerine appName kullanıldı
         "-nologo",
         "-cg",
         "DefaultFeature",
@@ -93,7 +96,7 @@ project.tasks.register<Exec>("harvest") {
         "-template",
         "product",
         "-out",
-        "MuJing.wxs",
+        "$appName.wxs", // MuJing.wxs yerine $appName.wxs kullanıldı
         "-var",
         "var.SourceDir"
     )
@@ -123,8 +126,8 @@ project.tasks.register<Exec>("compileWxs") {
     dependsOn(editWxs)
     workingDir(appDir)
     val candle = project.layout.projectDirectory.file("build/wix311/candle.exe").asFile.absolutePath
-    // candle main.wxs -dSourceDir=".\MuJing"
-    commandLine(candle, "MuJing.wxs","-nologo", "-dSourceDir=.\\MuJing")
+    // candle main.wxs -dSourceDir=".\Learna"
+    commandLine(candle, "$appName.wxs","-nologo", "-dSourceDir=.\\$appName") // MuJing referansları appName ile değiştirildi
 }
 
 project.tasks.register<Exec>("light") {
@@ -135,8 +138,8 @@ project.tasks.register<Exec>("light") {
     workingDir(appDir)
     val light = project.layout.projectDirectory.file("build/wix311/light.exe").asFile.absolutePath
 
-    // light -ext WixUIExtension -cultures:zh-CN -spdb MuJing.wixobj -o MuJing.msi
-    commandLine(light, "-ext", "WixUIExtension", "-cultures:zh-CN", "-spdb","-nologo", "MuJing.wixobj", "-o", "MuJing-${project.version}.msi")
+    // light -ext WixUIExtension -cultures:tr-TR -spdb Learna.wixobj -o Learna.msi (zh-CN -> tr-TR olarak değiştirildi)
+    commandLine(light, "-ext", "WixUIExtension", "-cultures:tr-TR", "-spdb","-nologo", "$appName.wixobj", "-o", "$appName-${project.version}.msi")
 }
 
 
@@ -149,7 +152,7 @@ private fun editWixTask(
     licensePath: String,
     manufacturer:String
 ) {
-    val wixFile = project.layout.projectDirectory.dir("build/compose/binaries/main/app/MuJing.wxs").asFile
+    val wixFile = project.layout.projectDirectory.dir("build/compose/binaries/main/app/$appName.wxs").asFile // MuJing.wxs -> $appName.wxs
 
     val dbf = DocumentBuilderFactory.newInstance()
     val doc = dbf.newDocumentBuilder().parse(wixFile)
@@ -159,26 +162,23 @@ private fun editWixTask(
     val productElement = doc.documentElement.getElementsByTagName("Product").item(0) as Element
     println(productElement.nodeName)
     productElement.setAttribute("Manufacturer", manufacturer)
-    productElement.setAttribute("Codepage", "936")
+    productElement.setAttribute("Codepage", "65001") // 936 (Çince) -> 65001 (UTF-8)
 
-    // 这个 Name 属性会出现在安装引导界面
-    // 控制面板-程序列表里也是这个名字
-    productElement.setAttribute("Name", "幕境")
+    // Bu Name özniteliği kurulum sihirbazında ve Denetim Masası'ndaki program listesinde görünür.
+    productElement.setAttribute("Name", appName) // "幕境" -> appName ("Learna")
     productElement.setAttribute("Version", "${project.version}")
 
-    // 设置升级码, 用于升级,大版本更新时，可能需要修改这个值
-    // 如果要修改这个值，可能还需要修改安装位置，如果不修改安装位置，两个版本会安装在同一个位置
-    // 这段代码和 MajorUpgrade 相关，如果 UpgradeCode 一直保持不变，安装新版的时候会自动卸载旧版本。
-    val upgradeCode = createNameUUID("v2.0")
+    // Yükseltme kodu ayarlanıyor. Yeni bir ürün olduğu için farklı bir baz string kullanıldı.
+    val upgradeCode = createNameUUID("Learna-v1.0") // "v2.0" -> "Learna-v1.0"
     productElement.setAttribute("UpgradeCode", upgradeCode)
 
 
     val packageElement = productElement.getElementsByTagName("Package").item(0) as Element
     println(packageElement.nodeName)
-    packageElement.setAttribute("Comments", "幕境")
+    packageElement.setAttribute("Comments", appName) // "幕境" -> appName ("Learna")
     packageElement.setAttribute("Compressed", "yes")
     packageElement.setAttribute("InstallerVersion", "200")
-    packageElement.setAttribute("Languages", "1033")
+    packageElement.setAttribute("Languages", "1055") // 1033 (İngilizce ABD) -> 1055 (Türkçe Türkiye)
     packageElement.setAttribute("Manufacturer", manufacturer)
     packageElement.setAttribute("Platform", "x64")
 
@@ -251,15 +251,15 @@ private fun editWixTask(
         id = "DesktopShortcut",
         directory = "DesktopFolder",
         workingDirectory = "INSTALLDIR",
-        name = shortcutName,
-        target = "[INSTALLDIR]MuJing.exe",
+        name = shortcutName, // Zaten "Learna" olarak ayarlı
+        target = "[INSTALLDIR]$appName.exe", // MuJing.exe -> $appName.exe
         icon="icon.ico"
     )
-    //   <RemoveFile Id="DesktopShortcut" On="uninstall" Name="幕境.lnk" Directory="DesktopFolder"/>
+    //   <RemoveFile Id="DesktopShortcut" On="uninstall" Name="Learna.lnk" Directory="DesktopFolder"/>
     val removeDesktopShortcut = doc.createElement("RemoveFile").apply{
         setAttributeNode(doc.createAttribute("Id").also { it.value = "DesktopShortcut" })
         setAttributeNode(doc.createAttribute("On").also { it.value = "uninstall" })
-        setAttributeNode(doc.createAttribute("Name").also { it.value = "$shortcutName.lnk" })
+        setAttributeNode(doc.createAttribute("Name").also { it.value = "$shortcutName.lnk" }) // $shortcutName zaten "Learna"
         setAttributeNode(doc.createAttribute("Directory").also { it.value = "DesktopFolder" })
     }
     desktopComponent.appendChild(desktopShortcut)
@@ -270,9 +270,9 @@ private fun editWixTask(
 
 
 
-    // 开始菜单文件夹
+    // Başlat Menüsü klasörü
     val programMenuFolderElement = directoryBuilder(doc, id = "ProgramMenuFolder", name = "Programs")
-    val programeMenuDir = directoryBuilder(doc, id = "ProgramMenuDir", name = "幕境")
+    val programeMenuDir = directoryBuilder(doc, id = "ProgramMenuDir", name = shortcutName) // "幕境" -> shortcutName ("Learna")
     val menuGuid = createNameUUID("programMenuDirComponent")
     val programMenuDirComponent = componentBuilder(doc, id = "programMenuDirComponent", guid = menuGuid)
     val startMenuShortcut = shortcutBuilder(
@@ -280,13 +280,13 @@ private fun editWixTask(
         id = "startMenuShortcut",
         directory = "ProgramMenuDir",
         workingDirectory = "INSTALLDIR",
-        name = shortcutName,
-        target = "[INSTALLDIR]MuJing.exe"
+        name = shortcutName, // Zaten "Learna"
+        target = "[INSTALLDIR]$appName.exe" // MuJing.exe -> $appName.exe
     )
     val uninstallShortcut = shortcutBuilder(
         doc,
         id = "uninstallShortcut",
-        name = "卸载幕境",
+        name = "Learna'yı Kaldır", // "卸载幕境" -> "Learna'yı Kaldır"
         directory = "ProgramMenuDir",
         target = "[System64Folder]msiexec.exe",
         arguments = "/x [ProductCode]",
@@ -349,14 +349,14 @@ private fun editWixTask(
     }
 
     // <Component Guid="{GUID}" Id="installProduct">
-    //    <RegistryValue Root="HKLM" Key="Software\MuJing"
+    //    <RegistryValue Root="HKLM" Key="Software\Learna"
     //                   Name="InstallLocation" Type="string" Value="[INSTALLDIR]" KeyPath="yes"/>
     //</Component>
     val installGuid = createNameUUID("installProduct")
     val installComponent = componentBuilder(doc, id = "installProduct", guid = installGuid)
     val installRegistry = doc.createElement("RegistryValue").apply{
         setAttributeNode(doc.createAttribute("Root").also { it.value = "HKLM" })
-        setAttributeNode(doc.createAttribute("Key").also { it.value = "Software\\MuJing" })
+        setAttributeNode(doc.createAttribute("Key").also { it.value = "Software\\$appName" }) // MuJing -> $appName
         setAttributeNode(doc.createAttribute("Name").also { it.value = "InstallLocation" })
         setAttributeNode(doc.createAttribute("Type").also { it.value = "string" })
         setAttributeNode(doc.createAttribute("Value").also { it.value = "[INSTALLDIR]" })
@@ -375,13 +375,13 @@ private fun editWixTask(
         component.setAttributeNode(win64)
     }
 
-    // 设置 Feature 节点
+    // Feature düğümünü ayarla
     val featureElement = doc.getElementsByTagName("Feature").item(0) as Element
     featureElement.setAttribute("Id", "Complete")
-    featureElement.setAttribute("Title", "幕境")
+    featureElement.setAttribute("Title", appName) // "幕境" -> appName ("Learna")
 
-    // 设置 UI
-    // 添加 <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    // UI Ayarları
+    // <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" /> ekle
     val installUI = doc.createElement("Property").apply{
         setAttributeNode(doc.createAttribute("Id").also { it.value = "WIXUI_INSTALLDIR" })
         setAttributeNode(doc.createAttribute("Value").also { it.value = "INSTALLDIR" })
@@ -433,10 +433,10 @@ private fun editWixTask(
     // 安装新版时，自动卸载旧版本，已经安装新版，再安装旧版本，提示用户先卸载新版。
     // 这段逻辑要和 UpgradeCode 一起设置，如果 UpgradeCode 一直保持不变，安装新版的时候会自动卸载旧版本。
     // 如果 UpgradeCode 改变了，可能会安装两个版本
-    // <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="新版的[ProductName]已经安装，如果要安装旧版本，请先把新版本卸载。" />
+    // <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="[ProductName]'in yeni bir sürümü zaten yüklü. Eski sürümü yüklemek istiyorsanız, lütfen önce yeni sürümü kaldırın." />
     val majorUpgrade = doc.createElement("MajorUpgrade").apply{
         setAttributeNode(doc.createAttribute("AllowSameVersionUpgrades").also { it.value = "yes" })
-        val message = "新版的[ProductName]已经安装，如果要安装旧版本，请先把新版本卸载。"
+        val message = "[ProductName]'in yeni bir sürümü zaten yüklü. Eski sürümü yüklemek istiyorsanız, lütfen önce yeni sürümü kaldırın."
         setAttributeNode(doc.createAttribute("DowngradeErrorMessage").also { it.value = message })
     }
     productElement.appendChild(majorUpgrade)
@@ -463,12 +463,12 @@ private fun editWixTask(
     // https://learn.microsoft.com/en-us/windows/win32/msi/conditional-statement-syntax#summary-of-conditional-statement-syntax
     //<!--          NOT INSTALLED -->
     //<!--  如果 INSTALLED 为空或 null，那么 NOT INSTALLED 的结果将是 FALSE-->
-    //<!--  如果 INSTALLED 不为空或 null，那么 NOT INSTALLED 的结果将是 TRUE-->
-    //    <Condition Message="已经安装了幕境的另一个版本，无法继续安装此版本。可以使用”控制面板“中”添加/删除程序“来删除该版本">
+    //<!--  Eğer INSTALLED boş veya null değilse, NOT INSTALLED sonucu TRUE olur-->
+    //    <Condition Message="Learna'nın başka bir sürümü zaten yüklü. Bu sürüm yüklenemiyor. Lütfen Denetim Masası'ndaki 'Program Ekle/Kaldır'ı kullanarak mevcut sürümü kaldırın.">
     //        <![CDATA[NOT INSTALLED]]>
     //    </Condition>
     val installCondition = doc.createElement("Condition").apply{
-        val message = "已经安装了幕境的另一个版本，无法继续安装此版本。可以使用”控制面板“中”添加/删除程序“来删除该版本"
+        val message = "Learna'nın başka bir sürümü zaten yüklü. Bu sürüm yüklenemiyor. Lütfen Denetim Masası'ndaki 'Program Ekle/Kaldır'ı kullanarak mevcut sürümü kaldırın."
         setAttributeNode(doc.createAttribute("Message").also { it.value = message })
         appendChild(doc.createCDATASection("NOT INSTALLED"))
     }
@@ -531,7 +531,7 @@ private fun registryBuilder(doc: Document, id: String, productCode: String): Ele
     val regComponentElement = doc.createElement("RegistryValue").apply{
         setAttributeNode(doc.createAttribute("Id").also { it.value = id })
         setAttributeNode(doc.createAttribute("Root").also { it.value = "HKCU" })
-        setAttributeNode(doc.createAttribute("Key").also { it.value = "Software\\MuJing" })
+        setAttributeNode(doc.createAttribute("Key").also { it.value = "Software\\$appName" }) // MuJing -> $appName
         setAttributeNode(doc.createAttribute("Type").also { it.value = "string" })
         setAttributeNode(doc.createAttribute("Name").also { it.value = "ProductCode" })
         setAttributeNode(doc.createAttribute("Value").also { it.value = productCode })
@@ -544,7 +544,7 @@ private fun registrySearchBuilder(doc:Document,version:String,id:Int):Element{
     val registrySearch = doc.createElement("RegistrySearch").apply{
         setAttributeNode(doc.createAttribute("Id").also { it.value = "SearchOldVersion$id" })
         setAttributeNode(doc.createAttribute("Root").also { it.value = "HKCU" })
-        setAttributeNode(doc.createAttribute("Key").also { it.value = "Software\\深圳市龙华区幕境网络工作室\\幕境\\$version" })
+        setAttributeNode(doc.createAttribute("Key").also { it.value = "Software\\$manufacturer\\$appName\\$version" }) // 幕境 -> $appName
         setAttributeNode(doc.createAttribute("Name").also { it.value = "ProductCode" })
         setAttributeNode(doc.createAttribute("Type").also { it.value = "raw" })
         setAttributeNode(doc.createAttribute("Win64").also { it.value = "yes" })

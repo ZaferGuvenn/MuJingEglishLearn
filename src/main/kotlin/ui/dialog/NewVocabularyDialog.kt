@@ -36,7 +36,7 @@ fun NewVocabularyDialog(
 ) {
 
     DialogWindow(
-        title = "新建词库",
+        title = "Yeni Kelime Listesi", // "新建词库" -> "Yeni Kelime Listesi"
         icon = painterResource("logo/logo.png"),
         onCloseRequest = { close() },
         resizable = true,
@@ -60,7 +60,7 @@ fun NewVocabularyDialog(
                     val border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f))
                     Row(verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp)){
-                        Text("词库名称：")
+                        Text("Kelime Listesi Adı: ") // "词库名称：" -> "Kelime Listesi Adı: "
                         BasicTextField(
                             value = name,
                             onValueChange = { name = it },
@@ -78,7 +78,7 @@ fun NewVocabularyDialog(
                     }
                     Row(verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()){
-                        Text("词库位置：")
+                        Text("Kaydedilecek Konum: ") // "词库位置：" -> "Kaydedilecek Konum: "
                         BasicTextField(
                             value = vocabularyDir,
                             onValueChange = { vocabularyDir = it },
@@ -97,7 +97,7 @@ fun NewVocabularyDialog(
                         IconButton(onClick = { showFileChooser = true }) {
                             Icon(
                                 Icons.Filled.FolderOpen,
-                                contentDescription = "open directory",
+                                contentDescription = "Dizin Aç", // "open directory" -> "Dizin Aç"
                                 modifier = Modifier.size(30.dp)
                             )
                         }
@@ -121,7 +121,7 @@ fun NewVocabularyDialog(
                         }
                     }
                     Row{
-                        Text("词库将会保存到：$path")
+                        Text("Kelime listesi şuraya kaydedilecek: $path") // "词库将会保存到：" -> "Kelime listesi şuraya kaydedilecek: "
                     }
 
                     Row(horizontalArrangement = Arrangement.End,
@@ -132,7 +132,7 @@ fun NewVocabularyDialog(
                                 val vocabulary = Vocabulary(
                                     name = name,
                                     type = VocabularyType.DOCUMENT,
-                                    language = "",
+                                    language = "", // Dil "english" veya "turkish" olarak ayarlanabilir, şimdilik boş bırakıyorum.
                                     size = 0,
                                     relateVideoPath = "",
                                     subtitlesTrackId = 0,
@@ -144,20 +144,20 @@ fun NewVocabularyDialog(
                                     close()
                                 }catch(e:Exception){
                                     e.printStackTrace()
-                                    JOptionPane.showMessageDialog(window, "保存词库失败,错误信息：\n${e.message}")
+                                    JOptionPane.showMessageDialog(window, "Kelime listesi kaydedilemedi. Hata:\n${e.message}") // "保存词库失败,错误信息：\n${e.message}"
                                 }
 
                             },
                             modifier = Modifier
                         ) {
-                            Text("确定")
+                            Text("Onayla") // "确定" -> "Onayla"
                         }
                         Spacer(modifier = Modifier.width(20.dp))
                         OutlinedButton(
                             onClick = { close() },
                             modifier = Modifier
                         ) {
-                            Text("取消")
+                            Text("İptal") // "取消" -> "İptal"
                         }
                     }
 

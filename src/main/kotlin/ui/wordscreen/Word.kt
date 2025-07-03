@@ -46,20 +46,20 @@ import java.util.*
 import javax.sound.sampled.*
 import kotlin.concurrent.schedule
 
-/** 单词组件
- * @param word 单词
- * @param global 全局状态
- * @param wordVisible 单词可见性
- * @param pronunciation 单词发音
- * @param playTimes 单词播放次数
- * @param isPlaying 是否正在播放单词发音
- * @param setIsPlaying 设置单词发音播放状态
- * @param isDictation 是否是听写模式
- * @param correctTime 单词的正确数
- * @param wrongTime 单词的错误数
- * @param textFieldValue 用户输入的字符串
- * @param typingResult 用户输入字符的结果
- * @param checkTyping 检查用户的输入是否正确的回调
+/** Kelime bileşeni
+ * @param word Kelime
+ * @param global Genel durum
+ * @param wordVisible Kelime görünürlüğü
+ * @param pronunciation Kelime telaffuzu
+ * @param playTimes Kelime çalma sayısı
+ * @param isPlaying Kelime telaffuzu çalınıyor mu
+ * @param setIsPlaying Kelime telaffuzu çalma durumunu ayarla
+ * @param isDictation Dikte modu mu
+ * @param correctTime Kelimenin doğru sayısı
+ * @param wrongTime Kelimenin yanlış sayısı
+ * @param textFieldValue Kullanıcının girdiği dize
+ * @param typingResult Kullanıcının girdiği karakterlerin sonucu
+ * @param checkTyping Kullanıcının girdisinin doğru olup olmadığını kontrol etme geri çağrısı
  */
 @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 @ExperimentalAnimationApi
@@ -258,7 +258,7 @@ fun Word(
 }
 
 /**
- * 音标组件
+ * Fonetik bileşeni
  */
 @Composable
 fun Phonetic(
@@ -274,7 +274,7 @@ fun Phonetic(
             if (word.usphone.isNotEmpty()) {
                 SelectionContainer {
                     Text(
-                        text = "美:${word.usphone}",
+                        text = "ABD:${word.usphone}",
                         fontSize = fontSize,
                         color = MaterialTheme.colors.onBackground,
                         modifier = Modifier.padding(start = 5.dp, end = 5.dp)
@@ -285,7 +285,7 @@ fun Phonetic(
             if (word.ukphone.isNotEmpty()) {
                 SelectionContainer {
                     Text(
-                        text = "英:${word.ukphone}",
+                        text = "İng:${word.ukphone}",
                         fontSize = fontSize,
                         color = MaterialTheme.colors.onBackground,
                         modifier = Modifier.padding(start = 5.dp, end = 5.dp)
@@ -298,7 +298,7 @@ fun Phonetic(
 }
 
 /**
- * 禁用文本菜单和剪贴板
+ * Metin menüsünü ve panoyu devre dışı bırak
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -328,7 +328,7 @@ fun DisableTextMenuAndClipboardProvider(content: @Composable () -> Unit) {
 }
 
 /**
- * 自定义文本菜单和剪贴板，文本菜单只保留复制
+ * Özel metin menüsü ve pano, metin menüsü yalnızca kopyalamayı korur
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -368,9 +368,9 @@ fun CustomTextMenuProvider(content: @Composable () -> Unit) {
 }
 
 /**
- * 播放音效
- * @param path 路径
- * @param volume 音量
+ * Ses efektini çal
+ * @param path Yol
+ * @param volume Ses seviyesi
  */
 fun playSound(path: String, volume: Float) {
     try {
@@ -399,7 +399,7 @@ fun playSound(path: String, volume: Float) {
     }
 }
 
-/** 计算单词的底部内边距 */
+/** Kelimenin alt iç boşluğunu hesapla */
 fun computeBottom(
     textStyle:String,
     textHeight:Dp,

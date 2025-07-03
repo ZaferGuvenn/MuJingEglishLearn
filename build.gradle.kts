@@ -17,7 +17,7 @@ group = "com.movcontext"
 version = "2.6.12"
 
 buildConfig {
-    buildConfigField("APP_NAME", provider { "幕境" })
+    buildConfigField("APP_NAME", provider { "Learna" })
     buildConfigField("APP_VERSION", provider { "v${project.version}" })
 }
 
@@ -95,7 +95,7 @@ compose.desktop {
         jvmArgs += listOf("-Dapple.awt.application.appearance=system")
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "幕境"
+            packageName = "Learna"
             packageVersion = version.toString()
             modules("java.compiler","java.instrument","java.management","java.prefs", "java.security.jgss","java.sql", "jdk.unsupported","java.xml.crypto","jdk.accessibility", "java.naming" )
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
@@ -105,7 +105,7 @@ compose.desktop {
             windows{
 //                console = true
                 dirChooser = true
-                menuGroup = "幕境"
+                menuGroup = "Learna"
                 iconFile.set(project.file("src/main/resources/logo/logo.ico"))
             }
             macOS{
@@ -167,8 +167,8 @@ project.afterEvaluate {
         tasks.named("runDistributable") {
             doFirst {
                 println("update VLC plugins cache")
-                val plugins = project.layout.projectDirectory.dir("build/compose/binaries/main/app/幕境/app/resources/VLC/plugins").asFile.absolutePath
-                val cacheGen = project.layout.projectDirectory.dir("build/compose/binaries/main/app/幕境/app/resources/VLC/vlc-cache-gen.exe").asFile.absolutePath
+                val plugins = project.layout.projectDirectory.dir("build/compose/binaries/main/app/Learna/app/resources/VLC/plugins").asFile.absolutePath
+                val cacheGen = project.layout.projectDirectory.dir("build/compose/binaries/main/app/Learna/app/resources/VLC/vlc-cache-gen.exe").asFile.absolutePath
                 val command = listOf(cacheGen, plugins)
                 try {
                     val process = ProcessBuilder(command).start()

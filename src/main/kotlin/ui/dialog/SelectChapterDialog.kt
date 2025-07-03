@@ -28,7 +28,7 @@ import ui.wordscreen.WordScreenState
 import ui.wordscreen.rememberDictationState
 
 /**
- * 选择章节
+ * Bölüm Seç
  */
 @ExperimentalComposeUiApi
 @Composable
@@ -39,7 +39,7 @@ fun SelectChapterDialog(
     isMultiple:Boolean
 ) {
     DialogWindow(
-        title = if(isMultiple) "听写测试，可以选择多个章节" else "选择章节",
+        title = if(isMultiple) "Dikte testi, birden fazla bölüm seçebilirsiniz" else "Bölüm Seç",
         onCloseRequest = { close() },
         resizable = true,
         state = rememberDialogState(
@@ -112,9 +112,9 @@ fun SelectChapterDialog(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("选择了${selectedChapters.size}个章节  ", color = MaterialTheme.colors.onBackground)
+                            Text("${selectedChapters.size} bölüm seçildi  ", color = MaterialTheme.colors.onBackground)
                             Text("${selectedWords.value.size}", color = MaterialTheme.colors.primary)
-                            Text(" 个单词", color = MaterialTheme.colors.onBackground)
+                            Text(" kelime", color = MaterialTheme.colors.onBackground)
                             Checkbox(
                                 checked = isSelectAll,
                                 onCheckedChange = {
@@ -123,7 +123,7 @@ fun SelectChapterDialog(
                                 },
                                 modifier = Modifier.padding(start = 20.dp)
                             )
-                            Text("全选")
+                            Text("Tümünü Seç")
                         }
                         Divider()
                     }
@@ -154,7 +154,7 @@ fun SelectChapterDialog(
                     modifier = Modifier.align(Alignment.BottomCenter),
                     confirmEnable = selectedChapters.isNotEmpty(),
                     confirm = {
-                        // 独立的听写测试，可以选择多个章节
+                        // Bağımsız dikte testi, birden fazla bölüm seçilebilir
                         if(isMultiple){
                             if(wordScreenState.memoryStrategy != MemoryStrategy.DictationTest && wordScreenState.memoryStrategy != MemoryStrategy.Dictation){
                                 wordScreenState.hiddenInfo(dictationState)
@@ -164,20 +164,20 @@ fun SelectChapterDialog(
                             wordScreenState.reviewWords.clear()
                             wordScreenState.reviewWords.addAll(selectedWords.value.shuffled())
                             wordScreenState.dictationIndex = 0
-                        // 非独立的听写测试，只能选择一个章节
+                        // Bağımsız olmayan dikte testi, yalnızca bir bölüm seçilebilir
                         }else{
                             val chapter = selectedChapters.first()
                             if (chapter == 0) wordScreenState.chapter = 1
                             wordScreenState.chapter = chapter
                             wordScreenState.index = (chapter - 1) * 20
                             wordScreenState.saveWordScreenState()
-                            // 如果是独立的听写测试单词，又重新选择了章节，所以就取消独立的听写测试
+                            // Bağımsız bir dikte testi kelimesi ise ve bölüm yeniden seçilirse, bağımsız dikte testi iptal edilir
                             if(wordScreenState.memoryStrategy == MemoryStrategy.DictationTest){
                                 wordScreenState.memoryStrategy = MemoryStrategy.Normal
                                 wordScreenState.showInfo()
                             }
                         }
-                        // 如果不是独立的听写测试，同时正在听写单词，又重新选择了章节，所以就退出听写
+                        // Bağımsız bir dikte testi değilse ve aynı anda kelimeler dikte ediliyorsa ve bölüm yeniden seçilirse, dikteden çıkılır
                         if(wordScreenState.memoryStrategy == MemoryStrategy.Dictation && !isMultiple){
                             wordScreenState.showInfo()
                             wordScreenState.memoryStrategy = MemoryStrategy.Normal
@@ -217,7 +217,7 @@ fun Chapters(
             val mod = size % 20
             if (mod != 0 && size > 20) count += 1
             if (size < 20) count = 1
-            val chapters = (1 until count + 1).map { "Chapter $it" }.toList()
+            val chapters = (1 until count + 1).map { "Bölüm $it" }.toList()
             val listState = rememberLazyGridState()
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(144.dp),
@@ -265,7 +265,7 @@ fun Chapters(
                                 if(mod==0) 20 else mod
                             } else 20
                             Text(
-                                text = "$words 词",
+                                text = "$words kelime",
                                 color = MaterialTheme.colors.onBackground,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp)
@@ -325,11 +325,11 @@ fun Footer(
                     enabled = confirmEnable,
                     onClick = { confirm() }
                 ) {
-                    Text(text = "确认")
+                    Text(text = "Onayla")
                 }
                 Spacer(Modifier.width(10.dp))
                 OutlinedButton(onClick = { exit() }) {
-                    Text(text = "取消")
+                    Text(text = "İptal")
                 }
                 Spacer(Modifier.width(10.dp))
             }

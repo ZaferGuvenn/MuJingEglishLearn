@@ -32,7 +32,7 @@ import ui.dialog.SelectChapterDialog
 import java.awt.Rectangle
 
 /**
- * 侧边菜单
+ * Yan Menü
  */
 @OptIn(
     ExperimentalSerializationApi::class, ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class
@@ -86,7 +86,7 @@ fun WordScreenSidebar(
                             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                             shape = RectangleShape
                         ) {
-                            val tooltip =  "听写测试，可以选择多个章节"
+                            val tooltip =  "Dikte testi, birden fazla bölüm seçebilirsiniz"
                             Text(text = tooltip, modifier = Modifier.padding(10.dp))
                         }
                     },
@@ -103,11 +103,11 @@ fun WordScreenSidebar(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().clickable { showDictationDialog = true }.padding(start = 16.dp, end = 8.dp)
                     ) {
-                        Text("听写测试", color = MaterialTheme.colors.onBackground)
+                        Text("Dikte Testi", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(15.dp))
                         Icon(
                             Icons.Filled.RateReview,
-                            contentDescription = "Localized description",
+                            contentDescription = "Dikte Testi",
                             tint = tint,
                             modifier = Modifier.size(48.dp, 48.dp).padding(top = 12.dp, bottom = 12.dp)
                         )
@@ -128,11 +128,11 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth().clickable { showChapterDialog = true }.padding(start = 16.dp, end = 8.dp)
                 ) {
 
-                    Text("选择章节", color = MaterialTheme.colors.onBackground)
+                    Text("Bölüm Seç", color = MaterialTheme.colors.onBackground)
                     Spacer(Modifier.width(15.dp))
                     Icon(
                         Icons.Filled.Apps,
-                        contentDescription = "Localized description",
+                        contentDescription = "Bölüm Seç",
                         tint = tint,
                             modifier = Modifier.size(48.dp, 48.dp).padding(top = 12.dp, bottom = 12.dp)
                     )
@@ -153,7 +153,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
                     Row {
-                        Text("显示单词", color = MaterialTheme.colors.onBackground)
+                        Text("Kelimeyi Göster", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "$ctrl+V",
@@ -179,7 +179,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
                     Row {
-                        Text(text = "显示音标", color = MaterialTheme.colors.onBackground)
+                        Text(text = "Fonetiği Göster", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "$ctrl+P",
@@ -210,7 +210,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
                     Row {
-                        Text("显示词形", color = MaterialTheme.colors.onBackground)
+                        Text("Morfolojiyi Göster", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "$ctrl+L",
@@ -241,7 +241,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
                     Row {
-                        Text("英文释义", color = MaterialTheme.colors.onBackground)
+                        Text("İngilizce Tanım", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "$ctrl+E",
@@ -271,7 +271,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
                     Row {
-                        Text("中文释义", color = MaterialTheme.colors.onBackground)
+                        Text("Türkçe Tanım", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "$ctrl+K",
@@ -303,7 +303,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
                     Row {
-                        Text("显示例句", color = MaterialTheme.colors.onBackground)
+                        Text("Örnek Cümleleri Göster", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "$ctrl+H",
@@ -335,7 +335,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
                     Row {
-                        Text("显示字幕", color = MaterialTheme.colors.onBackground)
+                        Text("Altyazıları Göster", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(10.dp))
                         Text(
                             text = "$ctrl+S",
@@ -367,7 +367,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth()
                         .clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
-                    Text("击键音效", color = MaterialTheme.colors.onBackground)
+                    Text("Tuş Vuruşu Ses Efekti", color = MaterialTheme.colors.onBackground)
                     Spacer(Modifier.width(15.dp))
                     Switch(
                         colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colors.primary),
@@ -386,7 +386,7 @@ fun WordScreenSidebar(
                     modifier = Modifier.fillMaxWidth()
                         .clickable { }.padding(start = 16.dp, end = 8.dp)
                 ) {
-                    Text("提示音效", color = MaterialTheme.colors.onBackground)
+                    Text("İpucu Ses Efekti", color = MaterialTheme.colors.onBackground)
                     Spacer(Modifier.width(15.dp))
                     Switch(
                         colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colors.primary),
@@ -411,7 +411,7 @@ fun WordScreenSidebar(
                             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                             shape = RectangleShape
                         ) {
-                            val tooltip = "拼写成功后，自动切换到下一个单词"
+                            val tooltip = "Doğru yazdıktan sonra otomatik olarak sonraki kelimeye geç"
                             Text(text = tooltip, modifier = Modifier.padding(10.dp))
                         }
                     },
@@ -427,7 +427,7 @@ fun WordScreenSidebar(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                     ) {
-                        Text(text = "自动切换", color = MaterialTheme.colors.onBackground)
+                        Text(text = "Otomatik Geçiş", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(15.dp))
                         Switch(
                             colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colors.primary),
@@ -452,7 +452,7 @@ fun WordScreenSidebar(
                                 border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                                 shape = RectangleShape
                             ) {
-                                val tooltip = "拼写成功 $times 次后，自动切换到下一个单词"
+                            val tooltip = "Doğru yazdıktan $times kez sonra otomatik olarak sonraki kelimeye geç"
                                 Text(text = tooltip, modifier = Modifier.padding(10.dp))
                             }
                         },
@@ -468,7 +468,7 @@ fun WordScreenSidebar(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxWidth().clickable { }.padding(top = 10.dp,start = 16.dp, end = 14.dp,bottom = 10.dp)
                         ) {
-                            Text(text = "重复次数", color = MaterialTheme.colors.onBackground)
+                            Text(text = "Tekrar Sayısı", color = MaterialTheme.colors.onBackground)
                             val border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f))
                             BasicTextField(
                                 value = times,
@@ -503,7 +503,7 @@ fun WordScreenSidebar(
                             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                             shape = RectangleShape
                         ) {
-                            val tooltip =  "播放视频时，自动加载外部字幕"
+                            val tooltip =  "Video oynatılırken harici altyazıları otomatik olarak yükle"
                             Text(text = tooltip, modifier = Modifier.padding(10.dp))
                         }
                     },
@@ -519,7 +519,7 @@ fun WordScreenSidebar(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                     ) {
-                        Text("外部字幕", color = MaterialTheme.colors.onBackground)
+                        Text("Harici Altyazılar", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(15.dp))
                         Switch(
                             colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colors.primary),
@@ -540,7 +540,7 @@ fun WordScreenSidebar(
                             border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                             shape = RectangleShape
                         ) {
-                            val tooltip =  "播放视频后，光标自动移动到字幕"
+                            val tooltip =  "Videoyu oynattıktan sonra imleci otomatik olarak altyazıya taşı"
                             Text(text = tooltip, modifier = Modifier.padding(10.dp))
                         }
                     },
@@ -556,7 +556,7 @@ fun WordScreenSidebar(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth().clickable { }.padding(start = 16.dp, end = 8.dp)
                     ) {
-                        Text("抄写字幕", color = MaterialTheme.colors.onBackground)
+                        Text("Altyazıları Yaz", color = MaterialTheme.colors.onBackground)
                         Spacer(Modifier.width(15.dp))
                         Switch(
                             colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colors.primary),
@@ -579,7 +579,7 @@ fun WordScreenSidebar(
                 ) {
 
                     Row {
-                        Text("音量控制", color = MaterialTheme.colors.onBackground)
+                        Text("Ses Kontrolü", color = MaterialTheme.colors.onBackground)
                     }
                     Spacer(Modifier.width(15.dp))
                     CursorDropdownMenu(
@@ -592,7 +592,7 @@ fun WordScreenSidebar(
                         ) {
                             Column(Modifier.width(300.dp).height(180.dp).padding(start = 16.dp, end = 16.dp)) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("击键音效")
+                                    Text("Tuş Vuruşu Sesi")
                                     Slider(value = appState.global.keystrokeVolume, onValueChange = {
                                         scope.launch(Dispatchers.IO) {
                                             println("Current Thread Name:"+Thread.currentThread().name)
@@ -602,7 +602,7 @@ fun WordScreenSidebar(
                                     })
                                 }
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("提示音效")
+                                    Text("İpucu Sesi")
                                     Slider(value = wordScreenState.soundTipsVolume, onValueChange = {
                                         scope.launch(Dispatchers.IO) {
                                             wordScreenState.soundTipsVolume = it
@@ -611,7 +611,7 @@ fun WordScreenSidebar(
                                     })
                                 }
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("单词发音")
+                                    Text("Kelime Telaffuzu")
                                     Slider(value = appState.global.audioVolume, onValueChange = {
                                         scope.launch(Dispatchers.IO) {
                                             appState.global.audioVolume = it
@@ -620,7 +620,7 @@ fun WordScreenSidebar(
                                     })
                                 }
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("视频播放")
+                                    Text("Video Oynatma")
                                     Slider(
                                         value = appState.global.videoVolume,
                                         valueRange = 1f..100f,
@@ -651,7 +651,7 @@ fun WordScreenSidebar(
                         .clickable {  expanded = true }
                         .padding(start = 16.dp, end = 8.dp)
                 ) {
-                    Text("发音设置", color = MaterialTheme.colors.onBackground)
+                    Text("Telaffuz Ayarları", color = MaterialTheme.colors.onBackground)
                     Spacer(Modifier.width(15.dp))
                     CursorDropdownMenu(
                         expanded = expanded,
@@ -672,7 +672,7 @@ fun WordScreenSidebar(
                                         },
                                         modifier = Modifier.width(140.dp).height(40.dp)
                                     ) {
-                                        Text("关闭发音")
+                                        Text("Telaffuzu Kapat")
                                         if( wordScreenState.playTimes == 0){
                                             RadioButton(selected = true, onClick = {},Modifier.padding(start = 10.dp))
                                         }
@@ -690,7 +690,7 @@ fun WordScreenSidebar(
                                             },
                                             modifier = Modifier.width(140.dp).height(40.dp)
                                         ) {
-                                            Text("英式发音")
+                                            Text("İngiliz Aksanı")
                                             if(wordScreenState.pronunciation == "uk" && wordScreenState.playTimes != 0){
                                                 RadioButton(selected = true, onClick = {},Modifier.padding(start = 10.dp))
                                             }
@@ -707,7 +707,7 @@ fun WordScreenSidebar(
                                             },
                                             modifier = Modifier.width(140.dp).height(40.dp)
                                         ) {
-                                            Text("美式发音")
+                                            Text("Amerikan Aksanı")
                                             if(wordScreenState.pronunciation == "us" && wordScreenState.playTimes != 0){
                                                 RadioButton(selected = true, onClick = {},Modifier.padding(start = 10.dp))
                                             }
@@ -727,7 +727,7 @@ fun WordScreenSidebar(
                                             },
                                             modifier = Modifier.width(140.dp).height(40.dp)
                                         ) {
-                                            Text("日语")
+                                            Text("Japonca")
                                             if(wordScreenState.pronunciation == "jp" && wordScreenState.playTimes != 0){
                                                 RadioButton(selected = true, onClick = {},Modifier.padding(start = 10.dp))
                                             }
@@ -764,7 +764,7 @@ fun WordScreenSidebar(
                                         },
                                         modifier = Modifier.width(140.dp).height(40.dp)
                                     ) {
-                                        Text("本地语音合成")
+                                        Text("Yerel Ses Sentezi")
                                         if(wordScreenState.pronunciation == "local TTS"){
                                             RadioButton(selected = true, onClick = {},Modifier.padding(start = 10.dp))
                                         }
@@ -787,7 +787,7 @@ fun WordScreenSidebar(
                                                     ){
                                                         Icon(
                                                             Icons.Filled.Tune,
-                                                            contentDescription = "Localized description",
+                                                            contentDescription = "Azure TTS Ayarları",
                                                             tint =  MaterialTheme.colors.onBackground,
                                                         )
                                                     }
@@ -811,7 +811,7 @@ fun WordScreenSidebar(
                                             },
                                             modifier = Modifier.width(120.dp).height(40.dp)
                                         ) {
-                                            Text("播放一次")
+                                            Text("Bir Kez Çal")
                                             if( wordScreenState.playTimes == 1){
                                                 RadioButton(selected = true, onClick = {},Modifier.padding(start = 10.dp))
                                             }
@@ -825,7 +825,7 @@ fun WordScreenSidebar(
                                             },
                                             modifier = Modifier.width(120.dp).height(40.dp)
                                         ) {
-                                            Text("播放多次")
+                                            Text("Birden Fazla Çal")
                                             if( wordScreenState.playTimes == 2){
                                                 RadioButton(selected = true, onClick = {},Modifier.padding(start = 10.dp))
                                             }
@@ -853,7 +853,7 @@ fun WordScreenSidebar(
                         .clickable {  playExpanded = true }
                         .padding(start = 16.dp, end = 8.dp)
                 ) {
-                    Text("播放设置", color = MaterialTheme.colors.onBackground)
+                    Text("Oynatma Ayarları", color = MaterialTheme.colors.onBackground)
                     Spacer(Modifier.width(15.dp))
 
                     CursorDropdownMenu(
@@ -869,10 +869,10 @@ fun WordScreenSidebar(
                                     onClick = { resetVideoBounds() },
                                     modifier = Modifier.width(280.dp).height(48.dp)
                                 ) {
-                                    Text("恢复播放器的默认大小和位置",modifier = Modifier.padding(end = 10.dp))
+                                    Text("Oynatıcının varsayılan boyutunu ve konumunu geri yükle",modifier = Modifier.padding(end = 10.dp))
                                     Icon(
                                         imageVector = Icons.Filled.FlipToBack,
-                                        contentDescription = "",
+                                        contentDescription = "Oynatıcıyı Sıfırla",
                                         tint = MaterialTheme.colors.onBackground,
                                         modifier = Modifier.size(40.dp, 40.dp)
                                     )
@@ -882,7 +882,7 @@ fun WordScreenSidebar(
                     }
                     Icon(
                         imageVector = Icons.Filled.PlayArrow,
-                        contentDescription = "",
+                        contentDescription = "Oynatma Ayarları",
                         tint = MaterialTheme.colors.onBackground,
                         modifier = Modifier.size(48.dp, 48.dp).padding(top = 12.dp, bottom = 12.dp)
                     )

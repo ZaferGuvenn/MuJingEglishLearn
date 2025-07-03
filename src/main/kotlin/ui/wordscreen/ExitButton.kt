@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 
-/** 退出按钮 */
+/** Çıkış Düğmesi */
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun ExitButton(
@@ -44,7 +44,7 @@ fun ExitButton(
         }) {
             Icon(
                 Icons.Filled.Close,
-                contentDescription = "Localized description",
+                contentDescription = tooltip, // Using the dynamic tooltip text for accessibility
                 tint = MaterialTheme.colors.primary
             )
         }

@@ -20,8 +20,8 @@ import java.nio.charset.Charset
 import java.util.*
 import javax.swing.JOptionPane
 
-/** 计算文件的媒体类型，
- * 如果文件不存在返回默认的媒体类型 video
+/** Dosyanın medya türünü hesapla,
+ * Dosya mevcut değilse varsayılan medya türü olan videoyu döndür
  */
 fun computeMediaType(mediaPath:String):String{
     val file = File(mediaPath)
@@ -39,7 +39,7 @@ fun computeMediaType(mediaPath:String):String{
 
 
 /**
- * 计算视频播放窗口的位置和大小
+ * Video oynatma penceresinin konumunu ve boyutunu hesapla
  */
 fun computeVideoBounds(
     windowState: WindowState,
@@ -77,11 +77,11 @@ fun computeVideoBounds(
 
 
 /**
- * 解析字幕，返回最大字符数和字幕列表，用于显示。
- * @param subtitlesPath 字幕的路径
- * @param setMaxLength 用于设置字幕的最大字符数的回调函数
- * @param setCaptionList 用于设置字幕列表的回调函数
- * @param resetSubtitlesState 字幕文件删除，或者被修改，导致不能解析，就重置
+ * Altyazıları ayrıştır, görüntülemek için maksimum karakter sayısını ve altyazı listesini döndür.
+ * @param subtitlesPath Altyazıların yolu
+ * @param setMaxLength Altyazıların maksimum karakter sayısını ayarlamak için geri çağırma fonksiyonu
+ * @param setCaptionList Altyazı listesini ayarlamak için geri çağırma fonksiyonu
+ * @param resetSubtitlesState Altyazı dosyası silindiğinde veya değiştirildiğinde ayrıştırılamazsa sıfırla
  */
 fun parseSubtitles(
     subtitlesPath: String,
@@ -126,12 +126,12 @@ fun parseSubtitles(
             exception.printStackTrace()
             resetSubtitlesState()
             JOptionPane.showMessageDialog(
-                null, "字幕文件解析失败:\n${exception.message}"
+                null, "Altyazı dosyası ayrıştırma başarısız:\n${exception.message}"
             )
 
         }
     } else {
-        JOptionPane.showMessageDialog(null, "找不到字幕")
+        JOptionPane.showMessageDialog(null, "Altyazı bulunamadı")
         resetSubtitlesState()
     }
 
@@ -172,11 +172,11 @@ fun parseSubtitles(subtitlesPath: String):List<PlayerCaption>{
 
         }catch (exception: Exception){
             exception.printStackTrace()
-            JOptionPane.showMessageDialog(null, "字幕文件解析失败:\n${exception.message}")
+            JOptionPane.showMessageDialog(null, "Altyazı dosyası ayrıştırma başarısız:\n${exception.message}")
         }
 
     }else{
-        JOptionPane.showMessageDialog(null, "找不到字幕")
+        JOptionPane.showMessageDialog(null, "Altyazı bulunamadı")
     }
     return captionList
 }

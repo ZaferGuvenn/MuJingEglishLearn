@@ -1,71 +1,70 @@
-## 幕境
-幕境是一款通过电影、美剧或文档中的真实语境学习英语单词的应用，让您在原汁原味的情境中记忆词汇，提升学习效率。
-### [下载地址](https://github.com/tangshimin/MuJing/releases)
+## Learna
+Learna, filmlerdeki, dizilerdeki veya belgelerdeki gerçek bağlamlar aracılığıyla İngilizce kelimeler öğrenmenizi sağlayan bir uygulamadır. Kelimeleri özgün bağlamlarında hatırlamanıza yardımcı olarak öğrenme verimliliğinizi artırır.
+### [İndirme Adresi](https://github.com/tangshimin/MuJing/releases)
 [![downloads](https://img.shields.io/github/downloads/tangshimin/MuJing/total?style=for-the-badge&logo=download&logoColor=white)](https://github.com/tangshimin/MuJing/releases)
 
-## 主要功能：
+## Ana Özellikler:
 
-### 1. 记忆单词
-   - 情境记忆：每个单词都有来自电影、美剧或文档的真实语境
-   - 发音练习：自动播放单词读音
-   - 拼写练习：使用键盘打字练习单词拼写，形成肌肉记忆
-   - 视频片段：使用视频生成的词库可以播放单词对应的视频片段
-   - 字幕抄写：可以抄写单词对应的字幕，加深记忆
-   - 听写测试：每个单元20个单词，记完后有听写测试检查记忆效果
+### 1. Kelime Öğrenme
+   - Bağlamsal Öğrenme: Her kelime, filmlerden, dizilerden veya belgelerden alınmış gerçek kullanım bağlamlarıyla sunulur.
+   - Telaffuz Pratiği: Kelimelerin telaffuzları otomatik olarak çalınır.
+   - Yazma Alıştırması: Klavyeyle kelime yazma alıştırması yaparak kas hafızanızı geliştirin.
+   - Video Klipleri: Video kaynaklı kelime listeleri oluşturulduğunda, kelimeye karşılık gelen video kliplerini oynatabilirsiniz.
+   - Altyazı Yazma: Kelimeye ait altyazıyı yazarak hafızanızı güçlendirin.
+   - Dinleme Testi: Her ünite 20 kelimeden oluşur ve ünite sonunda yapılan dinleme testiyle öğrenme durumunuz kontrol edilir.
 
    https://github.com/user-attachments/assets/fe30b357-af95-48ba-ab6a-fd676ef87fb7.mp4
 
-   demo 中的电影片段来源于 [Sintel](https://www.youtube.com/watch?v=eRsGyueVLvQ)。
+   Demo'daki film kesitleri [Sintel](https://www.youtube.com/watch?v=eRsGyueVLvQ) kaynağından alınmıştır.
 
 
-### 2. 听写测试
-可以选择多个章节一起测试，全面检验学习成果
+### 2. Dinleme Testi
+Birden fazla bölümü birlikte test ederek öğrenme başarınızı kapsamlı bir şekilde değerlendirebilirsiniz.
 
-   ![DictionReview](https://github.com/tangshimin/MuJing/assets/16540656/b407ee8e-e477-4342-8dd6-7eaf11e67256)
-
-
-### 3. 视频播放器
-  - 弹幕复习：播放电影时，单词以弹幕形式出现
-  - 快速查询：输入单词或对应数字即可查看中文解释
-  - 快捷打开：正在记忆由视频或字幕生成的词库时，可将视频拖放到记忆单词界面，快速打开视频和弹幕
-
-     ![videoPlayer](https://user-images.githubusercontent.com/16540656/220088640-2f9c3a54-500e-477b-8c63-bc31b32d2d71.jpg)
+   ![Dinleme Değerlendirmesi](https://github.com/tangshimin/MuJing/assets/16540656/b407ee8e-e477-4342-8dd6-7eaf11e67256)
 
 
-### 4. 字幕浏览器
-   - 跟读练习：浏览字幕，练习跟读美剧、电影、TED演讲
-   - 选择性播放：可以选择性播放一条或多条字幕
-   - 字幕抄写：提供字幕抄写功能，加深记忆
+### 3. Video Oynatıcı
+  - Akan Yazıyla Tekrar: Film izlerken kelimeler akan yazı (danmaku) şeklinde görünür.
+  - Hızlı Arama: Kelimeyi veya karşılık gelen sayıyı girerek Türkçe açıklamasına bakabilirsiniz.
+  - Hızlı Açma: Video veya altyazıdan oluşturulmuş bir kelime listesini öğrenirken, videoyu kelime öğrenme arayüzüne sürükleyip bırakarak videoyu ve akan yazıları hızla açabilirsiniz.
+
+     ![Video Oynatıcı](https://user-images.githubusercontent.com/16540656/220088640-2f9c3a54-500e-477b-8c63-bc31b32d2d71.jpg)
+
+
+### 4. Altyazı Tarayıcısı
+   - Tekrar Etme Pratiği: Altyazıları inceleyerek dizi, film veya TED konuşmalarını tekrar etme pratiği yapın.
+   - Seçmeli Oynatma: Bir veya birden fazla altyazıyı seçerek oynatabilirsiniz.
+   - Altyazı Yazma: Hafızanızı güçlendirmek için altyazı yazma özelliği sunulur.
 
    https://user-images.githubusercontent.com/16540656/174944474-e5947df9-c8ed-4546-9c67-057fe52c2d51.mp4
 
 
-### 5. 词库生成系统
-**多种来源生成词库**
-- [MKV格式视频：从电影、电视剧中提取单词及其语境](https://github.com/tangshimin/MuJing/wiki/%E5%A6%82%E4%BD%95%E7%94%A8-MKV-%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E8%AF%8D%E5%BA%93)
-- [字幕+视频：非MKV格式视频可使用字幕文件生成词库](https://github.com/tangshimin/MuJing/wiki/%E5%A6%82%E4%BD%95%E7%94%A8%E5%AD%97%E5%B9%95%E7%94%9F%E6%88%90%E8%AF%8D%E5%BA%93)
-- [英文文档：从PDF、TXT等文档中提取单词及其语境，适合阅读前预习生词](https://github.com/tangshimin/MuJing/wiki/%E5%A6%82%E4%BD%95%E7%94%A8%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E8%AF%8D%E5%BA%93)
+### 5. Kelime Listesi Oluşturma Sistemi
+**Farklı Kaynaklardan Kelime Listesi Oluşturma**
+- [MKV Formatındaki Videolar: Filmlerden veya dizilerden kelimeleri ve bağlamlarını çıkarın.](https://github.com/tangshimin/MuJing/wiki/%E5%A6%82%E4%BD%95%E7%94%A8-MKV-%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E8%AF%8D%E5%BA%93)
+- [Altyazı + Video: MKV formatında olmayan videolar için altyazı dosyalarını kullanarak kelime listesi oluşturun.](https://github.com/tangshimin/MuJing/wiki/%E5%A6%82%E4%BD%95%E7%94%A8%E5%AD%97%E5%B9%95%E7%94%9F%E6%88%90%E8%AF%8D%E5%BA%93)
+- [İngilizce Belgeler: PDF, TXT gibi belgelerden kelimeleri ve bağlamlarını çıkarın; okuma öncesi yeni kelimeleri öğrenmek için idealdir.](https://github.com/tangshimin/MuJing/wiki/%E5%A6%82%E4%BD%95%E7%94%A8%E6%96%87%E6%A1%A3%E7%94%9F%E6%88%90%E8%AF%8D%E5%BA%93)
 
-**词库链接功能**
-- [可将MKV视频或字幕生成的词库链接到文档生成的词库或内置词库，实现跨媒体学习](https://github.com/tangshimin/MuJing/wiki/%E9%93%BE%E6%8E%A5%E5%AD%97%E5%B9%95%E8%AF%8D%E5%BA%93)
+**Kelime Listesi Bağlama Özelliği**
+- [MKV video veya altyazılardan oluşturulan kelime listelerini, belgelerden oluşturulan veya dahili kelime listelerine bağlayarak çapraz medya öğrenimini gerçekleştirin.](https://github.com/tangshimin/MuJing/wiki/%E9%93%BE%E6%8E%A5%E5%AD%97%E5%B9%95%E8%AF%8D%E5%BA%93)
 
 
-## 为什么选择幕境？
+## Neden Learna'yı Seçmelisiniz?
 
-1. 情境学习：单词不再孤立，而是存在于真实的电影、美剧或文档语境中
-2. 多感官记忆：结合视听、拼写和抄写，全方位强化记忆
-3. 个性化学习：可根据自己的兴趣选择内容，生成个性化词库
-4. 高效复习：通过弹幕、听写测试等多种方式巩固学习成果
-5. 跨媒体整合：将不同来源的词库链接起来，构建完整的学习体系
+1. Bağlamsal Öğrenme: Kelimeler artık tek başına değil, gerçek film, dizi veya belge bağlamlarında yer alır.
+2. Çoklu Duyusal Hafıza: İşitsel, görsel, yazma ve kopyalama yöntemlerini birleştirerek hafızanızı her yönden güçlendirin.
+3. Kişiselleştirilmiş Öğrenme: İlgi alanlarınıza göre içerik seçebilir ve kişiselleştirilmiş kelime listeleri oluşturabilirsiniz.
+4. Etkili Tekrar: Akan yazılar, dinleme testleri gibi çeşitli yöntemlerle öğrendiklerinizi pekiştirin.
+5. Çapraz Medya Entegrasyonu: Farklı kaynaklardan gelen kelime listelerini birbirine bağlayarak kapsamlı bir öğrenme sistemi oluşturun.
 
-## 开始使用
+## Kullanmaya Başlayın
 
-1. 下载并安装幕境
-2. 选择您喜欢的电影、美剧或文档生成词库
-3. 开始记忆单词，享受沉浸式学习体验
-4. 通过听写测试检验学习成果
-5. 使用视频播放器和弹幕功能进行复习
+1. Learna'yı indirin ve kurun.
+2. Beğendiğiniz filmleri, dizileri veya belgeleri seçerek kelime listeleri oluşturun.
+3. Kelimeleri öğrenmeye başlayın ve sürükleyici bir öğrenme deneyiminin tadını çıkarın.
+4. Dinleme testleriyle öğrenme başarınızı kontrol edin.
+5. Tekrar yapmak için video oynatıcıyı ve akan yazı özelliğini kullanın.
 
-## 应用平台：Windows / macOS
-### [下载地址](https://github.com/tangshimin/MuJing/releases)
-
+## Desteklenen Platformlar: Windows / macOS
+### [İndirme Adresi](https://github.com/tangshimin/MuJing/releases)

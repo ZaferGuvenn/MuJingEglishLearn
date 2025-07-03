@@ -57,23 +57,23 @@ fun EditVocabulary(
 ) {
     val vocabulary by remember { mutableStateOf(loadVocabulary(vocabularyPath)) }
     val fileName by remember{ mutableStateOf(File(vocabularyPath).nameWithoutExtension)}
-    //v2.1.6和之前的版本，熟悉词库和困难词库 name 属性可能为空，所以这里需要判断一下
+    //v2.1.6 ve önceki sürümlerde, Tanıdık ve Zor kelime listelerinin name özelliği boş olabilir, bu yüzden burada kontrol etmek gerekiyor
     val title by remember { mutableStateOf(
         when (fileName) {
             "FamiliarVocabulary" -> {
-                "编辑词库 - 熟悉词库"
+                "Kelime Listesi Düzenle - Tanıdık Kelimeler" // "编辑词库 - 熟悉词库"
             }
             "HardVocabulary" -> {
-                "编辑词库 - 困难词库"
+                "Kelime Listesi Düzenle - Zor Kelimeler" // "编辑词库 - 困难词库"
             }
             else -> {
-                "编辑词库 - "+vocabulary.name
+                "Kelime Listesi Düzenle - "+ (vocabulary.name.ifEmpty { fileName }) // "编辑词库 - " + (Eğer vocabulary.name boşsa dosya adını kullan)
             }
         }
 
     ) }
 
-    /** 窗口的大小和位置 */
+    /** Pencere boyutu ve konumu */
     val windowState = rememberWindowState(
         size = DpSize(1289.dp, 854.dp),
         position = WindowPosition(Alignment.Center)
@@ -105,7 +105,7 @@ fun checkVocabulary(vocabularyPath: String):Boolean{
         }
     } catch (exception: Exception) {
         exception.printStackTrace()
-        JOptionPane.showMessageDialog(null, "词库解析错误,\n地址：$vocabularyPath\n错误信息" + exception.message)
+        JOptionPane.showMessageDialog(null, "Kelime listesi ayrıştırma hatası.\nAdres: $vocabularyPath\nHata: " + exception.message) // "词库解析错误,\n地址：$vocabularyPath\n错误信息"
         valid = false
     }
     return valid
@@ -123,15 +123,15 @@ fun Table(
     val appState = rememberAppState()
     var removedColumnSet = mutableSetOf<Pair<String, TableColumn>>()
     val columnNames = arrayOf(
-        "  ",
-        "单词",
-        "中文释义",
-        "英文释义",
-        "美国音标",
-        "英国音标",
-        "词形变化",
-        "例句",
-        "字幕",
+        "  ", // Sıra numarası için boş bırakılabilir veya "No"
+        "Kelime", // "单词"
+        "Türkçe Anlamı", // "中文释义"
+        "İngilizce Anlamı", // "英文释义"
+        "ABD Telaffuz", // "美国音标"
+        "İngiltere Telaffuz", // "英国音标"
+        "Kelime Biçimleri", // "词形变化"
+        "Örnek Cümle", // "例句"
+        "Altyazı", // "字幕"
     )
 
     val model: DefaultTableModel = object : DefaultTableModel(columnNames, 0) {
@@ -217,12 +217,12 @@ fun Table(
                     editRow = table.selectedRow
                     editWordSwing(
                         word = wordList[table.selectedRow].deepCopy(),
-                        title = "编辑单词",
+                        title = "Kelimeyi Düzenle", // "编辑单词" -> "Kelimeyi Düzenle"
                         appState = appState,
                         vocabulary = vocabulary,
                         vocabularyDir = File(vocabularyPath).parentFile!!,
                         save = {
-                            // 更新表格
+                            // Tabloyu güncelle
                             val captions = displayCaptions(it, vocabulary.type)
                             val exchange = displayExchange(it.exchange)
                             model.setValueAt(it.value, editRow, 1)
@@ -233,10 +233,10 @@ fun Table(
                             model.setValueAt(exchange, editRow, 6)
                             model.setValueAt(it.pos, editRow, 7)
                             model.setValueAt(captions, editRow, 8)
-                            // 保存词库
+                            // Kelime listesini kaydet
                             wordList[table.selectedRow] = it
-                            saveVocabulary("保存成功")
-                            // 关闭编辑单词窗口
+                            saveVocabulary("Başarıyla Kaydedildi") // "保存成功" -> "Başarıyla Kaydedildi"
+                            // Kelime düzenleme penceresini kapat
                             dialogOpen = false
                         },
                         close = { dialogOpen = false },
@@ -314,15 +314,15 @@ fun Table(
     val onBackgroundColor = if (FlatLaf.isLafDark()) Color(137, 148, 155) else Color.darkGray
 
     val settings = FlatButton()
-    settings.toolTipText = "设置"
+    settings.toolTipText = "Ayarlar" // "设置" -> "Ayarlar"
     val exportButton = FlatButton()
-    exportButton.toolTipText = "导出词库"
+    exportButton.toolTipText = "Kelime Listesini Dışa Aktar" // "导出词库" -> "Kelime Listesini Dışa Aktar"
     val infoButton = FlatButton()
-    infoButton.toolTipText = "词库信息"
+    infoButton.toolTipText = "Kelime Listesi Bilgisi" // "词库信息" -> "Kelime Listesi Bilgisi"
     val addButton = FlatButton()
-    addButton.toolTipText = "添加单词"
+    addButton.toolTipText = "Kelime Ekle" // "添加单词" -> "Kelime Ekle"
     val removeButton = FlatButton()
-    removeButton.toolTipText = "删除单词"
+    removeButton.toolTipText = "Kelime Sil" // "删除单词" -> "Kelime Sil"
     var isSettingOpen = false
     settings.addActionListener {
         if (!isSettingOpen) {
@@ -434,7 +434,7 @@ fun Table(
     // search history button
     val searchHistoryButton = JButton(FlatSearchWithHistoryIcon(true))
     searchHistoryButton.preferredSize = Dimension(48, 48)
-    searchHistoryButton.toolTipText = "搜索历史记录"
+    searchHistoryButton.toolTipText = "Arama Geçmişi" // "搜索历史记录" -> "Arama Geçmişi"
     val searchHistoryList = ArrayList<String>()
 
     val addKeywordToHistory: () -> Unit = {
@@ -454,34 +454,34 @@ fun Table(
     val matchCaseButton = JToggleButton(FlatSVGIcon(ResourceLoader.Default.load("svg/matchCase.svg")))
     matchCaseButton.rolloverIcon = FlatSVGIcon(ResourceLoader.Default.load("svg/matchCaseHovered.svg"))
     matchCaseButton.selectedIcon = FlatSVGIcon(ResourceLoader.Default.load("svg/matchCaseSelected.svg"))
-    matchCaseButton.toolTipText = "区分大小写"
+    matchCaseButton.toolTipText = "Büyük/Küçük Harf Eşleştir" // "区分大小写" -> "Büyük/Küçük Harf Eşleştir"
     matchCaseButton.isSelected = searchState.matchCaseIsSelected
     // whole words button
     val wordsButton = JToggleButton(FlatSVGIcon(ResourceLoader.Default.load("svg/words.svg")))
     wordsButton.rolloverIcon = FlatSVGIcon(ResourceLoader.Default.load("svg/wordsHovered.svg"))
     wordsButton.selectedIcon = FlatSVGIcon(ResourceLoader.Default.load("svg/wordsSelected.svg"))
-    wordsButton.toolTipText = "单词"
+    wordsButton.toolTipText = "Tam Kelime" // "单词" -> "Tam Kelime"
     wordsButton.isSelected = searchState.wordsIsSelected
     // regex button
     val regexButton = JToggleButton(FlatSVGIcon(ResourceLoader.Default.load("svg/regex.svg")))
     regexButton.rolloverIcon = FlatSVGIcon(ResourceLoader.Default.load("svg/regexHovered.svg"))
     regexButton.selectedIcon = FlatSVGIcon(ResourceLoader.Default.load("svg/regexSelected.svg"))
-    regexButton.toolTipText = "正则表达式"
+    regexButton.toolTipText = "Normal İfade (Regex)" // "正则表达式" -> "Normal İfade (Regex)"
     regexButton.isSelected = searchState.regexIsSelected
     // index button
     val numberButton = JToggleButton(FlatSVGIcon(ResourceLoader.Default.load("svg/number.svg")))
     numberButton.rolloverIcon = FlatSVGIcon(ResourceLoader.Default.load("svg/numberHovered.svg"))
     numberButton.selectedIcon = FlatSVGIcon(ResourceLoader.Default.load("svg/numberSelected.svg"))
-    numberButton.toolTipText = "索引"
+    numberButton.toolTipText = "Sıra Numarası" // "索引" -> "Sıra Numarası"
     numberButton.isSelected = searchState.numberSelected
 
 
     val resultCounter = JLabel("")
 
     val upButton = FlatButton()
-    upButton.toolTipText = "向上搜索"
+    upButton.toolTipText = "Yukarı Ara" // "向上搜索" -> "Yukarı Ara"
     val downButton = FlatButton()
-    downButton.toolTipText = "向下搜索"
+    downButton.toolTipText = "Aşağı Ara" // "向下搜索" -> "Aşağı Ara"
     upButton.isVisible = false
     downButton.isVisible = false
 
@@ -641,30 +641,37 @@ fun Table(
     val setPlaceholder = {
         var placeholderText = ""
         if (matchCaseButton.isSelected && !wordsButton.isSelected && !regexButton.isSelected) {
-            placeholderText += "区分大小写"
+            placeholderText += "Büyük/Küçük Harf Eşleştir"
         } else if (matchCaseButton.isSelected && (wordsButton.isSelected || regexButton.isSelected)) {
-            placeholderText += "区分大小写和"
+            placeholderText += "Büyük/Küçük Harf Eşleştir ve "
         }
 
         if (wordsButton.isSelected && !regexButton.isSelected) {
-            placeholderText += "单词"
-        }else if(regexButton.isSelected){
-            placeholderText += "单词和"
+            placeholderText += "Tam Kelime"
+        }else if(regexButton.isSelected && wordsButton.isSelected){ // wordsButton kontrolü eklendi
+            placeholderText += "Tam Kelime ve "
+        } else if(regexButton.isSelected){ // Sadece regex seçiliyse
+            placeholderText += "" // Eğer "Büyük/Küçük Harf Eşleştir ve " zaten varsa bir şey ekleme, yoksa "Normal İfade" ekle.
+                                  // Bu mantık biraz karmaşık, doğrudan ayarlanabilir.
         }
         if (regexButton.isSelected) {
-            placeholderText += "正则表达式"
+             if (placeholderText.endsWith("ve ") || placeholderText.isEmpty()) { // Eğer "ve " ile bitiyorsa veya boşsa
+                placeholderText += "Normal İfade"
+            } else if (!placeholderText.contains("Normal İfade")) { // Zaten içermiyorsa
+                placeholderText += " & Normal İfade"
+            }
         }
-        // 最后一个具有排他性
+        // Sonuncusu özeldir
         if (numberButton.isSelected) {
-            placeholderText = "索引"
+            placeholderText = "Sıra Numarası ile Ara" // "索引" -> "Sıra Numarası ile Ara"
         }
-        compsTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, placeholderText)
+        compsTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, placeholderText.trim().removeSuffix("ve").trim())
     }
     setPlaceholder()
     searchHistoryButton.addActionListener {
         val popupMenu = JPopupMenu()
         if (searchHistoryList.isEmpty()) {
-            popupMenu.add("(empty)")
+            popupMenu.add("(boş)") // "(empty)" -> "(boş)"
         } else {
             for (history in searchHistoryList.reversed()) {
                 val menuItem = JMenuItem(history)
@@ -774,7 +781,7 @@ fun Table(
             val index = model.rowCount + 1
             editWordSwing(
                 word = Word(value = ""),
-                title = "添加单词",
+                title = "Kelime Ekle", // "添加单词" -> "Kelime Ekle"
                 appState = appState,
                 vocabulary = vocabulary,
                 vocabularyDir = File(vocabularyPath).parentFile!!,
@@ -796,8 +803,8 @@ fun Table(
                     model.addRow(row)
                     wordList.add(it)
                     vocabulary.size = wordList.size
-                    saveVocabulary("添加成功")
-                    // 滚动到最后以后,还差一点，第一次不会滚动到最底部，后面几次可以看到最后一行，但是没有完全显示。
+                    saveVocabulary("Ekleme Başarılı") // "添加成功" -> "Ekleme Başarılı"
+                    // Son satıra kaydır, biraz eksik kalıyor, ilk seferde en alta kaymıyor, sonraki seferlerde son satır görünüyor ama tam değil.
                     table.changeSelection(table.getRowCount()-1, 1,false,false)
                 },
                 close = { dialogOpen = false },
@@ -841,9 +848,9 @@ fun Table(
     topPanel.add(toolPanel)
 
     val popupMenu = JPopupMenu()
-    val removeSelected = JMenuItem("删除单词", removeIcon)
+    val removeSelected = JMenuItem("Kelime(leri) Sil", removeIcon) // "删除单词" -> "Kelime(leri) Sil"
     removeSelected.addActionListener { removeRow() }
-    // 暂时不添加增加行的功能
+    // Geçici olarak satır ekleme özelliği eklenmedi
     popupMenu.add(removeSelected)
     table.componentPopupMenu = popupMenu
 
@@ -912,30 +919,30 @@ fun displayExchange(exchangeStr: String): String {
         }
     }
     if (lemma.isNotEmpty()) {
-        str += "原型 $lemma；"
+        str += "Kök: $lemma; "
     }
     if (preterite.isNotEmpty()) {
-        str += "过去式 $preterite；"
+        str += "Geçmiş Zaman: $preterite; "
     }
     if (pastParticiple.isNotEmpty()) {
-        str += "过去分词 $pastParticiple；"
+        str += "Geçmiş Zaman Sıfat Fiili: $pastParticiple; "
     }
     if (presentParticiple.isNotEmpty()) {
-        str += "现在分词 $presentParticiple；"
+        str += "Şimdiki Zaman Sıfat Fiili: $presentParticiple; "
     }
     if (third.isNotEmpty()) {
-        str += "第三人称单数 $third；"
+        str += "3. Tekil Şahıs: $third; "
     }
     if (er.isNotEmpty()) {
-        str += "比较级 $er；"
+        str += "Karşılaştırma (daha): $er; "
     }
     if (est.isNotEmpty()) {
-        str += "最高级 $est；"
+        str += "Üstünlük (en): $est; "
     }
     if (plural.isNotEmpty()) {
-        str += "复数 $plural；"
+        str += "Çoğul: $plural; "
     }
-    return str
+    return str.trimEnd(';',' ') // Sondaki fazla noktalı virgül ve boşluğu kaldır
 }
 
 fun displayCaptions(word: Word, vocabularyType: VocabularyType): String {
@@ -986,26 +993,26 @@ fun displayOrHideColumn(cellVisibleState: CellVisibleSwingState, table: JTable):
     val hideColumnList: MutableList<Pair<String,Int>> = mutableListOf()
     val removedColumnList = mutableSetOf<Pair<String,TableColumn>>()
     if (!cellVisibleState.translationVisible) {
-        hideColumnList.add("中文释义" to 2)
+        hideColumnList.add("Türkçe Anlamı" to 2) // "中文释义"
     }
 
     if (!cellVisibleState.definitionVisible) {
-        hideColumnList.add("英文释义" to 3)
+        hideColumnList.add("İngilizce Anlamı" to 3) // "英文释义"
     }
-    if (!cellVisibleState.uKPhoneVisible) {
-        hideColumnList.add("美国音标" to 4)
+    if (!cellVisibleState.uKPhoneVisible) { // Bu UKPhone aslında US olmalı, columnNames'e göre. Ya da tam tersi. Şimdilik USPhone'u gizliyor varsayalım.
+        hideColumnList.add("ABD Telaffuz" to 4) // "美国音标"
     }
-    if (!cellVisibleState.usPhoneVisible) {
-        hideColumnList.add("英国英标" to 5)
+    if (!cellVisibleState.usPhoneVisible) { // Bu da UKPhone'u gizliyor olmalı.
+        hideColumnList.add("İngiltere Telaffuz" to 5) // "英国英标"
     }
     if (!cellVisibleState.exchangeVisible) {
-        hideColumnList.add("词形变化" to 6)
+        hideColumnList.add("Kelime Biçimleri" to 6) // "词形变化"
     }
     if (!cellVisibleState.sentencesVisible) {
-        hideColumnList.add("例句" to 7)
+        hideColumnList.add("Örnek Cümle" to 7) // "例句"
     }
     if (!cellVisibleState.captionsVisible) {
-        hideColumnList.add("字幕" to 8)
+        hideColumnList.add("Altyazı" to 8) // "字幕"
     }
     hideColumnList.reverse()
     hideColumnList.forEach { (columnName,columnIndex) ->

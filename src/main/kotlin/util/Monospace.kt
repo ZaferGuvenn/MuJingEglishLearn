@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.platform.Font
 
 /**
- * Monospace 字体
+ * Monospace yazı tipi
  */
 @Composable
 fun rememberMonospace() : FontFamily {

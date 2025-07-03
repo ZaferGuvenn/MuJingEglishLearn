@@ -43,7 +43,7 @@ fun UpdateDialog(
     ignore:(String) -> Unit,
 ) {
     DialogWindow(
-        title = "检查更新",
+        title = "Güncellemeleri Kontrol Et", // "检查更新" -> "Güncellemeleri Kontrol Et"
         icon = painterResource("logo/logo.png"),
         onCloseRequest = { close() },
         resizable = true,
@@ -84,7 +84,7 @@ fun UpdateDialog(
                             body = if (releaseVersion > currentVersion) {
                                 downloadable = true
                                 releaseTagName = releases.tag_name
-                                var releaseContent = "最新版本：${releases.tag_name}\n"
+                                var releaseContent = "En son sürüm: ${releases.tag_name}\n" // "最新版本：" -> "En son sürüm:"
                                 val contentBody = releases.body
                                 if (contentBody != null) {
                                     val end = contentBody.indexOf("---")
@@ -95,17 +95,17 @@ fun UpdateDialog(
                                 releaseContent
                             } else {
                                 downloadable = false
-                                "没有可用更新"
+                                "Kullanılabilir güncelleme yok." // "没有可用更新" -> "Kullanılabilir güncelleme yok."
                             }
                         }
                         HttpStatusCode.NotFound -> {
-                            body = "网页没找到"
+                            body = "Web sayfası bulunamadı." // "网页没找到" -> "Web sayfası bulunamadı."
                         }
                         HttpStatusCode.InternalServerError -> {
-                            body = "服务器错误"
+                            body = "Sunucu hatası." // "服务器错误" -> "Sunucu hatası."
                         }
                         else -> {
-                            body = "未知错误"
+                            body = "Bilinmeyen bir hata oluştu." // "未知错误" -> "Bilinmeyen bir hata oluştu."
                         }
                     }
                 } catch (exception: Exception) {
@@ -135,14 +135,14 @@ fun UpdateDialog(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("当前版本：$version")
+                        Text("Mevcut Sürüm: $version") // "当前版本：" -> "Mevcut Sürüm:"
                     }
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("自动检查更新")
+                        Text("Güncellemeleri otomatik kontrol et") // "自动检查更新" -> "Güncellemeleri otomatik kontrol et"
                         Checkbox(
                             checked = autoUpdate,
                             onCheckedChange = { setAutoUpdate(it) }
@@ -161,7 +161,7 @@ fun UpdateDialog(
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
                         ) {
-                            Text("正在检查")
+                            Text("Kontrol ediliyor...") // "正在检查" -> "Kontrol ediliyor..."
                         }
                     }
 
@@ -170,9 +170,10 @@ fun UpdateDialog(
                         modifier = Modifier.fillMaxWidth().padding(start = 20.dp,top = 10.dp,end = 20.dp)
                     ) {
                         if(latestVersion.isNotEmpty()){
-                            val note = "最新版本：$latestVersion\n$releaseNote"
+                            val note = "En son sürüm: $latestVersion\n$releaseNote" // "最新版本：" -> "En son sürüm:"
                             Text(text = note)
                         }else{
+                            // body içerisindeki "网页没找到", "服务器错误", "未知错误", "没有可用更新" gibi metinler detectingUpdates fonksiyonunda çevrilecek
                             Text(body)
                         }
                     }
@@ -183,7 +184,7 @@ fun UpdateDialog(
                     modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(bottom = 10.dp)
                 ) {
                     OutlinedButton(onClick = { close() }) {
-                        Text("关闭")
+                        Text("Kapat") // "关闭" -> "Kapat"
                     }
                     Spacer(Modifier.width(20.dp))
                     val uriHandler = LocalUriHandler.current
@@ -195,7 +196,7 @@ fun UpdateDialog(
                         },
                         enabled = downloadable
                     ) {
-                        Text("下载最新版")
+                        Text("Son Sürümü İndir") // "下载最新版" -> "Son Sürümü İndir"
                     }
                     Spacer(Modifier.width(20.dp))
                     val ignoreEnable = latestVersion.isNotEmpty() || releaseTagName.isNotEmpty()
@@ -209,7 +210,7 @@ fun UpdateDialog(
                         }
                             close()
                         }) {
-                        Text("忽略")
+                        Text("Yoksay") // "忽略" -> "Yoksay"
                     }
                 }
                 VerticalScrollbar(

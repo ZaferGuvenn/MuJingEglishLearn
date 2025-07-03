@@ -143,13 +143,13 @@ fun TextScreen(
                 if (extension == "txt") {
                     // 拖放的文件和已有的文件不一样，或者文件路径一样，但是后面又修改了。
                     if (textState.textPath != file.absolutePath || lastModified == file.lastModified()) {
-                        // 检查一行是否超过 75个字符
+                        // Bir satırın 75 karakteri aşıp aşmadığını kontrol et
                         val result = isGreaterThan75(file)
-                        // 如果没有超过 75 个字符，马上就可以开始抄写
+                        // 75 karakteri aşmıyorsa hemen kopyalamaya başla
                         if (!result.first) {
                             changeTextPath(file)
 
-                        // 如果是需要格式化再抄写
+                        // Formatlanması gerekiyorsa
                         } else {
                             formatPath = file.absolutePath
                             row = result.second + 1
@@ -157,25 +157,25 @@ fun TextScreen(
                         }
 
                     } else {
-                        JOptionPane.showMessageDialog(window, "文件已打开")
+                        JOptionPane.showMessageDialog(window, "Dosya zaten açık.") // "文件已打开"
                     }
 
                 }else if(videoFormatList.contains(extension)){
                     showVideoPlayer(true)
                     setVideoPath(file.absolutePath)
                 } else {
-                    JOptionPane.showMessageDialog(window, "格式不支持")
+                    JOptionPane.showMessageDialog(window, "Desteklenmeyen format.") // "格式不支持"
                 }
         }
     }
 
-    /** 打开文件对话框 */
+    /** Dosya Seçiciyi Aç */
     val openFileChooser: () -> Unit = {
-        // 打开 windows 的文件选择器很慢，有时候会等待超过2秒
+        // Windows dosya seçicisi yavaş açılabilir, bazen 2 saniyeden fazla sürebilir
         openLoadingDialog()
         scope.launch(Dispatchers.IO) {
             val fileChooser = futureFileChooser.get()
-            fileChooser.dialogTitle = "打开文本"
+            fileChooser.dialogTitle = "Metin Aç" // "打开文本" -> "Metin Aç"
             fileChooser.fileSystemView = FileSystemView.getFileSystemView()
             fileChooser.currentDirectory = FileSystemView.getFileSystemView().defaultDirectory
             fileChooser.fileSelectionMode = JFileChooser.FILES_ONLY
@@ -644,7 +644,7 @@ fun TextScreen(
                         border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.12f)),
                         shape = RectangleShape
                     ) {
-                        Text(text = "打开文本文件 $ctrl + O", modifier = Modifier.padding(10.dp))
+                        Text(text = "Metin Dosyası Aç $ctrl + O", modifier = Modifier.padding(10.dp)) // "打开文本文件" -> "Metin Dosyası Aç"
                     }
                 },
                 delayMillis = 50,
@@ -658,12 +658,12 @@ fun TextScreen(
                     modifier = Modifier.padding(top = if (isMacOS()) 30.dp else 0.dp)) {
                     Icon(
                         Icons.Filled.Folder,
-                        contentDescription = "Localized description",
+                        contentDescription = "Localized description", // Öneri: "Klasör Aç" veya "Dosya Seç"
                         tint = MaterialTheme.colors.onBackground
                     )
                 }
             }
-            RemoveButton( onClick = {removeText()},toolTip = "关闭当前文本")
+            RemoveButton( onClick = {removeText()},toolTip = "Mevcut Metni Kapat") // "关闭当前文本" -> "Mevcut Metni Kapat"
 
         }
 
@@ -714,7 +714,7 @@ fun TextSidebar(
 }
 
 
-/** 检测文本的每一行长度，是否超过 75 个字母 */
+/** Metnin her satırının uzunluğunun 75 karakteri aşıp aşmadığını kontrol eder */
 private fun isGreaterThan75(file:File):Pair<Boolean,Int> {
     file.useLines { lines ->
         lines.forEachIndexed { index,line ->
